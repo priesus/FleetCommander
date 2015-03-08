@@ -16,7 +16,7 @@ public class PlanetTest {
 	}
 
 	@Test
-	public void calculatesDistanceThroughPythagoras() throws Exception {
+	public void distanceIsCalculatedThroughPythagoras() throws Exception {
 		Planet p1 = new Planet(0, 0);
 		Planet p2 = new Planet(10, 10);
 		Planet p3 = new Planet(10, 0);
