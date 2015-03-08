@@ -9,7 +9,7 @@ public class PlayerTest {
 
 	@Test
 	public void playerHasNameAndCredits() {
-		Player player = new Player("John", 500);
+		Player player = new Player("John");
 		assertThat(player.getName(), is("John"));
 		assertThat(player.getCredits(), is(500));
 	}

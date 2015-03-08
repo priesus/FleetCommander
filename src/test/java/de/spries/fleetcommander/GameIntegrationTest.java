@@ -1,18 +1,24 @@
 package de.spries.fleetcommander;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class GameIntegrationTest {
 
 	@Test
 	public void playthrough() throws Exception {
-		Universe u = UniverseGenerator.generate(10);
-		System.out.println(u);
-
 		Game g = new Game();
-		g.createHumanPlayer("John");
+		Player player1 = g.createHumanPlayer("John");
+
+		Universe u = UniverseGenerator.generate(10, Arrays.asList(player1));
 		g.setUniverse(u);
+
 		g.start();
 
+		System.out.println(g);
+
+		Planet homePlanet = u.getHomePlanet(player1);
+		homePlanet.buildFactory(player1);
 	}
 }

@@ -8,8 +8,6 @@ public class Game {
 		// Nothing to do
 	}
 
-	private static final int DEFAULT_STARTING_CREDITS = 500;
-
 	private ArrayList<Player> players;
 	private Universe universe;
 
@@ -18,13 +16,9 @@ public class Game {
 	}
 
 	public Player createHumanPlayer(String name) {
-		Player player = new Player(name, DEFAULT_STARTING_CREDITS);
+		Player player = new Player(name);
 		players.add(player);
 		return player;
-	}
-
-	public void setUniverse(Universe universe) {
-		this.universe = universe;
 	}
 
 	public void start() throws NotEnoughPlayersException {
@@ -34,6 +28,10 @@ public class Game {
 		if (universe == null) {
 			throw new IllegalStateException("No universe!");
 		}
+	}
+
+	public void setUniverse(Universe universe) {
+		this.universe = universe;
 	}
 
 	/**
@@ -65,4 +63,5 @@ public class Game {
 
 		return sb.toString();
 	}
+
 }

@@ -19,6 +19,20 @@ public class Universe {
 		this.planets = Collections.unmodifiableList(planets);
 	}
 
+	public List<Planet> getPlanets() {
+		return planets;
+	}
+
+	public Planet getHomePlanet(Player player) {
+		// TODO improve performance
+		for (Planet planet : planets) {
+			if (planet.isHomePlanetOf(player)) {
+				return planet;
+			}
+		}
+		throw new IllegalStateException("player " + player + " has no home planet");
+	}
+
 	private static boolean planetsHaveDistinctLocations(List<Planet> planets) {
 		for (int i = 0; i < planets.size() - 1; i++) {
 			for (int j = i + 1; j < planets.size(); j++) {
@@ -30,10 +44,6 @@ public class Universe {
 			}
 		}
 		return true;
-	}
-
-	public List<Planet> getPlanets() {
-		return planets;
 	}
 
 }

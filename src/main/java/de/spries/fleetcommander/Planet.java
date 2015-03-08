@@ -9,10 +9,35 @@ public class Planet {
 
 	private final int coordinateX;
 	private final int coordinateY;
+	private Player inhabitant;
+	private boolean isHomePlanet;
 
+	/**
+	 * Regular (yet uninhabited) planed
+	 */
 	public Planet(int x, int y) {
+		this(x, y, null);
+	}
+
+	/**
+	 * Home planet of a player
+	 */
+	public Planet(int x, int y, Player inhabitant) {
 		coordinateX = x;
 		coordinateY = y;
+		this.inhabitant = inhabitant;
+		isHomePlanet = true;
+	}
+
+	public Player getInhabitant() {
+		return inhabitant;
+	}
+
+	public boolean isHomePlanetOf(Player player) {
+		if (isHomePlanet && player.equals(inhabitant)) {
+			return true;
+		}
+		return false;
 	}
 
 	public int getCoordinateX() {
