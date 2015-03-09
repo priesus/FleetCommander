@@ -16,8 +16,6 @@ public class GameTurnIT {
 
 		game.start();
 
-		System.out.println(game);
-
 		Planet homePlanet = u.getHomePlanet(player1);
 		homePlanet.buildFactory(player1);
 	}
