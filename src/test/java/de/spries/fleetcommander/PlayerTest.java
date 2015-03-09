@@ -10,7 +10,7 @@ import de.spries.fleetcommander.Player.InsufficientCreditsException;
 
 public class PlayerTest {
 
-	private static final int HALF_STARTING_BALANCE = Player.STARTING_BALANCE / 2;
+	private static final int HALF_STARTING_BALANCE = Player.STARTING_CREDITS / 2;
 	private Player john;
 
 	@Before
@@ -21,12 +21,12 @@ public class PlayerTest {
 	@Test
 	public void playerHasNameAndCredits() {
 		assertThat(john.getName(), is("John"));
-		assertThat(john.getCredits(), is(Player.STARTING_BALANCE));
+		assertThat(john.getCredits(), is(Player.STARTING_CREDITS));
 	}
 
 	@Test(expected = InsufficientCreditsException.class)
 	public void playerCannotBuyStuffHeCannotAfford() throws Exception {
-		john.reduceCredits(Player.STARTING_BALANCE + 1);
+		john.reduceCredits(Player.STARTING_CREDITS + 1);
 	}
 
 	@Test
@@ -36,6 +36,21 @@ public class PlayerTest {
 
 		john.reduceCredits(HALF_STARTING_BALANCE);
 		assertThat(john.getCredits(), is(0));
+	}
+
+	@Test
+	public void addingCreditsIncreasesBalance() throws Exception {
+		john.addCredits(1);
+		assertThat(john.getCredits(), is(Player.STARTING_CREDITS + 1));
+
+		john.addCredits(10);
+		assertThat(john.getCredits(), is(Player.STARTING_CREDITS + 11));
+	}
+
+	@Test
+	public void playerCretidsAreCapped() throws Exception {
+		john.addCredits(Player.MAX_CREDITS);
+		assertThat(john.getCredits(), is(Player.MAX_CREDITS));
 	}
 
 }

@@ -13,6 +13,10 @@ public class Planet {
 		// Nothing to implement
 	}
 
+	public static class NoFactorySlotsAvailableException extends Exception {
+		// Nothing to implement
+	}
+
 	public static final int FACTORY_COST = 100;
 
 	private final int coordinateX;
@@ -66,11 +70,17 @@ public class Planet {
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 
-	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException {
+	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
+			NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
 		player.reduceCredits(FACTORY_COST);
+	}
+
+	public int getFactorySlotCount() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	@Override

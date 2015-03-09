@@ -29,6 +29,10 @@ public class Game {
 		}
 	}
 
+	public void endTurn() {
+		players.get(0).addCredits(1);
+	}
+
 	public void setUniverse(Universe universe) {
 		this.universe = universe;
 	}

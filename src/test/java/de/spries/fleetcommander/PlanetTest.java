@@ -3,15 +3,29 @@ package de.spries.fleetcommander;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import de.spries.fleetcommander.Planet.NoFactorySlotsAvailableException;
 import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
 
 public class PlanetTest {
 
-	private static final Player JACK = new Player("Jack");
-	private static final Player JOHN = new Player("John");
+	private Player jack;
+	private Player john;
+	private Planet johnsHomePlanet;
+	private Planet uninhabitedPlanet;
+
+	@Before
+	public void setUp() {
+		john = new Player("John");
+		jack = new Player("Jack");
+
+		johnsHomePlanet = new Planet(0, 0, john);
+		uninhabitedPlanet = new Planet(0, 0);
+	}
 
 	@Test
 	public void newPlanetHasCoordinates() {
@@ -34,41 +48,48 @@ public class PlanetTest {
 
 	@Test
 	public void homePlanetIsIdentifiable() throws Exception {
-		Planet homePlanet = new Planet(0, 0, JOHN);
-		Planet planet = new Planet(0, 0);
+		assertThat(johnsHomePlanet.isHomePlanetOf(john), is(true));
+		assertThat(johnsHomePlanet.isHomePlanetOf(jack), is(false));
 
-		assertThat(homePlanet.isHomePlanetOf(JOHN), is(true));
-		assertThat(homePlanet.isHomePlanetOf(JACK), is(false));
-
-		assertThat(planet.isHomePlanetOf(JOHN), is(false));
-		assertThat(planet.isHomePlanetOf(JACK), is(false));
+		assertThat(uninhabitedPlanet.isHomePlanetOf(john), is(false));
+		assertThat(uninhabitedPlanet.isHomePlanetOf(jack), is(false));
 	}
 
 	@Test
 	public void homePlanetIsOwnedByInhabitingPlayerOnly() throws Exception {
-		Planet homePlanet = new Planet(0, 0, JOHN);
-
-		assertThat(homePlanet.isInhabitedBy(JOHN), is(true));
-		assertThat(homePlanet.isInhabitedBy(JACK), is(false));
+		assertThat(johnsHomePlanet.isInhabitedBy(john), is(true));
+		assertThat(johnsHomePlanet.isInhabitedBy(jack), is(false));
 	}
 
 	@Test(expected = NotPlayersOwnPlanetException.class)
 	public void cannotBuildFactoryOnUninhabitedPlanet() throws Exception {
-		Planet planet = new Planet(0, 0);
-		planet.buildFactory(JOHN);
+		uninhabitedPlanet.buildFactory(john);
 	}
 
 	@Test(expected = NotPlayersOwnPlanetException.class)
 	public void cannotBuildFactoryOnOtherPlayersPlanet() throws Exception {
-		Planet planet = new Planet(0, 0, JACK);
-		planet.buildFactory(JOHN);
+		johnsHomePlanet.buildFactory(jack);
 	}
 
 	@Test
 	public void buildingFactoryReducesPlayerCredits() throws Exception {
-		Planet planet = new Planet(0, 0, JACK);
-		planet.buildFactory(JACK);
-		assertThat(JACK.getCredits(), is(Player.STARTING_BALANCE - Planet.FACTORY_COST));
+		johnsHomePlanet.buildFactory(john);
+		assertThat(john.getCredits(), is(Player.STARTING_CREDITS - Planet.FACTORY_COST));
+	}
+
+	@Test
+	public void cannotBuildMoreFactoriesThanSlotsAvailable() throws Exception {
+		int slots = johnsHomePlanet.getFactorySlotCount();
+
+		for (int i = 0; i < slots; i++) {
+			johnsHomePlanet.buildFactory(john);
+		}
+		try {
+			johnsHomePlanet.buildFactory(john);
+			fail("Expected exception");
+		} catch (NoFactorySlotsAvailableException e) {
+			// Expected behavior
+		}
 	}
 
 }

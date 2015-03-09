@@ -6,14 +6,15 @@ public class Player {
 		// Nothing to implement
 	}
 
-	public static final int STARTING_BALANCE = 500;
+	public static final int STARTING_CREDITS = 500;
+	public static final int MAX_CREDITS = 99_999;
 
 	private String name;
 	private int credits;
 
 	public Player(String name) {
 		this.name = name;
-		credits = STARTING_BALANCE;
+		credits = STARTING_CREDITS;
 	}
 
 	public String getName() {
@@ -29,5 +30,12 @@ public class Player {
 			throw new InsufficientCreditsException();
 		}
 		credits -= debit;
+	}
+
+	public void addCredits(int creditsToAdd) {
+		credits += creditsToAdd;
+		if (credits > MAX_CREDITS) {
+			credits = MAX_CREDITS;
+		}
 	}
 }
