@@ -13,8 +13,8 @@ public class GameTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void gameRequiresAUniverseToStart() throws Exception {
-		Game g = new Game();
-		g.createHumanPlayer("John");
-		g.start();
+		Game game = new Game();
+		game.createHumanPlayer("John");
+		game.start();
 	}
 }

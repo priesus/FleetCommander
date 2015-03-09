@@ -4,19 +4,19 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-public class GameIntegrationTest {
+public class GameTurnIT {
 
 	@Test
 	public void playthrough() throws Exception {
-		Game g = new Game();
-		Player player1 = g.createHumanPlayer("John");
+		Game game = new Game();
+		Player player1 = game.createHumanPlayer("John");
 
 		Universe u = UniverseGenerator.generate(10, Arrays.asList(player1));
-		g.setUniverse(u);
+		game.setUniverse(u);
 
-		g.start();
+		game.start();
 
-		System.out.println(g);
+		System.out.println(game);
 
 		Planet homePlanet = u.getHomePlanet(player1);
 		homePlanet.buildFactory(player1);

@@ -5,7 +5,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.spries.fleetcommander.Player.InsufficientCreditsException;
+
 public class Planet {
+
+	public static class NotPlayersOwnPlanetException extends Exception {
+		// Nothing to implement
+	}
+
+	public static final int FACTORY_COST = 100;
 
 	private final int coordinateX;
 	private final int coordinateY;
@@ -40,6 +48,10 @@ public class Planet {
 		return false;
 	}
 
+	public boolean isInhabitedBy(Player player) {
+		return player.equals(inhabitant);
+	}
+
 	public int getCoordinateX() {
 		return coordinateX;
 	}
@@ -52,6 +64,13 @@ public class Planet {
 		int distanceX = coordinateX - other.getCoordinateX();
 		int distanceY = coordinateY - other.getCoordinateY();
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+	}
+
+	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException {
+		if (!player.equals(inhabitant)) {
+			throw new NotPlayersOwnPlanetException();
+		}
+		player.reduceCredits(FACTORY_COST);
 	}
 
 	@Override

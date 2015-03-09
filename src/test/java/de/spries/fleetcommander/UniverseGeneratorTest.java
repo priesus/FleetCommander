@@ -18,19 +18,19 @@ public class UniverseGeneratorTest {
 
 	@Test
 	public void generatedUniverseHasDesiredSize() throws Exception {
-		Universe u = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		assertThat(u.getPlanets(), hasSize(PLANET_COUNT));
+		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
+		assertThat(universe.getPlanets(), hasSize(PLANET_COUNT));
 	}
 
 	@Test
 	public void playerHasHomePlanet() throws Exception {
-		Universe u = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		assertThat(u.getHomePlanet(JOHN), is(notNullValue()));
+		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
+		assertThat(universe.getHomePlanet(JOHN), is(notNullValue()));
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void everyPlayerHasToHaveAHomePlanet() throws Exception {
-		Universe u = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		u.getHomePlanet(new Player("Other player"));
+		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
+		universe.getHomePlanet(new Player("Other player"));
 	}
 }

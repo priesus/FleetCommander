@@ -27,8 +27,8 @@ public class UniverseTest {
 
 	@Test
 	public void newUniverseHasPlanets() {
-		Universe u = new Universe(Arrays.asList(PLANET1, PLANET2));
-		assertThat(u.getPlanets(), hasSize(2));
+		Universe universe = new Universe(Arrays.asList(PLANET1, PLANET2));
+		assertThat(universe.getPlanets(), hasSize(2));
 	}
 
 	@SuppressWarnings("unused")

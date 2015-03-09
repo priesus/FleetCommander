@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
+
 public class PlanetTest {
 
 	private static final Player JACK = new Player("Jack");
@@ -13,9 +15,9 @@ public class PlanetTest {
 
 	@Test
 	public void newPlanetHasCoordinates() {
-		Planet p = new Planet(10, 20);
-		assertThat(p.getCoordinateX(), is(10));
-		assertThat(p.getCoordinateY(), is(20));
+		Planet planet = new Planet(10, 20);
+		assertThat(planet.getCoordinateX(), is(10));
+		assertThat(planet.getCoordinateY(), is(20));
 	}
 
 	@Test
@@ -40,6 +42,33 @@ public class PlanetTest {
 
 		assertThat(planet.isHomePlanetOf(JOHN), is(false));
 		assertThat(planet.isHomePlanetOf(JACK), is(false));
+	}
+
+	@Test
+	public void homePlanetIsOwnedByInhabitingPlayerOnly() throws Exception {
+		Planet homePlanet = new Planet(0, 0, JOHN);
+
+		assertThat(homePlanet.isInhabitedBy(JOHN), is(true));
+		assertThat(homePlanet.isInhabitedBy(JACK), is(false));
+	}
+
+	@Test(expected = NotPlayersOwnPlanetException.class)
+	public void cannotBuildFactoryOnUninhabitedPlanet() throws Exception {
+		Planet planet = new Planet(0, 0);
+		planet.buildFactory(JOHN);
+	}
+
+	@Test(expected = NotPlayersOwnPlanetException.class)
+	public void cannotBuildFactoryOnOtherPlayersPlanet() throws Exception {
+		Planet planet = new Planet(0, 0, JACK);
+		planet.buildFactory(JOHN);
+	}
+
+	@Test
+	public void buildingFactoryReducesPlayerCredits() throws Exception {
+		Planet planet = new Planet(0, 0, JACK);
+		planet.buildFactory(JACK);
+		assertThat(JACK.getCredits(), is(Player.STARTING_BALANCE - Planet.FACTORY_COST));
 	}
 
 }
