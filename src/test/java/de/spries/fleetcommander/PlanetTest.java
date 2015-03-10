@@ -61,6 +61,33 @@ public class PlanetTest {
 		assertThat(johnsHomePlanet.isInhabitedBy(jack), is(false));
 	}
 
+	@Test
+	public void homePlanetStartsWithShips() throws Exception {
+		assertThat(johnsHomePlanet.getShipCount(), is(Planet.HOME_PLANET_STARTING_SHIPS));
+	}
+
+	@Test
+	public void uninhabitedPlanetStartsWithoutShips() throws Exception {
+		assertThat(uninhabitedPlanet.getShipCount(), is(0));
+	}
+
+	@Test
+	public void factoryCycleInreasesNumberOfShips() throws Exception {
+		int shipsBefore = johnsHomePlanet.getShipCount();
+		johnsHomePlanet.buildFactory(john);
+		johnsHomePlanet.runFactoryCycle();
+
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + Planet.SHIPS_PER_FACTORY_PER_TURN));
+	}
+
+	@Test
+	public void noShipsAreBuildWithoutFactories() throws Exception {
+		int shipsBefore = johnsHomePlanet.getShipCount();
+		johnsHomePlanet.runFactoryCycle();
+
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore));
+	}
+
 	@Test(expected = NotPlayersOwnPlanetException.class)
 	public void cannotBuildFactoryOnUninhabitedPlanet() throws Exception {
 		uninhabitedPlanet.buildFactory(john);
@@ -79,6 +106,7 @@ public class PlanetTest {
 
 	@Test
 	public void cannotBuildMoreFactoriesThanSlotsAvailable() throws Exception {
+		john.addCredits(500);
 		int slots = johnsHomePlanet.getFactorySlotCount();
 
 		for (int i = 0; i < slots; i++) {
@@ -89,6 +117,37 @@ public class PlanetTest {
 			fail("Expected exception");
 		} catch (NoFactorySlotsAvailableException e) {
 			// Expected behavior
+		}
+	}
+
+	@Test
+	public void factoryCountIncreasesWithEachBuiltFactory() throws Exception {
+		john.addCredits(500);
+		int slots = johnsHomePlanet.getFactorySlotCount();
+
+		assertThat(johnsHomePlanet.getFactoryCount(), is(0));
+
+		for (int i = 0; i < slots; i++) {
+			johnsHomePlanet.buildFactory(john);
+			assertThat(johnsHomePlanet.getFactoryCount(), is(i + 1));
+		}
+	}
+
+	@Test
+	public void eachFactoryIncreasesCreditsProduction() throws Exception {
+		assertThat(johnsHomePlanet.getProducedCreditsPerTurn(), is(0));
+		for (int i = 0; i < 5; i++) {
+			johnsHomePlanet.buildFactory(john);
+			assertThat(johnsHomePlanet.getProducedCreditsPerTurn(), is((i + 1) * Planet.CREDITS_PER_FACTORY_PER_TURN));
+		}
+	}
+
+	@Test
+	public void eachFactoryIncreasesShipProduction() throws Exception {
+		assertThat(johnsHomePlanet.getProducedShipsPerTurn(), is(0));
+		for (int i = 0; i < 5; i++) {
+			johnsHomePlanet.buildFactory(john);
+			assertThat(johnsHomePlanet.getProducedShipsPerTurn(), is((i + 1) * Planet.SHIPS_PER_FACTORY_PER_TURN));
 		}
 	}
 

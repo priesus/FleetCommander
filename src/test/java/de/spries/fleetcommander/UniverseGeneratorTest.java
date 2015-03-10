@@ -25,12 +25,12 @@ public class UniverseGeneratorTest {
 	@Test
 	public void playerHasHomePlanet() throws Exception {
 		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		assertThat(universe.getHomePlanet(JOHN), is(notNullValue()));
+		assertThat(universe.getHomePlanetOf(JOHN), is(notNullValue()));
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void everyPlayerHasToHaveAHomePlanet() throws Exception {
 		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		universe.getHomePlanet(new Player("Other player"));
+		universe.getHomePlanetOf(new Player("Other player"));
 	}
 }

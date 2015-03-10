@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 public class UniverseTest {
@@ -35,6 +36,19 @@ public class UniverseTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void planetsMustHaveDifferentPosition() {
 		new Universe(Arrays.asList(new Planet(0, 0), new Planet(0, 0)));
+	}
+
+	@Test
+	public void onlyPlanetsInhabitedByPlayerAreReturned() throws Exception {
+		Player john = new Player("John");
+		Player jack = new Player("Jack");
+
+		Planet uninhabitedPlanet = new Planet(0, 0);
+		Planet johnsPlanet = new Planet(1, 0, john);
+		Planet JacksPlanet = new Planet(2, 0, jack);
+
+		Universe universe = new Universe(Arrays.asList(uninhabitedPlanet, johnsPlanet, JacksPlanet));
+		assertThat(universe.getPlanetsInhabitedBy(john), Matchers.contains(johnsPlanet));
 	}
 
 }

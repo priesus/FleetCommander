@@ -25,25 +25,25 @@ public class GameTurnIT {
 
 	@Test
 	public void factoryIncreasesPlayerCreditsOnTurnEnd() throws Exception {
-		Planet homePlanet = universe.getHomePlanet(john);
+		Planet homePlanet = universe.getHomePlanetOf(john);
 		homePlanet.buildFactory(john);
 
 		int creditsBefore = john.getCredits();
 		game.endTurn();
 
-		assertThat(john.getCredits(), is(creditsBefore + 1));
+		assertThat(john.getCredits(), is(creditsBefore + Planet.CREDITS_PER_FACTORY_PER_TURN));
 	}
 
 	@Test
 	public void twoFactoryIncreasePlayerCreditsOnTurnEnd() throws Exception {
-		Planet homePlanet = universe.getHomePlanet(john);
+		Planet homePlanet = universe.getHomePlanetOf(john);
 		homePlanet.buildFactory(john);
 		homePlanet.buildFactory(john);
 
 		int creditsBefore = john.getCredits();
 		game.endTurn();
 
-		assertThat(john.getCredits(), is(creditsBefore + 2));
+		assertThat(john.getCredits(), is(creditsBefore + 2 * Planet.CREDITS_PER_FACTORY_PER_TURN));
 	}
 
 	@Test

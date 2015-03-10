@@ -2,6 +2,8 @@ package de.spries.fleetcommander;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -23,14 +25,22 @@ public class Universe {
 		return planets;
 	}
 
-	public Planet getHomePlanet(Player player) {
-		// TODO improve performance
-		for (Planet planet : planets) {
-			if (planet.isHomePlanetOf(player)) {
-				return planet;
-			}
+	public List<Planet> getPlanetsInhabitedBy(Player player) {
+		return planets.parallelStream().filter((p) -> p.isInhabitedBy(player)).collect(Collectors.toList());
+	}
+
+	public Planet getHomePlanetOf(Player player) {
+		Optional<Planet> homePlanet = planets.parallelStream().filter((p) -> p.isHomePlanetOf(player)).findFirst();
+		if (!homePlanet.isPresent()) {
+			throw new IllegalStateException("player " + player + " has no home planet");
 		}
-		throw new IllegalStateException("player " + player + " has no home planet");
+		return homePlanet.get();
+	}
+
+	public void runFactoryCycle() {
+		for (Planet planet : planets) {
+			planet.runFactoryCycle();
+		}
 	}
 
 	private static boolean planetsHaveDistinctLocations(List<Planet> planets) {
