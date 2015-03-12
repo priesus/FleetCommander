@@ -17,10 +17,10 @@ public class Planet {
 		// Nothing to implement
 	}
 
-	public static final int FACTORY_COST = 100;
-	public static final int CREDITS_PER_FACTORY_PER_TURN = 75;
-	public static final int SHIPS_PER_FACTORY_PER_TURN = 1;
-	public static final int HOME_PLANET_STARTING_SHIPS = 6;
+	protected static final int FACTORY_COST = 100;
+	protected static final int CREDITS_PER_FACTORY_PER_TURN = 75;
+	protected static final int SHIPS_PER_FACTORY_PER_TURN = 1;
+	protected static final int HOME_PLANET_STARTING_SHIPS = 6;
 
 	private final int coordinateX;
 	private final int coordinateY;
@@ -93,7 +93,7 @@ public class Planet {
 	}
 
 	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-	NoFactorySlotsAvailableException {
+			NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}

@@ -9,8 +9,8 @@ public class Player {
 		// Nothing to implement
 	}
 
-	public static final int STARTING_CREDITS = 500;
-	public static final int MAX_CREDITS = 99_999;
+	protected static final int STARTING_CREDITS = 500;
+	protected static final int MAX_CREDITS = 99_999;
 
 	private String name;
 	private int credits;
