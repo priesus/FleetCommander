@@ -59,6 +59,10 @@ public class Planet {
 		return false;
 	}
 
+	public boolean isInhabited() {
+		return inhabitant != null;
+	}
+
 	public boolean isInhabitedBy(Player player) {
 		return player.equals(inhabitant);
 	}
@@ -89,7 +93,7 @@ public class Planet {
 	}
 
 	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-			NoFactorySlotsAvailableException {
+	NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
@@ -118,7 +122,7 @@ public class Planet {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_FIELD_NAMES_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 
 	@Override

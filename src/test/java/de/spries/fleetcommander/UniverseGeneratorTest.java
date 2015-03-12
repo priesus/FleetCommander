@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,8 @@ import org.junit.Test;
 
 public class UniverseGeneratorTest {
 
-	private static final Player JOHN = new Player("John");
+	private static final Player JOHN = mock(Player.class);
+	private static final Player OTHER_PLAYER = mock(Player.class);
 	private static final List<Player> JOHN_ONLY = Arrays.asList(JOHN);
 	private static final int PLANET_COUNT = 80;
 
@@ -31,6 +33,6 @@ public class UniverseGeneratorTest {
 	@Test(expected = IllegalStateException.class)
 	public void everyPlayerHasToHaveAHomePlanet() throws Exception {
 		Universe universe = UniverseGenerator.generate(PLANET_COUNT, JOHN_ONLY);
-		universe.getHomePlanetOf(new Player("Other player"));
+		universe.getHomePlanetOf(OTHER_PLAYER);
 	}
 }

@@ -4,9 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import de.spries.fleetcommander.Planet.NoFactorySlotsAvailableException;
 import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
@@ -20,8 +23,8 @@ public class PlanetTest {
 
 	@Before
 	public void setUp() {
-		john = new Player("John");
-		jack = new Player("Jack");
+		john = mock(Player.class);
+		jack = mock(Player.class);
 
 		johnsHomePlanet = new Planet(0, 0, john);
 		uninhabitedPlanet = new Planet(0, 0);
@@ -32,6 +35,12 @@ public class PlanetTest {
 		Planet planet = new Planet(10, 20);
 		assertThat(planet.getCoordinateX(), is(10));
 		assertThat(planet.getCoordinateY(), is(20));
+	}
+
+	@Test
+	public void planetsWithInhabitantAreInhabited() throws Exception {
+		assertThat(uninhabitedPlanet.isInhabited(), is(false));
+		assertThat(johnsHomePlanet.isInhabited(), is(true));
 	}
 
 	@Test
@@ -101,7 +110,7 @@ public class PlanetTest {
 	@Test
 	public void buildingFactoryReducesPlayerCredits() throws Exception {
 		johnsHomePlanet.buildFactory(john);
-		assertThat(john.getCredits(), is(Player.STARTING_CREDITS - Planet.FACTORY_COST));
+		verify(john).reduceCredits(Mockito.eq(Planet.FACTORY_COST));
 	}
 
 	@Test

@@ -1,5 +1,8 @@
 package de.spries.fleetcommander;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class Player {
 
 	public static class InsufficientCreditsException extends Exception {
@@ -37,5 +40,10 @@ public class Player {
 		if (credits > MAX_CREDITS) {
 			credits = MAX_CREDITS;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
 	}
 }
