@@ -123,6 +123,14 @@ public class UniverseTest {
 	}
 
 	@Test
+	public void shipsLandOnTargetPlanet() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.runShipTravellingCycle();
+		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
+		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+	}
+
+	@Test
 	@Ignore("not implemented")
 	public void test() {
 		// TODO attack planet

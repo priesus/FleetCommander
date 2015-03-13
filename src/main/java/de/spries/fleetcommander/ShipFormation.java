@@ -52,4 +52,9 @@ public class ShipFormation {
 		shipCount = 0;
 	}
 
+	public void landOnDestination() {
+		destination.landShips(shipCount, commander);
+		shipCount = 0;
+	}
+
 }

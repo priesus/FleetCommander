@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.spries.fleetcommander.FactorySite.NoFactorySlotsAvailableException;
 import de.spries.fleetcommander.Player.InsufficientCreditsException;
 
 public class Planet {
@@ -13,21 +14,14 @@ public class Planet {
 		// Nothing to implement
 	}
 
-	public static class NoFactorySlotsAvailableException extends Exception {
-		// Nothing to implement
-	}
-
-	protected static final int FACTORY_COST = 100;
-	protected static final int CREDITS_PER_FACTORY_PER_TURN = 75;
-	protected static final int SHIPS_PER_FACTORY_PER_TURN = 1;
-	protected static final int HOME_PLANET_STARTING_SHIPS = 6;
+	private static final int HOME_PLANET_STARTING_SHIPS = 6;
 
 	private final int coordinateX;
 	private final int coordinateY;
-	private final int factorySlots = 6;
 	private Player inhabitant;
 	private int shipCount;
-	private int factoryCount = 0;
+
+	private FactorySite factorySite = new FactorySite();
 
 	/**
 	 * Regular (yet uninhabited) planed
@@ -79,10 +73,10 @@ public class Planet {
 		return shipCount;
 	}
 
-	public void runFactoryCycle() {
-		shipCount += factoryCount * SHIPS_PER_FACTORY_PER_TURN;
+	public void runProductionCycle() {
+		shipCount += factorySite.getProducedShipsPerTurn();
 		if (inhabitant != null) {
-			inhabitant.addCredits(getProducedCreditsPerTurn());
+			inhabitant.addCredits(factorySite.getProducedCreditsPerTurn());
 		}
 	}
 
@@ -93,35 +87,18 @@ public class Planet {
 	}
 
 	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-			NoFactorySlotsAvailableException {
+	NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
-		if (factorySlots == factoryCount) {
-			throw new NoFactorySlotsAvailableException();
+		if (factorySite.hasAvailableSlots()) {
+			player.reduceCredits(FactorySite.FACTORY_COST);
 		}
-		player.reduceCredits(FACTORY_COST);
-		factoryCount++;
-	}
-
-	public int getFactorySlotCount() {
-		return factorySlots;
-	}
-
-	public int getFactoryCount() {
-		return factoryCount;
-	}
-
-	public int getProducedCreditsPerTurn() {
-		return factoryCount * CREDITS_PER_FACTORY_PER_TURN;
-	}
-
-	public int getProducedShipsPerTurn() {
-		return factoryCount * SHIPS_PER_FACTORY_PER_TURN;
+		factorySite.buildFactory();
 	}
 
 	public void sendShipsAway(int shipsToSend, Player player) throws NotPlayersOwnPlanetException,
-			NotEnoughShipsException {
+	NotEnoughShipsException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
@@ -152,5 +129,12 @@ public class Planet {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	/**
+	 * for tests only!
+	 */
+	protected void setFactorySite(FactorySite factorySite) {
+		this.factorySite = factorySite;
 	}
 }

@@ -38,7 +38,7 @@ public class GameTest {
 	@Test
 	public void endingTurnRunsFactoryCycle() throws Exception {
 		startedGame.endTurn();
-		verify(universe).runFactoryCycle();
+		verify(universe).runFactoryProductionCycle();
 	}
 
 	@Test

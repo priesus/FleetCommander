@@ -46,13 +46,16 @@ public class Universe {
 		return homePlanet.get();
 	}
 
-	public void runFactoryCycle() {
+	public void runFactoryProductionCycle() {
 		for (Planet planet : planets) {
-			planet.runFactoryCycle();
+			planet.runProductionCycle();
 		}
 	}
 
 	public void runShipTravellingCycle() {
+		for (ShipFormation shipFormation : travellingShipFormations) {
+			shipFormation.landOnDestination();
+		}
 		travellingShipFormations.clear();
 	}
 

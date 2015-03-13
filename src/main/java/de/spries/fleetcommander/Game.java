@@ -30,7 +30,7 @@ public class Game {
 	}
 
 	public void endTurn() {
-		universe.runFactoryCycle();
+		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 	}
 

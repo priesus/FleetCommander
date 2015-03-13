@@ -3,6 +3,7 @@ package de.spries.fleetcommander;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -86,6 +87,13 @@ public class ShipFormationTest {
 		ShipFormation joiningFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JOHN);
 		joiningFormation.join(existingFormation);
 		assertThat(joiningFormation.getShipCount(), is(0));
+	}
+
+	@Test
+	public void landingOnDestinationTransfersShipsToPlanet() {
+		existingFormation.landOnDestination();
+		assertThat(existingFormation.getShipCount(), is(0));
+		verify(OTHER_PLANET).landShips(1, JOHN);
 	}
 
 }
