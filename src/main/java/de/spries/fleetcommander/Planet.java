@@ -120,6 +120,25 @@ public class Planet {
 		return factoryCount * SHIPS_PER_FACTORY_PER_TURN;
 	}
 
+	public void sendShipsAway(int shipsToSend, Player player) throws NotPlayersOwnPlanetException,
+			NotEnoughShipsException {
+		if (!player.equals(inhabitant)) {
+			throw new NotPlayersOwnPlanetException();
+		}
+		if (shipsToSend > shipCount) {
+			throw new NotEnoughShipsException();
+		}
+
+		shipCount -= shipsToSend;
+	}
+
+	public void landShips(int shipsToLand, Player player) {
+		if (!isInhabited()) {
+			inhabitant = player;
+		}
+		shipCount += shipsToLand;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

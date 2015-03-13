@@ -1,13 +1,24 @@
 package de.spries.fleetcommander;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class ShipFormationTest {
 
 	private static final Player JOHN = mock(Player.class);
+	private static final Player JACK = mock(Player.class);
 	private static final Planet PLANET = mock(Planet.class);
+	private static final Planet OTHER_PLANET = mock(Planet.class);
+	private ShipFormation existingFormation;
+
+	@Before
+	public void setUp() {
+		existingFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JOHN);
+	}
 
 	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
@@ -37,6 +48,44 @@ public class ShipFormationTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void commanderMustBeNonNull() {
 		new ShipFormation(1, PLANET, PLANET, null);
+	}
+
+	@Test
+	public void formationCannotJoinIfOriginIsDifferent() {
+		ShipFormation newShipFormation = new ShipFormation(1, OTHER_PLANET, OTHER_PLANET, JOHN);
+		assertThat(newShipFormation.canJoin(existingFormation), is(false));
+	}
+
+	@Test
+	public void formationCannotJoinIfDestinationIsDifferent() {
+		ShipFormation newShipFormation = new ShipFormation(1, PLANET, PLANET, JOHN);
+		assertThat(newShipFormation.canJoin(existingFormation), is(false));
+	}
+
+	@Test
+	public void formationCannotJoinIfCommanderIsDifferent() {
+		ShipFormation newShipFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JACK);
+		assertThat(newShipFormation.canJoin(existingFormation), is(false));
+	}
+
+	@Test
+	public void formationCanJoinIfRouteAndCommanderAreEqual() {
+		ShipFormation newShipFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JOHN);
+		assertThat(newShipFormation.canJoin(existingFormation), is(true));
+	}
+
+	@Test
+	public void mergingIncreasesShipCountOfExistingFormation() {
+		ShipFormation joiningFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JOHN);
+		joiningFormation.join(existingFormation);
+		assertThat(existingFormation.getShipCount(), is(2));
+	}
+
+	@Test
+	public void mergingDecreasesShipCountOfJoiningFormationToZero() {
+		ShipFormation joiningFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JOHN);
+		joiningFormation.join(existingFormation);
+		assertThat(joiningFormation.getShipCount(), is(0));
 	}
 
 }

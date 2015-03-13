@@ -52,6 +52,45 @@ public class Universe {
 		}
 	}
 
+	public void runShipTravellingCycle() {
+		travellingShipFormations.clear();
+	}
+
+	public void sendShips(int shipCount, Planet origin, Planet destination, Player player)
+			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
+		if (!planets.contains(origin) || !planets.contains(destination)) {
+			throw new IllegalArgumentException("origin & destination must be contained in universe");
+		}
+
+		if (destination.equals(origin)) {
+			return;
+		}
+
+		origin.sendShipsAway(shipCount, player);
+
+		ShipFormation newShipFormation = new ShipFormation(shipCount, origin, destination, player);
+		ShipFormation joinableFormation = getJoinableShipFormation(newShipFormation);
+
+		if (joinableFormation == null) {
+			travellingShipFormations.add(newShipFormation);
+		} else {
+			newShipFormation.join(joinableFormation);
+		}
+	}
+
+	private ShipFormation getJoinableShipFormation(ShipFormation newShipFormation) {
+		for (ShipFormation formation : travellingShipFormations) {
+			if (newShipFormation.canJoin(formation)) {
+				return formation;
+			}
+		}
+		return null;
+	}
+
+	public List<ShipFormation> getTravellingShipFormations() {
+		return travellingShipFormations;
+	}
+
 	private static boolean planetsHaveDistinctLocations(List<Planet> planets) {
 		for (int i = 0; i < planets.size() - 1; i++) {
 			for (int j = i + 1; j < planets.size(); j++) {
@@ -63,33 +102,6 @@ public class Universe {
 			}
 		}
 		return true;
-	}
-
-	public void sendShips(int shipCount, Planet origin, Planet destination, Player player)
-			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
-		if (!planets.contains(origin) || !planets.contains(destination)) {
-			throw new IllegalArgumentException("origin & destination must be contained in universe");
-		}
-		if (!origin.isInhabitedBy(player)) {
-			throw new NotPlayersOwnPlanetException();
-		}
-		if (shipCount > origin.getShipCount()) {
-			throw new NotEnoughShipsException();
-		}
-
-		if (destination.equals(origin)) {
-			return;
-		}
-
-		ShipFormation shipFormation = new ShipFormation(shipCount, origin, destination, player);
-		travellingShipFormations.add(shipFormation);
-	}
-
-	public void runShipTravellingCycle() {
-	}
-
-	public List<ShipFormation> getTravellingShipFormations() {
-		return travellingShipFormations;
 	}
 
 }

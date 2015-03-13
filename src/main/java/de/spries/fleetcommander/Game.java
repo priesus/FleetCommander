@@ -31,6 +31,7 @@ public class Game {
 
 	public void endTurn() {
 		universe.runFactoryCycle();
+		universe.runShipTravellingCycle();
 	}
 
 	public void setUniverse(Universe universe) {

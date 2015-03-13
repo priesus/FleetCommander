@@ -13,9 +13,8 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
 
 public class UniverseTest {
 
@@ -70,28 +69,6 @@ public class UniverseTest {
 	}
 
 	@Test
-	public void sendingShipsReducedShipsCountOnOriginPlanet() throws Exception {
-		int shipsBefore = johnsHomePlanet.getShipCount();
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-
-		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore - 1));
-	}
-
-	@Test
-	public void landingShipsIncreaseDestinationPlanetShipCount() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		universe.runShipTravellingCycle();
-		assertThat(uninhabitedPlanet.getShipCount(), is(1));
-	}
-
-	@Test
-	public void landingShipsOnUninhabitedPlanetInhabitsPlanet() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		universe.runShipTravellingCycle();
-		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
-	}
-
-	@Test
 	public void universeHasNoTravellingShips() throws Exception {
 		assertThat(universe.getTravellingShipFormations(), hasSize(0));
 	}
@@ -117,17 +94,7 @@ public class UniverseTest {
 		assertThat(shipFormations, hasSize(1));
 
 		ShipFormation shipFormation = shipFormations.get(0);
-		assertThat(shipFormation.getShipCount(), is(2));
-	}
-
-	@Test(expected = NotPlayersOwnPlanetException.class)
-	public void cannotSendShipsFromOtherPlayersPlanets() throws Exception {
-		universe.sendShips(1, jacksHomePlanet, uninhabitedPlanet, john);
-	}
-
-	@Test(expected = NotPlayersOwnPlanetException.class)
-	public void cannotSendShipsFromUninhabitedPlayersPlanets() throws Exception {
-		universe.sendShips(1, uninhabitedPlanet, uninhabitedPlanet, john);
+		assertThat(shipFormation.getShipCount(), is(3));
 	}
 
 	@Test
@@ -136,12 +103,6 @@ public class UniverseTest {
 		universe.sendShips(1, johnsHomePlanet, johnsHomePlanet, john);
 		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore));
 		assertThat(universe.getTravellingShipFormations(), is(empty()));
-	}
-
-	@Test(expected = NotEnoughShipsException.class)
-	public void cannotSendMoreShipsThanLocatedOnOriginPlanet() throws Exception {
-		int shipCount = johnsHomePlanet.getShipCount();
-		universe.sendShips(shipCount + 1, johnsHomePlanet, uninhabitedPlanet, john);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -155,6 +116,14 @@ public class UniverseTest {
 	}
 
 	@Test
+	public void runningTravellingCycleRemovedShipsFromSpace() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.runShipTravellingCycle();
+		assertThat(universe.getTravellingShipFormations(), is(empty()));
+	}
+
+	@Test
+	@Ignore("not implemented")
 	public void test() {
 		// TODO attack planet
 		// TODO various distances

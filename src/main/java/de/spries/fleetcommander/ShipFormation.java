@@ -36,4 +36,20 @@ public class ShipFormation {
 		return commander;
 	}
 
+	public boolean canJoin(ShipFormation existingFormation) {
+		if (origin.equals(existingFormation.origin) && destination.equals(existingFormation.destination)
+				&& commander.equals(existingFormation.commander)) {
+			return true;
+		}
+		return false;
+	}
+
+	public void join(ShipFormation existingFormation) {
+		if (!canJoin(existingFormation)) {
+			throw new IllegalArgumentException("cannot join this formation");
+		}
+		existingFormation.shipCount += shipCount;
+		shipCount = 0;
+	}
+
 }

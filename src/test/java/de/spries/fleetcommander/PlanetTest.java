@@ -19,6 +19,7 @@ public class PlanetTest {
 	private Player jack;
 	private Player john;
 	private Planet johnsHomePlanet;
+	private Planet jacksHomePlanet;
 	private Planet uninhabitedPlanet;
 
 	@Before
@@ -27,6 +28,7 @@ public class PlanetTest {
 		jack = mock(Player.class);
 
 		johnsHomePlanet = new Planet(0, 0, john);
+		jacksHomePlanet = new Planet(1, 1, jack);
 		uninhabitedPlanet = new Planet(0, 0);
 	}
 
@@ -160,4 +162,41 @@ public class PlanetTest {
 		}
 	}
 
+	@Test(expected = NotPlayersOwnPlanetException.class)
+	public void cannotSendShipsFromOtherPlayersPlanets() throws Exception {
+		jacksHomePlanet.sendShipsAway(1, john);
+	}
+
+	@Test(expected = NotPlayersOwnPlanetException.class)
+	public void cannotSendShipsFromUninhabitedPlanets() throws Exception {
+		uninhabitedPlanet.sendShipsAway(1, john);
+	}
+
+	@Test(expected = NotEnoughShipsException.class)
+	public void cannotSendMoreShipsThanLocatedOnPlanet() throws Exception {
+		int shipCount = johnsHomePlanet.getShipCount();
+		johnsHomePlanet.sendShipsAway(shipCount + 1, john);
+	}
+
+	@Test
+	public void sendingShipsReducedShipsCountOnPlanet() throws Exception {
+		int shipsBefore = johnsHomePlanet.getShipCount();
+		johnsHomePlanet.sendShipsAway(1, john);
+
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore - 1));
+	}
+
+	@Test
+	public void landingShipsIncreaseShipCount() throws Exception {
+		int shipsBefore = johnsHomePlanet.getShipCount();
+		johnsHomePlanet.landShips(1, john);
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + 1));
+	}
+
+	@Test
+	public void landingShipsOnUninhabitedPlanetInhabitsPlanet() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
+		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+	}
 }
