@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.player;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

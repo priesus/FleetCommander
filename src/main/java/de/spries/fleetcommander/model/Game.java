@@ -1,6 +1,9 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model;
 
 import java.util.ArrayList;
+
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.universe.Universe;
 
 public class Game {
 	public static class NotEnoughPlayersException extends Exception {

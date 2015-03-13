@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 
 public class Universe {
 

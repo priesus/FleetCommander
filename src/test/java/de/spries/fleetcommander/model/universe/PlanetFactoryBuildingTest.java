@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -13,9 +13,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import de.spries.fleetcommander.FactorySite.NoFactorySlotsAvailableException;
-import de.spries.fleetcommander.Planet.NotPlayersOwnPlanetException;
-import de.spries.fleetcommander.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.universe.FactorySite;
+import de.spries.fleetcommander.model.universe.Planet;
+import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
+import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 
 public class PlanetFactoryBuildingTest {
 

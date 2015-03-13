@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -10,6 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.universe.Universe;
+import de.spries.fleetcommander.model.universe.UniverseGenerator;
 
 public class UniverseGeneratorTest {
 

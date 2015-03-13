@@ -1,12 +1,13 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import de.spries.fleetcommander.FactorySite.NoFactorySlotsAvailableException;
-import de.spries.fleetcommander.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
 
 public class Planet {
 

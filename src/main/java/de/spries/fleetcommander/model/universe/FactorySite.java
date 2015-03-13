@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 public class FactorySite {
 

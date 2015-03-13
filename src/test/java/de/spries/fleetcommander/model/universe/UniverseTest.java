@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.empty;
@@ -15,6 +15,11 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.universe.Planet;
+import de.spries.fleetcommander.model.universe.ShipFormation;
+import de.spries.fleetcommander.model.universe.Universe;
 
 public class UniverseTest {
 

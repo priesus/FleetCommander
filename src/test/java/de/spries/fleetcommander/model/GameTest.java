@@ -1,4 +1,4 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -6,7 +6,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.Game.NotEnoughPlayersException;
+import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.Game.NotEnoughPlayersException;
+import de.spries.fleetcommander.model.universe.Universe;
 
 public class GameTest {
 

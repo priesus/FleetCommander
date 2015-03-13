@@ -1,7 +1,9 @@
-package de.spries.fleetcommander;
+package de.spries.fleetcommander.model.universe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.spries.fleetcommander.model.player.Player;
 
 
 public class UniverseGenerator {
