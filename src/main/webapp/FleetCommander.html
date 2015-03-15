@@ -19,19 +19,32 @@
 			<div class="inner game-box">
 				<h1>Fleet Commander</h1>
 				
-				<p>
-					Description yet to come... Description yet to come... Description yet to come...
-					Description yet to come... Description yet to come... Description yet to come...
-					Description yet to come... Description yet to come... Description yet to come...
-					Description yet to come... Description yet to come... Description yet to come...
-					Description yet to come...
-				</p>
+				<div id="introduction">
+					<p>
+						Conquer the universe by growing your own fleet of space fighters
+						to invade other player's planets in this turn-based strategy game!
+					</p>
+					<p>
+						You win the game by defeating your opponent fleet commanders
+						by taking over their home planets!
+					</p>
+					
+					<button class="btn btn-default" type="button" onclick="startGame()">Play!</button>
+				</div>
 				
-				<button class="btn btn-default" type="button">Play!</button>
+				<div id="game">
+					<img src="http://placehold.it/500x380">
+				</div>
 			</div>
 		</div>
 	</div>
+	
+	<div id="copyright">
+		&copy; Stefan Pries 2015
+	</div>
 
+	<script src="resources/js/ui.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
 </body>
