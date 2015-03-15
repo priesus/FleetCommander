@@ -19,7 +19,7 @@
 			<div class="inner game-box">
 				<h1>Fleet Commander</h1>
 				
-				<div id="introduction">
+				<div ng-hide="isIngame">
 					<p>
 						Conquer the universe by growing your own fleet of space fighters
 						to invade other player's planets in this turn-based strategy game!
@@ -29,25 +29,29 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" type="button" ng-if="runningGame.url !==undefined">{{'Resume game'}}</button>
-					<button class="btn btn-default" type="button" onclick="startGame()">Start new game!</button>
+					<button class="btn btn-default" type="button" ng-click="isIngame=true" ng-if="runningGame.url !==undefined">{{'Resume game'}}</button>
+					<button class="btn btn-default" type="button" ng-click="isIngame=true">Start new game!</button>
 				</div>
 				
-				<div id="game">
-					<img src="http://placehold.it/500x380" width="100%" height="100%">
+				<div ng-show="isIngame">
+					<div>
+						<img src="http://placehold.it/500x380" width="100%" height="100%">
+					</div>
+					
+					<div>
+						<button class="btn btn-default" type="button" ng-click="isIngame=false">Quit game</button>
+					</div>
 				</div>
 				
-				<div id="copyright">
-					&copy; Stefan Pries 2015
-				</div>
+				<div id="copyright">&copy; Stefan Pries 2015</div>
 			</div>
 		</div>
 	</div>
 
-	<script src="resources/js/ui.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-animate.js"></script>
 	<script src="resources/js/controllers.js"></script>
 </body>
 </html>
