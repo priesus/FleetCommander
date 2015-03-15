@@ -30,35 +30,41 @@ html, body {
 }
 
 .inner {
-	margin-left: auto;
-	margin-right: auto;
+	margin: 5px auto 5px;
+	width: 98%;
+	max-width: 600px;
 }
 
 .game-box {
 	text-align: center;
 	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
 	vertical-align: middle;
-	padding: 30px;
+	padding: 30px 30px 0;
 	float: none;
-	max-width: 600px;
 	border-radius: 5px;
 	background: #f0f0f0;
 }
 
 h1 {
-	font-family: Silkscreen, Arial, sans-serif;
 	margin: 0 0 25px;
+}
+
+@media ( max-width :578px) {
+	h1 {
+		font-size: 30px;
+	}
 }
 
 #introduction {
 }
 
 #game {
+	height: 100%;
 	display: none;
 }
 
 #copyright {
-	position: absolute;
-	bottom: 0;
-	right: 0;
+	font-size: x-small;
+	margin-top: 16px;
+	text-align: right;
 }
