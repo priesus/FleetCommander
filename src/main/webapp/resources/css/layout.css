@@ -40,7 +40,7 @@ html, body {
 	vertical-align: middle;
 	padding: 30px;
 	float: none;
-	width: 600px;
+	max-width: 600px;
 	border-radius: 5px;
 	background: #f0f0f0;
 }
