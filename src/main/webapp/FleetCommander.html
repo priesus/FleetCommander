@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" ng-app="fleetCommanderApp">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="resources/css/layout.css">
 </head>
-<body>
+<body ng-controller="GamesCtrl">
 	<div class="outer">
 		<div class="middle">
 			<div class="inner game-box">
@@ -29,7 +29,8 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" type="button" onclick="startGame()">Play!</button>
+					<button class="btn btn-default" type="button" ng-if="runningGame.url !==undefined">{{'Resume game'}}</button>
+					<button class="btn btn-default" type="button" onclick="startGame()">Start new game!</button>
 				</div>
 				
 				<div id="game">
@@ -47,5 +48,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
+	<script src="resources/js/controllers.js"></script>
 </body>
 </html>
