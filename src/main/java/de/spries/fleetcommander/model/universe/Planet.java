@@ -17,8 +17,8 @@ public class Planet {
 
 	private static final int HOME_PLANET_STARTING_SHIPS = 6;
 
-	private final int coordinateX;
-	private final int coordinateY;
+	private final int x;
+	private final int y;
 	private final boolean isHomePlanet;
 	private Player inhabitant;
 	private int shipCount;
@@ -29,8 +29,8 @@ public class Planet {
 	 * Regular (yet uninhabited) planed
 	 */
 	public Planet(int x, int y) {
-		coordinateX = x;
-		coordinateY = y;
+		this.x = x;
+		this.y = y;
 		shipCount = 0;
 		isHomePlanet = false;
 	}
@@ -39,19 +39,19 @@ public class Planet {
 	 * Home planet of a player
 	 */
 	public Planet(int x, int y, Player inhabitant) {
-		coordinateX = x;
-		coordinateY = y;
+		this.x = x;
+		this.y = y;
 		shipCount = HOME_PLANET_STARTING_SHIPS;
 		this.inhabitant = inhabitant;
 		isHomePlanet = true;
 	}
 
 	public int getCoordinateX() {
-		return coordinateX;
+		return x;
 	}
 
 	public int getCoordinateY() {
-		return coordinateY;
+		return y;
 	}
 
 	public boolean isHomePlanetOf(Player player) {
@@ -81,13 +81,13 @@ public class Planet {
 	}
 
 	public double distanceTo(Planet other) {
-		int distanceX = coordinateX - other.getCoordinateX();
-		int distanceY = coordinateY - other.getCoordinateY();
+		int distanceX = x - other.getCoordinateX();
+		int distanceY = y - other.getCoordinateY();
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 
 	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-			NoFactorySlotsAvailableException {
+	NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
@@ -98,7 +98,7 @@ public class Planet {
 	}
 
 	public void sendShipsAway(int shipsToSend, Player player) throws NotPlayersOwnPlanetException,
-			NotEnoughShipsException {
+	NotEnoughShipsException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
