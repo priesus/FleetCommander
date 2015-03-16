@@ -1,39 +1,14 @@
-var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'ngAnimate' ]);
+var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderServices', 'ngAnimate' ]);
 
-fleetCommanderApp.controller('GamesCtrl', function($scope) {
+fleetCommanderApp.controller('GamesCtrl', [ 'Universe', function($scope) {
+
+} ]);
+
+fleetCommanderApp.controller('GamesCtrl', [ '$scope', 'Universe', function($scope, Universe) {
 	$scope.runningGame = {
-	  'url' : 'games/123/',
+	  'url' : 'game/100/',
 	  'userId' : 123456789,
-	  'universe' : {
-		  'planets' : [ {
-		    'x' : 0,
-		    'y' : 0
-		  }, {
-		    'x' : 5,
-		    'y' : 5
-		  }, {
-		    'x' : 5,
-		    'y' : 45
-		  }, {
-		    'x' : 45,
-		    'y' : 5
-		  }, {
-		    'x' : 45,
-		    'y' : 45
-		  }, {
-		    'x' : 25,
-		    'y' : 25
-		  }, {
-		    'x' : 0,
-		    'y' : 99
-		  }, {
-		    'x' : 99,
-		    'y' : 0
-		  }, {
-		    'x' : 99,
-		    'y' : 99
-		  } ]
-	  }
+	  'universe' : Universe.get()
 	};
 	$scope.isIngame = $scope.runningGame.universe !== undefined;
-});
+} ]);
