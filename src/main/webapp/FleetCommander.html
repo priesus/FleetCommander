@@ -34,12 +34,15 @@
 				</div>
 				
 				<div ng-show="isIngame">
-					<div>
-						<img src="http://placehold.it/500x380" width="100%" height="100%">
+					<div class="game-menu">
+						<button class="btn btn-default" type="button" ng-click="isIngame=false">Quit game</button>
 					</div>
 					
-					<div>
-						<button class="btn btn-default" type="button" ng-click="isIngame=false">Quit game</button>
+					<div id="universe">
+						<div class="planet" ng-repeat="planet in runningGame.universe.planets"
+								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
+							<img src="http://placehold.it/16x16">
+						</div>
 					</div>
 				</div>
 				

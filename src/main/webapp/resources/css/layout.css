@@ -60,3 +60,21 @@ h1 {
 	margin-top: 16px;
 	text-align: right;
 }
+
+
+/* Game screen */
+
+#universe {
+	height: 350px;
+	width: 540px;
+	background-color: black;
+	position: relative;
+}
+
+.planet {
+	position: absolute;
+}
+
+.game-menu {
+	margin-bottom: 15px;
+}
