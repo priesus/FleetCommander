@@ -25,32 +25,28 @@ public class Planet {
 
 	private FactorySite factorySite = new FactorySite();
 
-	/**
-	 * Regular (yet uninhabited) planed
-	 */
 	public Planet(int x, int y) {
-		this.x = x;
-		this.y = y;
-		shipCount = 0;
-		isHomePlanet = false;
+		this(x, y, null);
 	}
 
-	/**
-	 * Home planet of a player
-	 */
 	public Planet(int x, int y, Player inhabitant) {
 		this.x = x;
 		this.y = y;
-		shipCount = HOME_PLANET_STARTING_SHIPS;
-		this.inhabitant = inhabitant;
-		isHomePlanet = true;
+		if (inhabitant != null) {
+			shipCount = HOME_PLANET_STARTING_SHIPS;
+			this.inhabitant = inhabitant;
+			isHomePlanet = true;
+		} else {
+			shipCount = 0;
+			isHomePlanet = false;
+		}
 	}
 
-	public int getCoordinateX() {
+	public int getX() {
 		return x;
 	}
 
-	public int getCoordinateY() {
+	public int getY() {
 		return y;
 	}
 
@@ -81,8 +77,8 @@ public class Planet {
 	}
 
 	public double distanceTo(Planet other) {
-		int distanceX = x - other.getCoordinateX();
-		int distanceY = y - other.getCoordinateY();
+		int distanceX = x - other.getX();
+		int distanceY = y - other.getY();
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 

@@ -35,8 +35,8 @@ public class PlanetTest {
 	@Test
 	public void newPlanetHasCoordinates() {
 		Planet planet = new Planet(10, 20);
-		assertThat(planet.getCoordinateX(), is(10));
-		assertThat(planet.getCoordinateY(), is(20));
+		assertThat(planet.getX(), is(10));
+		assertThat(planet.getY(), is(20));
 	}
 
 	@Test
