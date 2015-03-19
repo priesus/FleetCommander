@@ -1,37 +1,36 @@
 var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderServices', 'ngAnimate', 'ngCookies' ]);
 
-fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'Universe', function($scope, $cookies, Universe) {
+fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService',
+    function($scope, $cookies, GameService) {
 
-	var savedGameUrl = $cookies.runningGameUrl;
+	    $scope.isIngame = false;
 
-	if (savedGameUrl !== undefined) {
-		$scope.runningGame = {
-			'url' : savedGameUrl,
-		};
-	}
-	$scope.isIngame = false;
+	    $scope.hasActiveGame = function() {
+		    return $cookies.runningGameId !== undefined;
+	    };
 
-	$scope.hasActiveGame = function() {
-		return $scope.runningGame !== undefined;
-	};
+	    $scope.startGame = function() {
+		    $scope.runningGame = GameService.get({
+			    // TODO implement POST as create method
+			    gameId : 1234567890
+		    }, function() {
+			    $cookies.runningGameId = $scope.runningGame.id;
+		    });
+		    $scope.isIngame = true;
 
-	$scope.startGame = function() {
-		$scope.runningGame = {};
-		$scope.runningGame.universe = Universe.get();
-		$scope.isIngame = true;
+	    };
 
-		$cookies.runningGameUrl = 'game/100/';
-	};
+	    $scope.resumeGame = function() {
+		    $scope.runningGame = GameService.get({
+			    gameId : $cookies.runningGameId
+		    });
+		    $scope.isIngame = true;
+	    };
 
-	$scope.resumeGame = function() {
-		$scope.runningGame.universe = Universe.get();
-		$scope.isIngame = true;
-	};
-
-	$scope.quitGame = function() {
-		$scope.runningGame = undefined;
-		$scope.isIngame = false;
-
-		delete $cookies.runningGameUrl;
-	};
-} ]);
+	    $scope.quitGame = function() {
+		    $scope.runningGame.$delete();
+		    $scope.isIngame = false;
+		    delete $scope.runningGame;
+		    delete $cookies.runningGameId;
+	    };
+    } ]);

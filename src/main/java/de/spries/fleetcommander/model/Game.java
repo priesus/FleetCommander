@@ -10,10 +10,12 @@ public class Game {
 		// Nothing to do
 	}
 
+	private int id;
 	private ArrayList<Player> players;
 	private Universe universe;
 
 	public Game() {
+		id = 123;
 		players = new ArrayList<>();
 	}
 
@@ -35,6 +37,14 @@ public class Game {
 	public void endTurn() {
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public Universe getUniverse() {
+		return universe;
 	}
 
 	public void setUniverse(Universe universe) {
