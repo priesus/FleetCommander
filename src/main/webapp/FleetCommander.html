@@ -29,20 +29,21 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" type="button" ng-click="isIngame=true" ng-if="runningGame.url !==undefined">{{'Resume game'}}</button>
-					<button class="btn btn-default" type="button" ng-click="isIngame=true">Start new game!</button>
+					<button class="btn btn-default" type="button" ng-click="resumeGame()" ng-if="hasActiveGame()">{{'Resume game'}}</button>
+					<button class="btn btn-default" type="button" ng-click="startGame()">Start new game!</button>
 				</div>
 				
 				<div ng-show="isIngame">
 					<div class="game-menu">
-						<button class="btn btn-default" type="button" ng-click="isIngame=false">Quit game</button>
+						<button class="btn btn-default" type="button">End turn</button>
+						<button class="btn btn-default" type="button" ng-click="quitGame()">Quit game</button>
 					</div>
 					
 					<div id="universe">
 						<div class="planet" ng-repeat="planet in runningGame.universe.planets"
 								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
-							<img src="http://placehold.it/16/E8117F&text=H" ng-if="planet.inhabited==true">
-							<img src="http://placehold.it/16&text=P" ng-if="planet.inhabited!=true">
+							<img src="http://placehold.it/16/E8117F/000000&text={{planet.shipCount}}" ng-if="planet.inhabited==true">
+							<img src="http://placehold.it/16/AAAAAA/000000&text=P" ng-if="planet.inhabited==false">
 						</div>
 					</div>
 				</div>
@@ -54,9 +55,10 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-animate.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-resource.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-cookies.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-resource.js"></script>
 	<script src="resources/js/controllers.js"></script>
 	<script src="resources/js/services.js"></script>
 </body>
