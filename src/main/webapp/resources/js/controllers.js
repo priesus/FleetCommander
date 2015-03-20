@@ -12,15 +12,16 @@ fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService',
 	    $scope.startGame = function() {
 		    $scope.runningGame = GameService.start({}, function() {
 			    $cookies.runningGameId = $scope.runningGame.id;
+			    $scope.isIngame = true;
 		    });
-		    $scope.isIngame = true;
 	    };
 
 	    $scope.resumeGame = function() {
 		    $scope.runningGame = GameService.get({
 			    gameId : $cookies.runningGameId
+		    }, function() {
+			    $scope.isIngame = true;
 		    });
-		    $scope.isIngame = true;
 	    };
 
 	    $scope.quitGame = function() {

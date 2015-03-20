@@ -29,14 +29,14 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" type="button" ng-click="resumeGame()" ng-if="hasActiveGame()">{{'Resume game'}}</button>
-					<button class="btn btn-default" type="button" ng-click="startGame()">Start new game!</button>
+					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()">{{'Resume game'}}</button>
+					<button class="btn btn-default" ng-click="startGame()">Start new game!</button>
 				</div>
 				
 				<div ng-show="isIngame">
 					<div class="game-menu">
-						<button class="btn btn-default" type="button">End turn</button>
-						<button class="btn btn-default" type="button" ng-click="quitGame()">Quit game</button>
+						<button class="btn btn-default">End turn</button>
+						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					
 					<div id="universe">
