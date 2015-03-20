@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.Game;
 import de.spries.fleetcommander.model.Game.NotEnoughPlayersException;
 import de.spries.fleetcommander.model.universe.Universe;
 
@@ -18,8 +17,8 @@ public class GameTest {
 
 	@Before
 	public void setUp() throws Exception {
-		game = new Game();
-		startedGame = new Game();
+		game = new Game(1);
+		startedGame = new Game(1);
 		startedGame.createHumanPlayer("John");
 		universe = mock(Universe.class);
 		startedGame.setUniverse(universe);
