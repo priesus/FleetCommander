@@ -10,14 +10,10 @@ fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService',
 	    };
 
 	    $scope.startGame = function() {
-		    $scope.runningGame = GameService.get({
-			    // TODO implement POST as create method
-			    gameId : 1234567890
-		    }, function() {
+		    $scope.runningGame = GameService.start({}, function() {
 			    $cookies.runningGameId = $scope.runningGame.id;
 		    });
 		    $scope.isIngame = true;
-
 	    };
 
 	    $scope.resumeGame = function() {

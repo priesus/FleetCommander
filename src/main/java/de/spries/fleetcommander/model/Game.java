@@ -14,8 +14,8 @@ public class Game {
 	private ArrayList<Player> players;
 	private Universe universe;
 
-	public Game() {
-		id = 123;
+	public Game(int id) {
+		this.id = id;
 		players = new ArrayList<>();
 	}
 
