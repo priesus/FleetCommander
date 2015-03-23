@@ -40,32 +40,36 @@
 					</div>
 					
 					<div id="universe">
-						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="openPlanetMenu(planet)"
+						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
 							<img src="http://placehold.it/16/E8117F/000000&text={{planet.shipCount}}" ng-if="planet.inhabited==true">
 							<img src="http://placehold.it/16/AAAAAA/000000&text=P" ng-if="planet.inhabited==false">
 						</div>
 						
+						<div id="selectPlanetNote" ng-show="destinationSelectionActive">
+							Select a destination planet...
+						</div>
+						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
 							<div id="planetMenu"class="inner form-horizontal">
-							<a id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" class="btn btn-default">X</a>
-							<form name="sendShipsForm">
-								<div class="form-group">
-									<h4>Send ships to other planets</h4>
-								</div>
-								<div class="form-group">
-									<button ng-click="setShipCount(0)" class="btn btn-default">none</button>
-									<button ng-click="setShipCount(shipCount-1)" class="btn btn-default">-</button>
-									<input type="number" name="ships" ng-model="shipCount" min="0" max="{{selectedPlanet.shipCount}}">
-									<button ng-click="setShipCount(shipCount+1)" class="btn btn-default">+</button>
-									<button ng-click="setShipCount(selectedPlanet.shipCount)" class="btn btn-default">all</button>
-								</div>
-								<div class="form-group">
-									<button class="btn btn-default" ng-click="showPlanetMenu=false" ng-disabled="!sendShipsForm.ships.$valid">
-										Send {{shipCount}} ships to...
-									</button>
-								</div>
-							</form>
+								<a id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" class="btn btn-default">X</a>
+								<form name="sendShipsForm">
+									<div class="form-group">
+										<h4>Send ships to other planets</h4>
+									</div>
+									<div class="form-group">
+										<button ng-click="setShipCount(0)" ng-disabled="shipCount==0" class="btn btn-default">none</button>
+										<button ng-click="setShipCount(shipCount-1)" ng-disabled="shipCount==0" class="btn btn-default">-</button>
+										<input type="number" name="ships" ng-model="shipCount" min="0" max="{{selectedOriginPlanet.shipCount}}">
+										<button ng-click="setShipCount(shipCount+1)" ng-disabled="shipCount==selectedOriginPlanet.shipCount" class="btn btn-default">+</button>
+										<button ng-click="setShipCount(selectedOriginPlanet.shipCount)" ng-disabled="shipCount==selectedOriginPlanet.shipCount" class="btn btn-default">all</button>
+									</div>
+									<div class="form-group">
+										<button class="btn btn-default" ng-click="shipDestinationSelection()" ng-disabled="shipCount==0 || !sendShipsForm.ships.$valid">
+											Send {{shipCount}} ships to...
+										</button>
+									</div>
+								</form>
 							</div>
 						</div></div>
 					</div>

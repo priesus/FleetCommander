@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 
 import de.spries.fleetcommander.model.Game;
 import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.universe.NotEnoughShipsException;
+import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 import de.spries.fleetcommander.model.universe.UniverseGenerator;
 
 @Path("")
@@ -50,5 +52,26 @@ public class GameService {
 	@Path("games/{id:\\d+}")
 	public void quitGame(@PathParam("id") int id) {
 		gameStore.remove(id);
+	}
+
+	// TODO accept parameters as JSON
+	@POST
+	@Path("games/{id:\\d+}/universe/travellingShipFormations/{ships:\\d+}/{origin:\\d+}/{dest:\\d+}")
+	public void sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
+			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId) {
+
+		Game game = gameStore.get(gameId);
+		if (game != null) {
+			// TODO identify player
+			Player player = game.getPlayers().get(0);
+			try {
+				game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
+			} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		// TODO Error handling: game doesn't exist
+		// TODO error handling: game is not the player's own game
 	}
 }
