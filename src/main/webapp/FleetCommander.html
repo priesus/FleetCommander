@@ -42,8 +42,8 @@
 					<div id="universe">
 						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
-							<img src="http://placehold.it/16/E8117F/000000&text={{planet.shipCount}}" ng-if="planet.inhabited==true">
-							<img src="http://placehold.it/16/AAAAAA/000000&text=P" ng-if="planet.inhabited==false">
+							<img class="img-circle" src="http://placehold.it/16/E8117F/000000&text={{planet.shipCount}}" ng-if="planet.inhabited==true">
+							<img class="img-circle" src="http://placehold.it/16/AAAAAA/000000&text=P" ng-if="planet.inhabited==false">
 						</div>
 						
 						<div id="selectPlanetNote" ng-show="destinationSelectionActive">
