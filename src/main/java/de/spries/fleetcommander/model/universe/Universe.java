@@ -60,7 +60,14 @@ public class Universe {
 		travellingShipFormations.clear();
 	}
 
-	public void sendShips(int shipCount, Planet origin, Planet destination, Player player)
+	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId, Player player)
+			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
+		Planet origin = getPlanetForId(originPlanetId);
+		Planet destination = getPlanetForId(destinationPlanetId);
+		sendShips(shipCount, origin, destination, player);
+	}
+
+	protected void sendShips(int shipCount, Planet origin, Planet destination, Player player)
 			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
 		if (!planets.contains(origin) || !planets.contains(destination)) {
 			throw new IllegalArgumentException("origin & destination must be contained in universe");
@@ -80,6 +87,10 @@ public class Universe {
 		} else {
 			newShipFormation.join(joinableFormation);
 		}
+	}
+
+	protected Planet getPlanetForId(int originPlanetId) {
+		return planets.parallelStream().filter((p) -> p.getId() == originPlanetId).findFirst().get();
 	}
 
 	private ShipFormation getJoinableShipFormation(ShipFormation newShipFormation) {

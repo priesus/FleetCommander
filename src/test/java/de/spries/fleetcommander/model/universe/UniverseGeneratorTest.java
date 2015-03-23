@@ -36,4 +36,13 @@ public class UniverseGeneratorTest {
 		Universe universe = UniverseGenerator.generate(JOHN_ONLY);
 		universe.getHomePlanetOf(OTHER_PLAYER);
 	}
+
+	@Test
+	public void everyplanetHasAUniqueId() throws Exception {
+		Universe universe = UniverseGenerator.generate(JOHN_ONLY);
+		int planetCount = universe.getPlanets().size();
+		for (int i = 0; i < planetCount; i++) {
+			assertThat(universe.getPlanetForId(i), is(notNullValue()));
+		}
+	}
 }

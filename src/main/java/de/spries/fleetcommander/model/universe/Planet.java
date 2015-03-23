@@ -17,6 +17,7 @@ public class Planet {
 
 	private static final int HOME_PLANET_STARTING_SHIPS = 6;
 
+	private int id;
 	private final int x;
 	private final int y;
 	private final boolean isHomePlanet;
@@ -40,6 +41,14 @@ public class Planet {
 			shipCount = 0;
 			isHomePlanet = false;
 		}
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getX() {
@@ -83,7 +92,7 @@ public class Planet {
 	}
 
 	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-	NoFactorySlotsAvailableException {
+			NoFactorySlotsAvailableException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}
@@ -94,7 +103,7 @@ public class Planet {
 	}
 
 	public void sendShipsAway(int shipsToSend, Player player) throws NotPlayersOwnPlanetException,
-	NotEnoughShipsException {
+			NotEnoughShipsException {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}

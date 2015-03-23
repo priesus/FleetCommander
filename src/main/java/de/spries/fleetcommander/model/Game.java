@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.Universe;
@@ -49,6 +50,10 @@ public class Game {
 
 	public void setUniverse(Universe universe) {
 		this.universe = universe;
+	}
+
+	public List<Player> getPlayers() {
+		return new ArrayList<>(players);
 	}
 
 }

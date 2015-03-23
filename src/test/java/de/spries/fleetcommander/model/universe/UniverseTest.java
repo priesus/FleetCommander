@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mock;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,12 +18,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.universe.Planet;
-import de.spries.fleetcommander.model.universe.ShipFormation;
-import de.spries.fleetcommander.model.universe.Universe;
 
 public class UniverseTest {
 
+	private static final int INEXISTENT_PLANET = 123456789;
 	private Player john;
 	private Player jack;
 	private Planet johnsHomePlanet;
@@ -37,6 +36,9 @@ public class UniverseTest {
 		johnsHomePlanet = new Planet(1, 1, john);
 		jacksHomePlanet = new Planet(5, 1, jack);
 		uninhabitedPlanet = new Planet(3, 3);
+		johnsHomePlanet.setId(0);
+		jacksHomePlanet.setId(1);
+		uninhabitedPlanet.setId(2);
 		universe = new Universe(Arrays.asList(johnsHomePlanet, uninhabitedPlanet, jacksHomePlanet));
 	}
 
@@ -133,6 +135,24 @@ public class UniverseTest {
 		universe.runShipTravellingCycle();
 		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
 		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+	}
+
+	@Test
+	public void planetsAreIdentifiedById() throws Exception {
+		universe.sendShips(1, johnsHomePlanet.getId(), uninhabitedPlanet.getId(), john);
+		universe.runShipTravellingCycle();
+		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
+		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void originPlanetIsInvalidId() throws Exception {
+		universe.sendShips(1, INEXISTENT_PLANET, uninhabitedPlanet.getId(), john);
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void destinationPlanetIsInvalidId() throws Exception {
+		universe.sendShips(1, johnsHomePlanet.getId(), INEXISTENT_PLANET, john);
 	}
 
 	@Test
