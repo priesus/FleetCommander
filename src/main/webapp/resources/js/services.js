@@ -4,12 +4,19 @@ fleetCommanderServices.factory('GameService', [ '$resource', function($resource)
 	return $resource('rest/games/:gameId', {
 		gameId : '@id'
 	}, {
-	  start : {
-		  method : 'POST'
-	  },
-	  sendShips : {
-		  method : 'POST'
-	  }
+		start : {
+			method : 'POST'
+		}
+	});
+} ]);
+
+fleetCommanderServices.factory('TurnService', [ '$resource', function($resource) {
+	return $resource('rest/games/:gameId/turns', {
+		gameId : '@gameId'
+	}, {
+		endTurn : {
+			method : 'POST'
+		}
 	});
 } ]);
 

@@ -35,7 +35,7 @@
 				
 				<div ng-show="isIngame">
 					<div class="game-menu">
-						<button class="btn btn-default">End turn</button>
+						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress">End turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					

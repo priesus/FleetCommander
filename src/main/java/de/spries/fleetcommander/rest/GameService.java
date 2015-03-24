@@ -54,6 +54,19 @@ public class GameService {
 		gameStore.remove(id);
 	}
 
+	@POST
+	@Path("games/{id:\\d+}/turns")
+	public void endTurn(@PathParam("id") int gameId) {
+
+		Game game = gameStore.get(gameId);
+		if (game != null) {
+			// TODO identify player
+			game.endTurn();
+		}
+		// TODO Error handling: game doesn't exist
+		// TODO error handling: game is not the player's own game
+	}
+
 	// TODO accept parameters as JSON
 	@POST
 	@Path("games/{id:\\d+}/universe/travellingShipFormations/{ships:\\d+}/{origin:\\d+}/{dest:\\d+}")

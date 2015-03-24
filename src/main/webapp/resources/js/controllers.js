@@ -1,11 +1,12 @@
 var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderServices', 'ngAnimate', 'ngCookies' ]);
 
-fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService', 'ShipService',
-    function($scope, $cookies, GameService, ShipService) {
+fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService', 'TurnService', 'ShipService',
+    function($scope, $cookies, GameService, TurnService, ShipService) {
 
 	    $scope.isIngame = false;
 	    $scope.showPlanetMenu = false;
 	    $scope.destinationSelectionActive = false;
+	    $scope.blockingActionInProgress = false;
 
 	    $scope.hasActiveGame = function() {
 		    return $cookies.runningGameId !== undefined;
@@ -23,6 +24,18 @@ fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService',
 			    gameId : $cookies.runningGameId
 		    }, function() {
 			    $scope.isIngame = true;
+		    });
+	    };
+
+	    $scope.endTurn = function() {
+		    $scope.blockingActionInProgress = true;
+		    TurnService.endTurn({
+			    gameId : $scope.runningGame.id
+		    }, function() {
+			    $scope.reloadGame();
+			    $scope.blockingActionInProgress = false;
+		    }, function() {
+			    $scope.blockingActionInProgress = false;
 		    });
 	    };
 
