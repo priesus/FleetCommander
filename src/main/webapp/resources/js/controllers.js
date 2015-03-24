@@ -35,11 +35,13 @@ fleetCommanderApp.controller('GamesCtrl', [ '$scope', '$cookies', 'GameService',
 
 	    $scope.clickPlanetHandler = function(planet) {
 		    if (!$scope.destinationSelectionActive && planet.inhabited) {
+			    // Open planet menu
 			    $scope.selectedOriginPlanet = planet;
 			    $scope.showPlanetMenu = true;
-			    $scope.shipCount = 0;
+			    $scope.setShipCount(1);
 
 		    } else if ($scope.destinationSelectionActive) {
+			    // Send ships from previously selected planet to this planet
 			    ShipService.sendShips({
 			      gameId : $scope.runningGame.id,
 			      shipCount : $scope.shipCount,
