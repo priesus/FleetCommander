@@ -20,8 +20,8 @@ public class GameTest {
 
 	@Before
 	public void setUp() throws Exception {
-		game = new Game(1);
-		startedGame = new Game(1);
+		game = new Game();
+		startedGame = new Game();
 		startedGame.createHumanPlayer("John");
 		universe = mock(Universe.class);
 		startedGame.setUniverse(universe);

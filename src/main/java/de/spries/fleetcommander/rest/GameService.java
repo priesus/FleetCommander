@@ -1,8 +1,6 @@
 package de.spries.fleetcommander.rest;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,27 +15,20 @@ import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.NotEnoughShipsException;
 import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 import de.spries.fleetcommander.model.universe.UniverseGenerator;
+import de.spries.fleetcommander.persistence.GameStore;
 
 @Path("")
 public class GameService {
-
-	private static Map<Integer, Game> gameStore = new HashMap<>();
-	private static int nextId = 1;
 
 	@POST
 	@Path("games")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Game startGame() {
-		int gameId;
-		synchronized (this) {
-			gameId = nextId;
-			gameStore.put(nextId, null);
-			nextId++;
-		}
-		Game game = new Game(gameId);
+		Game game = new Game();
+		int gameId = GameStore.INSTANCE.create(game);
+		game.setId(gameId);
 		Player p = game.createHumanPlayer("Player 1");
 		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p)));
-		gameStore.put(gameId, game);
 		return game;
 	}
 
@@ -45,20 +36,20 @@ public class GameService {
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Game getGame(@PathParam("id") int id) {
-		return gameStore.get(id);
+		return GameStore.INSTANCE.get(id);
 	}
 
 	@DELETE
 	@Path("games/{id:\\d+}")
 	public void quitGame(@PathParam("id") int id) {
-		gameStore.remove(id);
+		GameStore.INSTANCE.delete(id);
 	}
 
 	@POST
 	@Path("games/{id:\\d+}/turns")
 	public void endTurn(@PathParam("id") int gameId) {
 
-		Game game = gameStore.get(gameId);
+		Game game = GameStore.INSTANCE.get(gameId);
 		if (game != null) {
 			// TODO identify player
 			game.endTurn();
@@ -73,7 +64,7 @@ public class GameService {
 	public void sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
 			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId) {
 
-		Game game = gameStore.get(gameId);
+		Game game = GameStore.INSTANCE.get(gameId);
 		if (game != null) {
 			// TODO identify player
 			Player player = game.getPlayers().get(0);
