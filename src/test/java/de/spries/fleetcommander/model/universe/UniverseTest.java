@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
@@ -14,7 +13,6 @@ import java.util.NoSuchElementException;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.player.Player;
@@ -153,13 +151,5 @@ public class UniverseTest {
 	@Test(expected = NoSuchElementException.class)
 	public void destinationPlanetIsInvalidId() throws Exception {
 		universe.sendShips(1, johnsHomePlanet.getId(), INEXISTENT_PLANET, john);
-	}
-
-	@Test
-	@Ignore("not implemented")
-	public void test() {
-		// TODO attack planet
-		// TODO various distances
-		fail("Not implemented");
 	}
 }
