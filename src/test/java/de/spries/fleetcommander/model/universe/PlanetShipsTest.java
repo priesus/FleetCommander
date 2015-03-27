@@ -1,7 +1,7 @@
 package de.spries.fleetcommander.model.universe;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -9,9 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.universe.FactorySite;
-import de.spries.fleetcommander.model.universe.NotEnoughShipsException;
-import de.spries.fleetcommander.model.universe.Planet;
 import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 
 public class PlanetShipsTest {

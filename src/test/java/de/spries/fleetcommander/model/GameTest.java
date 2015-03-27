@@ -1,6 +1,6 @@
 package de.spries.fleetcommander.model;
 
-import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
