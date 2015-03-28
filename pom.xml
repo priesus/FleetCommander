@@ -104,6 +104,9 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.2.10.v20150310</version>
 				<configuration>
+					<webAppConfig>
+						<defaultsDescriptor>src/main/resources/jetty-maven-plugin-webdefault.xml</defaultsDescriptor>
+					</webAppConfig>
 					<scanIntervalSeconds>2</scanIntervalSeconds>
 					<stopPort>8005</stopPort>
 					<stopKey>STOP</stopKey>
