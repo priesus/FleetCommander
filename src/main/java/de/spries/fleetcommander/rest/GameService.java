@@ -25,6 +25,8 @@ import de.spries.fleetcommander.persistence.GameStore;
 @Path("")
 public class GameService {
 
+	private static final String AUTH_TOKEN_PREFIX = "Bearer ";
+
 	@POST
 	@Path("games")
 	public Response createGame() {
@@ -34,14 +36,14 @@ public class GameService {
 		String token = GameAuthenticator.INSTANCE.createAuthToken(gameId);
 
 		return getNoCacheResponseBuilder(Response.Status.CREATED).header("Location", "/rest/games/" + gameId)
-				.entity("{\"gameAuthToken\": \"" + token + "\"}").build();
+				.entity("{\"gameAuthToken\": \"" + token + "\", \"gameId\": \"" + gameId + "\"}").build();
 	}
 
 	@GET
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString("Authorization");
+		String token = extractToken(httpHeaders);
 		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(id, token)) {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
@@ -53,7 +55,7 @@ public class GameService {
 	@DELETE
 	@Path("games/{id:\\d+}")
 	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString("Authorization");
+		String token = extractToken(httpHeaders);
 
 		try {
 			GameAuthenticator.INSTANCE.deleteAuthToken(id, token);
@@ -67,7 +69,7 @@ public class GameService {
 	@POST
 	@Path("games/{id:\\d+}/turns")
 	public Response endTurn(@PathParam("id") int gameId, @Context HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString("Authorization");
+		String token = extractToken(httpHeaders);
 		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
@@ -84,7 +86,7 @@ public class GameService {
 	public Response sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
 			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId,
 			@Context HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString("Authorization");
+		String token = extractToken(httpHeaders);
 		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
@@ -99,6 +101,14 @@ public class GameService {
 		} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
+	}
+
+	private String extractToken(HttpHeaders httpHeaders) {
+		String token = httpHeaders.getHeaderString("Authorization");
+		if (token.startsWith(AUTH_TOKEN_PREFIX)) {
+			return token.substring(AUTH_TOKEN_PREFIX.length());
+		}
+		return null;
 	}
 
 	private Response.ResponseBuilder getNoCacheResponseBuilder(Response.Status status) {

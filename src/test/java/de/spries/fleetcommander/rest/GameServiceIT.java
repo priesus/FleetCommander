@@ -95,7 +95,7 @@ public class GameServiceIT {
 	}
 
 	private RequestSpecification whenAuthorized() {
-		return when().header("Authorization", gameAuthToken);
+		return when().header("Authorization", "Bearer " + gameAuthToken);
 	}
 
 }
