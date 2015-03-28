@@ -104,7 +104,7 @@ public class GameService {
 
 	private String extractToken(HttpHeaders httpHeaders) {
 		String token = httpHeaders.getHeaderString("Authorization");
-		if (token.startsWith(AUTH_TOKEN_PREFIX)) {
+		if (token != null && token.startsWith(AUTH_TOKEN_PREFIX)) {
 			return token.substring(AUTH_TOKEN_PREFIX.length());
 		}
 		return null;
