@@ -39,13 +39,23 @@
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar">
-						Credits: {{runningGame.players[0].credits}}
+						<span>{{runningGame.players[0].name}}</span>
+						<span class="pull-right">Credits: {{runningGame.players[0].credits}}</span>
 					</div>
 					<div id="universe">
 						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
-								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
-							<img class="img-circle" src="http://placehold.it/16/E8117F/000000&text={{planet.shipCount}}" ng-if="planet.inhabited==true">
-							<img class="img-circle" src="http://placehold.it/16/AAAAAA/000000&text=P" ng-if="planet.inhabited==false">
+								style="top: {{planet.y / 100 * 334 - 5}}px; left: {{planet.x / 100 * 524 - 6}}px;">
+							
+							<div class="planet-icon">
+								<span class="glyphicon glyphicon-globe"></span>
+							</div>
+							
+							<div class="planet-annotation planet-annotation-top-left" ng-if="planet.inhabited==true">
+								<span class="glyphicon glyphicon-flag"></span>
+							</div>
+							<div class="planet-annotation planet-annotation-bottom-right" ng-if="planet.shipCount>0">
+								{{planet.shipCount}}
+							</div>
 						</div>
 						
 						<div id="selectPlanetNote" ng-show="destinationSelectionActive">

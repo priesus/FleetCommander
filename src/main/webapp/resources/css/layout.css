@@ -62,7 +62,9 @@ h1 {
 
 /* Game screen */
 .game-menu {
+	
 }
+
 .game-status-bar {
 	text-align: left;
 }
@@ -76,6 +78,45 @@ h1 {
 
 .planet {
 	position: absolute;
+	color: #F8F8F8;
+	width: 25px;
+	height: 25px;
+	vertical-align: center;
+}
+
+.planet-icon {
+	width: 15px;
+	height: 15px;
+	margin: 5px;
+}
+
+.planet-annotation {
+	color: #EEE;
+	font-size: 8px;
+}
+
+.planet-annotation-top-left {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.planet-annotation-top-right {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.planet-annotation-bottom-left {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.planet-annotation-bottom-right {
+	position: absolute;
+	bottom: 0;
+	right: 0;
 }
 
 #selectPlanetNote {
