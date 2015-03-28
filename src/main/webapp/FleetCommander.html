@@ -38,7 +38,9 @@
 						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress">End turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
-					
+					<div class="game-status-bar">
+						Credits: {{runningGame.players[0].credits}}
+					</div>
 					<div id="universe">
 						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334}}px; left: {{planet.x / 100 * 524 + 2}}px;">
@@ -52,7 +54,7 @@
 						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
 							<div id="planetMenu"class="inner form-horizontal">
-								<a id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" class="btn btn-default">X</a>
+								<button id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 								<form name="sendShipsForm">
 									<div class="form-group">
 										<h4>Send ships to other planets</h4>
