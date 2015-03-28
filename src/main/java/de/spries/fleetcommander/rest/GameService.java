@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.rest;
 
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import javax.ws.rs.DELETE;
@@ -26,7 +27,6 @@ public class GameService {
 
 	@POST
 	@Path("games")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response createGame() {
 		Game game = createSinglePlayerGame();
 		int gameId = GameStore.INSTANCE.create(game);
@@ -46,19 +46,18 @@ public class GameService {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
 
-		Game entity = GameStore.INSTANCE.get(id);
-		if (entity == null) {
-			return getNoCacheResponseBuilder(Response.Status.NOT_FOUND).build();
-		}
-
-		return getNoCacheResponseBuilder(Response.Status.OK).entity(entity).build();
+		Game game = GameStore.INSTANCE.get(id);
+		return getNoCacheResponseBuilder(Response.Status.OK).entity(game).build();
 	}
 
 	@DELETE
 	@Path("games/{id:\\d+}")
 	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
 		String token = httpHeaders.getHeaderString("Authorization");
-		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(id, token)) {
+
+		try {
+			GameAuthenticator.INSTANCE.deleteAuthToken(id, token);
+		} catch (GeneralSecurityException e) {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
 		GameStore.INSTANCE.delete(id);
@@ -82,22 +81,24 @@ public class GameService {
 	// TODO accept parameters as JSON
 	@POST
 	@Path("games/{id:\\d+}/universe/travellingShipFormations/{ships:\\d+}/{origin:\\d+}/{dest:\\d+}")
-	public void sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
-			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId) {
+	public Response sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
+			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId,
+			@Context HttpHeaders httpHeaders) {
+		String token = httpHeaders.getHeaderString("Authorization");
+		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
+			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
+		}
 
 		Game game = GameStore.INSTANCE.get(gameId);
-		if (game != null) {
-			// TODO identify player
-			Player player = game.getPlayers().get(0);
-			try {
-				game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
-			} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		game.endTurn();
+
+		Player player = game.getPlayers().get(0);
+		try {
+			game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
+			return getNoCacheResponseBuilder(Response.Status.OK).build();
+		} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
+			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
-		// TODO Error handling: game doesn't exist
-		// TODO error handling: game is not the player's own game
 	}
 
 	private Response.ResponseBuilder getNoCacheResponseBuilder(Response.Status status) {

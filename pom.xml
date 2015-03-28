@@ -5,7 +5,7 @@
 	<groupId>de.spries</groupId>
 	<artifactId>fleetcommander</artifactId>
 	<version>0.1.0</version>
-	
+
 	<packaging>war</packaging>
 
 	<name>Fleet Commander</name>
@@ -104,7 +104,7 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.2.3.v20140905</version>
 				<configuration>
-                    <scanIntervalSeconds>2</scanIntervalSeconds>
+					<scanIntervalSeconds>2</scanIntervalSeconds>
 					<httpConnector>
 						<port>80</port>
 					</httpConnector>
