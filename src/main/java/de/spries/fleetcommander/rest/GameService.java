@@ -92,7 +92,6 @@ public class GameService {
 		}
 
 		Game game = GameStore.INSTANCE.get(gameId);
-		game.endTurn();
 
 		Player player = game.getPlayers().get(0);
 		try {
