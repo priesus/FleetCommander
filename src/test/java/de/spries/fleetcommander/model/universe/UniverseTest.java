@@ -1,17 +1,18 @@
 package de.spries.fleetcommander.model.universe;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,20 +58,18 @@ public class UniverseTest {
 		assertThat(universe.getPlanets(), hasSize(3));
 	}
 
+	@Test
+	public void universeHasHomePlanets() throws Exception {
+		Collection<Planet> homePlanets = universe.getHomePlanets();
+		assertThat(homePlanets, hasItem(johnsHomePlanet));
+		assertThat(homePlanets, hasItem(jacksHomePlanet));
+		assertThat(homePlanets, hasSize(2));
+	}
+
 	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public void planetsMustHaveDifferentPosition() {
 		new Universe(Arrays.asList(new Planet(0, 0), new Planet(0, 0)));
-	}
-
-	@Test
-	public void onlyPlanetsInhabitedByPlayerAreReturned() throws Exception {
-		assertThat(universe.getPlanetsInhabitedBy(john), Matchers.contains(johnsHomePlanet));
-	}
-
-	@Test
-	public void onlyUninhabitedPlanetsAreReturned() throws Exception {
-		assertThat(universe.getUninhabitedPlanets(), Matchers.contains(uninhabitedPlanet));
 	}
 
 	@Test

@@ -25,6 +25,8 @@ import de.spries.fleetcommander.persistence.GameStore;
 @Path("")
 public class GameService {
 
+	//TODO move authorization check into a filter to avoid code duplication
+
 	private static final String AUTH_TOKEN_PREFIX = "Bearer ";
 
 	@POST
@@ -100,6 +102,27 @@ public class GameService {
 		} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
+	}
+
+	@POST
+	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
+	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId,
+			@Context HttpHeaders httpHeaders) {
+		String token = extractToken(httpHeaders);
+		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
+			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
+		}
+
+		Game game = GameStore.INSTANCE.get(gameId);
+		Player player = game.getPlayers().get(0);
+
+		try {
+			game.getUniverse().getPlanetForId(planetId).buildFactory(player);
+		} catch (Exception e) {
+			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
+		}
+
+		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
 
 	private String extractToken(HttpHeaders httpHeaders) {

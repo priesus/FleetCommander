@@ -84,7 +84,7 @@ public class Planet {
 		return shipCount;
 	}
 
-	public FactorySite getFactorySite() {
+	protected FactorySite getFactorySite() {
 		return factorySite;
 	}
 

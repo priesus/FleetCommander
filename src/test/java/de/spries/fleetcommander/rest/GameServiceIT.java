@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.rest;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
@@ -61,6 +62,51 @@ public class GameServiceIT {
 	public void cannotSendShipsWithoutAuthorization() throws Exception {
 		when().post(gameUrl + "/universe/travellingShipFormations/1/1/2")
 				.then().statusCode(SC_UNAUTHORIZED);
+	}
+
+	@Test
+	public void canSendShipsWithAuthorization() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int otherPlanetId = (homePlanetId + 1) % 20;
+
+		whenAuthorized().post(gameUrl + "/universe/travellingShipFormations/1/" + homePlanetId + "/" + otherPlanetId)
+				.then().statusCode(SC_OK);
+	}
+
+	@Test
+	public void cannotSendShipsFromWrongPlanet() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int otherPlanetId = (homePlanetId + 1) % 20;
+
+		whenAuthorized().post(gameUrl + "/universe/travellingShipFormations/1/" + otherPlanetId + "/" + homePlanetId)
+				.then().statusCode(SC_CONFLICT);
+	}
+
+	@Test
+	public void cannotBuildFactoryWithoutAuthorization() throws Exception {
+		when().post(gameUrl + "/universe/planets/1/factories")
+				.then().statusCode(SC_UNAUTHORIZED);
+	}
+
+	@Test
+	public void canBuildFactoryWithAuthorization() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+
+		whenAuthorized().post(gameUrl + "/universe/planets/" + homePlanetId + "/factories")
+				.then().statusCode(SC_OK);
+	}
+
+	@Test
+	public void cannotBuildFactoryOnWrongPlanet() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int otherPlanetId = (homePlanetId + 1) % 20;
+
+		whenAuthorized().post(gameUrl + "/universe/planets/" + otherPlanetId + "/factories")
+				.then().statusCode(SC_CONFLICT);
 	}
 
 	@Test

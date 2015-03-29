@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.model.universe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,12 +32,8 @@ public class Universe {
 		return planets;
 	}
 
-	public List<Planet> getPlanetsInhabitedBy(Player player) {
-		return planets.parallelStream().filter((p) -> p.isInhabitedBy(player)).collect(Collectors.toList());
-	}
-
-	public List<Planet> getUninhabitedPlanets() {
-		return planets.parallelStream().filter((p) -> !p.isInhabited()).collect(Collectors.toList());
+	public Collection<Planet> getHomePlanets() {
+		return planets.parallelStream().filter((p) -> p.isHomePlanet()).collect(Collectors.toList());
 	}
 
 	public Planet getHomePlanetOf(Player player) {
@@ -90,8 +87,8 @@ public class Universe {
 		}
 	}
 
-	protected Planet getPlanetForId(int originPlanetId) {
-		return planets.parallelStream().filter((p) -> p.getId() == originPlanetId).findFirst().get();
+	public Planet getPlanetForId(int planetId) {
+		return planets.parallelStream().filter((p) -> p.getId() == planetId).findFirst().get();
 	}
 
 	private ShipFormation getJoinableShipFormation(ShipFormation newShipFormation) {
