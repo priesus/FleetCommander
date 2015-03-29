@@ -41,10 +41,25 @@ public class PlanetFactoryBuildingTest {
 	@Test
 	public void factoryCycleInreasesNumberOfShips() throws Exception {
 		int shipsBefore = johnsHomePlanet.getShipCount();
-		doReturn(5).when(johnsFactorySite).getProducedShipsPerTurn();
+		doReturn(5f).when(johnsFactorySite).getProducedShipsPerTurn();
 		johnsHomePlanet.runProductionCycle();
 
 		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + 5));
+	}
+
+	@Test
+	public void lowShipProductionRequiresMultipleCyclesToProduceOneShip() throws Exception {
+		int shipsBefore = johnsHomePlanet.getShipCount();
+		doReturn(0.35f).when(johnsFactorySite).getProducedShipsPerTurn();
+
+		johnsHomePlanet.runProductionCycle();
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore));
+
+		johnsHomePlanet.runProductionCycle();
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore));
+
+		johnsHomePlanet.runProductionCycle();
+		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + 1));
 	}
 
 	@Test(expected = NotPlayersOwnPlanetException.class)

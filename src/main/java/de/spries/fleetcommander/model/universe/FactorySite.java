@@ -8,8 +8,8 @@ public class FactorySite {
 
 	public static final int FACTORY_COST = 100;
 
-	private static final int CREDITS_PER_FACTORY_PER_TURN = 75;
-	private static final int SHIPS_PER_FACTORY_PER_TURN = 1;
+	private static final int CREDITS_PER_FACTORY_PER_TURN = 20;
+	private static final float SHIPS_PER_FACTORY_PER_TURN = 0.35f;
 	private static final int FACTORY_SLOTS = 6;
 	private int factoryCount = 0;
 
@@ -32,7 +32,7 @@ public class FactorySite {
 		return factoryCount * CREDITS_PER_FACTORY_PER_TURN;
 	}
 
-	public int getProducedShipsPerTurn() {
+	public float getProducedShipsPerTurn() {
 		return factoryCount * SHIPS_PER_FACTORY_PER_TURN;
 	}
 

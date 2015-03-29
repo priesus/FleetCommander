@@ -22,7 +22,7 @@ public class Planet {
 	private final int y;
 	private final boolean isHomePlanet;
 	private Player inhabitant;
-	private int shipCount;
+	private float shipCount;
 	private int incomingShipCount;
 
 	private FactorySite factorySite = new FactorySite();
@@ -81,7 +81,7 @@ public class Planet {
 	}
 
 	public int getShipCount() {
-		return shipCount;
+		return (int) shipCount;
 	}
 
 	public FactorySite getFactorySite() {

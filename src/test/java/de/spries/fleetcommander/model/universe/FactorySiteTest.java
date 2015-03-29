@@ -68,7 +68,7 @@ public class FactorySiteTest {
 
 	@Test
 	public void emptyFactorySiteProducesNoShips() throws Exception {
-		assertThat(factorySite.getProducedShipsPerTurn(), is(0));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(0f));
 	}
 
 	@Test
@@ -80,6 +80,6 @@ public class FactorySiteTest {
 	@Test
 	public void factoryIncreasesShipProduction() throws Exception {
 		factorySite.buildFactory();
-		assertThat(factorySite.getProducedShipsPerTurn(), is(greaterThan(0)));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(greaterThan(0f)));
 	}
 }
