@@ -93,4 +93,19 @@ public class PlanetShipsTest {
 		uninhabitedPlanet.landShips(1, john);
 		assertThat(uninhabitedPlanet.isHomePlanetOf(john), is(false));
 	}
+
+	@Test
+	public void addingIncomingShipsIncreasesIncomingShips() throws Exception {
+		uninhabitedPlanet.addIncomingShips(1);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
+		uninhabitedPlanet.addIncomingShips(2);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(3));
+	}
+
+	@Test
+	public void landingShipsResetsIncomingShips() throws Exception {
+		uninhabitedPlanet.addIncomingShips(1);
+		uninhabitedPlanet.landShips(1, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+	}
 }

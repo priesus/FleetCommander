@@ -23,6 +23,7 @@ public class Planet {
 	private final boolean isHomePlanet;
 	private Player inhabitant;
 	private int shipCount;
+	private int incomingShipCount;
 
 	private FactorySite factorySite = new FactorySite();
 
@@ -33,6 +34,7 @@ public class Planet {
 	public Planet(int x, int y, Player inhabitant) {
 		this.x = x;
 		this.y = y;
+		incomingShipCount = 0;
 		if (inhabitant != null) {
 			shipCount = HOME_PLANET_STARTING_SHIPS;
 			this.inhabitant = inhabitant;
@@ -114,11 +116,20 @@ public class Planet {
 		shipCount -= shipsToSend;
 	}
 
+	public void addIncomingShips(int ships) {
+		incomingShipCount += ships;
+	}
+
+	public int getIncomingShipCount() {
+		return incomingShipCount;
+	}
+
 	public void landShips(int shipsToLand, Player player) {
 		if (!isInhabited() && shipsToLand > 0) {
 			inhabitant = player;
 		}
 		shipCount += shipsToLand;
+		incomingShipCount = 0;
 	}
 
 	@Override

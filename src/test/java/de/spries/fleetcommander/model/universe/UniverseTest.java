@@ -92,6 +92,31 @@ public class UniverseTest {
 	}
 
 	@Test
+	public void planetHasNoShipsIncoming() throws Exception {
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+	}
+
+	@Test
+	public void sendingShipsAddsIncomingShipsToDestinatopnPlanet() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
+	}
+
+	@Test
+	public void sendingMoreShipsAddsIncomingShipsToDestinatonPlanet() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.sendShips(2, johnsHomePlanet, uninhabitedPlanet, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(3));
+	}
+
+	@Test
+	public void runningTravellingCycleRemovesIncomingShips() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.runShipTravellingCycle();
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+	}
+
+	@Test
 	public void sendingShipsToSameDestinationAgainIncreasesShipsTravelling() throws Exception {
 		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
 		universe.sendShips(2, johnsHomePlanet, uninhabitedPlanet, john);

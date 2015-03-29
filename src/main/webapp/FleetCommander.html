@@ -44,7 +44,7 @@
 					</div>
 					<div id="universe">
 						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
-								style="top: {{planet.y / 100 * 334 - 5}}px; left: {{planet.x / 100 * 524 - 6}}px;">
+								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
 							<div class="planet-icon">
 								<span class="glyphicon glyphicon-globe"></span>
@@ -52,6 +52,9 @@
 							
 							<div class="planet-annotation planet-annotation-top-left" ng-if="planet.inhabited==true">
 								<span class="glyphicon glyphicon-flag"></span>
+							</div>
+							<div class="planet-annotation planet-annotation-bottom-left" ng-if="planet.incomingShipCount>0">
+								<span class="glyphicon glyphicon-share-alt"></span><br/>{{planet.incomingShipCount}}
 							</div>
 							<div class="planet-annotation planet-annotation-bottom-right" ng-if="planet.shipCount>0">
 								{{planet.shipCount}}
