@@ -29,13 +29,23 @@ public class FactorySiteTest {
 	}
 
 	@Test
-	public void mayedOutFactorySiteHasNoMoreSlotsAvailable() throws Exception {
-		for (int i = 0; i < factorySite.getFactorySlotCount(); i++) {
+	public void maxedOutFactorySiteHasNoMoreSlotsAvailable() throws Exception {
+		for (int i = 0; i < 6; i++) {
 			assertThat(factorySite.hasAvailableSlots(), is(true));
 			factorySite.buildFactory();
 		}
 
 		assertThat(factorySite.hasAvailableSlots(), is(false));
+	}
+
+	@Test
+	public void buildingFactoriesDecreasesAvailableSlots() throws Exception {
+		for (int i = 6; i > 0; i--) {
+			assertThat(factorySite.getAvailableSlots(), is(i));
+			factorySite.buildFactory();
+		}
+
+		assertThat(factorySite.getAvailableSlots(), is(0));
 	}
 
 	@Test
@@ -45,7 +55,7 @@ public class FactorySiteTest {
 
 	@Test
 	public void factoryCountIncreasesWithEachBuiltFactory() throws Exception {
-		for (int i = 0; i < factorySite.getFactorySlotCount(); i++) {
+		for (int i = 0; i < 6; i++) {
 			factorySite.buildFactory();
 			assertThat(factorySite.getFactoryCount(), is(i + 1));
 		}

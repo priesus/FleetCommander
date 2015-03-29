@@ -85,7 +85,7 @@ h1 {
 .planet-icon {
 	width: 15px;
 	height: 15px;
-	margin: 8px;
+	margin: 7px;
 }
 
 .planet-annotation {
@@ -135,4 +135,13 @@ h1 {
 	float: none;
 	border-radius: 5px;
 	background: #f0f0f0;
+}
+
+.factorySlot {
+	height: 25px;
+	width: 25px;
+	border: 1px solid #333;
+	margin: 0 2px;
+	padding: 2px;
+	display: inline-block;
 }

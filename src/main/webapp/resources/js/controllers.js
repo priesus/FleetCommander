@@ -44,6 +44,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 				TurnService.endTurn($scope.runningGameId, $scope.runningGameToken).success(function() {
 					$scope.reloadGame();
 					$scope.blockingActionInProgress = false;
+					$scope.showPlanetMenu = false;
+					$scope.destinationSelectionActive = false;
 				}).error(function() {
 					$scope.blockingActionInProgress = false;
 				});
@@ -59,14 +61,14 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.clickPlanetHandler = function(planet) {
 				if (!$scope.destinationSelectionActive && planet.inhabited) {
 					// Open planet menu
-					$scope.selectedOriginPlanet = planet;
+					$scope.selectedPlanet = planet;
 					$scope.showPlanetMenu = true;
 					$scope.setShipCount(1);
 
 				} else if ($scope.destinationSelectionActive) {
 					// Send ships from previously selected planet to this planet
 					ShipService.sendShips($scope.runningGameId, $scope.runningGameToken, $scope.shipCount,
-							$scope.selectedOriginPlanet.id, planet.id).success(function() {
+							$scope.selectedPlanet.id, planet.id).success(function() {
 						$scope.reloadGame();
 					});
 					$scope.destinationSelectionActive = false;
@@ -74,10 +76,10 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.setShipCount = function(ships) {
-				if (ships < 0)
-					ships = 0;
-				else if (ships > $scope.selectedOriginPlanet.shipCount)
-					ships = $scope.selectedOriginPlanet.shipCount
+				if (ships < 1)
+					ships = 1;
+				else if (ships > $scope.selectedPlanet.shipCount)
+					ships = $scope.selectedPlanet.shipCount
 				$scope.shipCount = ships;
 			};
 
@@ -85,4 +87,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.showPlanetMenu = false;
 				$scope.destinationSelectionActive = true;
 			};
+
+			$scope.getNumber = function(num) {
+				return new Array(num);
+			}
 		} ]);

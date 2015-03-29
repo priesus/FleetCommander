@@ -40,4 +40,8 @@ public class FactorySite {
 		return factoryCount < FACTORY_SLOTS;
 	}
 
+	public int getAvailableSlots() {
+		return FACTORY_SLOTS - factoryCount;
+	}
+
 }

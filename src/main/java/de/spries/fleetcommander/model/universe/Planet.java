@@ -61,6 +61,10 @@ public class Planet {
 		return y;
 	}
 
+	public boolean isHomePlanet() {
+		return isHomePlanet;
+	}
+
 	public boolean isHomePlanetOf(Player player) {
 		if (isHomePlanet && player.equals(inhabitant)) {
 			return true;
@@ -78,6 +82,10 @@ public class Planet {
 
 	public int getShipCount() {
 		return shipCount;
+	}
+
+	public FactorySite getFactorySite() {
+		return factorySite;
 	}
 
 	public void runProductionCycle() {
