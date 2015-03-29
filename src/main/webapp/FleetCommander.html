@@ -76,14 +76,14 @@
 								</div>
 								<div class="form-group">
 									<div class="factorySlot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
-										<img src="resources/img/factory.svg">
+										<img src="resources/img/factory.svg" height="19px" width="19px">
 									</div>
 									<div class="factorySlot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
 										&nbsp;
 									</div>
 								</div>
 								<div class="form-group">
-									<button ng-click="setShipCount(0)" ng-disabled="shipCount==0" class="btn btn-default">Build Factory</button>
+									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0" class="btn btn-default">Build Factory</button>
 								</div>
 								<form name="sendShipsForm">
 									<div class="form-group">

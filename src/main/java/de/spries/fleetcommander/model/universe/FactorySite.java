@@ -13,7 +13,7 @@ public class FactorySite {
 	private static final int FACTORY_SLOTS = 6;
 	private int factoryCount = 0;
 
-	public void buildFactory() throws NoFactorySlotsAvailableException {
+	protected void buildFactory() throws NoFactorySlotsAvailableException {
 		if (FACTORY_SLOTS == factoryCount) {
 			throw new NoFactorySlotsAvailableException();
 		}

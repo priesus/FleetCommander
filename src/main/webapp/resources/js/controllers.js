@@ -5,8 +5,9 @@ fleetCommanderApp.controller('GamesCtrl', [
 		'$cookies',
 		'GameService',
 		'TurnService',
+		'PlanetService',
 		'ShipService',
-		function($scope, $cookies, GameService, TurnService, ShipService) {
+		function($scope, $cookies, GameService, TurnService, PlanetService, ShipService) {
 
 			$scope.isIngame = false;
 			$scope.showPlanetMenu = false;
@@ -81,6 +82,12 @@ fleetCommanderApp.controller('GamesCtrl', [
 				else if (ships > $scope.selectedPlanet.shipCount)
 					ships = $scope.selectedPlanet.shipCount
 				$scope.shipCount = ships;
+			};
+
+			$scope.buildFactory = function(planet) {
+				PlanetService.buildFactory($scope.runningGameId, $scope.runningGameToken, planet.id).success(function() {
+					$scope.reloadGame();
+				});
 			};
 
 			$scope.shipDestinationSelection = function() {

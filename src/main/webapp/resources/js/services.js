@@ -43,6 +43,20 @@ fleetCommanderServices.factory('TurnService', [ '$http', function($http) {
 	};
 } ]);
 
+fleetCommanderServices.factory('PlanetService', [ '$http', function($http) {
+	return {
+		buildFactory : function(gameId, token, planetId) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games/' + gameId + '/universe/planets/' + planetId + '/factories',
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				}
+			});
+		}
+	};
+} ]);
+
 fleetCommanderServices.factory('ShipService', [ '$http', function($http) {
 	return {
 		sendShips : function(gameId, token, ships, origin, dest) {
