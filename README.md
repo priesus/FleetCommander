@@ -12,7 +12,7 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 * The AngularJS front-end talks to the server via the REST interface
 * Currently there is no persistence layer
 
-## How do I get going? ##
+## How to get it up and running ##
 
 ### Prerequisites ###
 * Java SDK 8
@@ -22,4 +22,4 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 * Clone the repository
 * **mvn verify** to run Unit & integration tests on the back-end
 * **mvn jetty:run** to start the web-app at (http://localhost:80)
-* **mvn package** will produce a .war file
+* **mvn package** will produce a deployable .war file
