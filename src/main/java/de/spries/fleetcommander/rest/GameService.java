@@ -77,7 +77,8 @@ public class GameService {
 		}
 
 		Game game = GameStore.INSTANCE.get(gameId);
-		game.endTurn();
+		Player player = game.getPlayers().get(0);
+		game.endTurn(player);
 
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
@@ -88,13 +89,13 @@ public class GameService {
 	public Response sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
 			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId,
 			@Context HttpHeaders httpHeaders) {
+
 		String token = extractToken(httpHeaders);
 		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
 			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
 		}
 
 		Game game = GameStore.INSTANCE.get(gameId);
-
 		Player player = game.getPlayers().get(0);
 		try {
 			game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
@@ -144,7 +145,8 @@ public class GameService {
 
 	private Game createSinglePlayerGame() {
 		Game game = new Game();
-		Player p = game.createHumanPlayer("Player 1");
+		Player p = new Player("Player 1");
+		game.addPlayer(p);
 		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p)));
 		return game;
 	}
