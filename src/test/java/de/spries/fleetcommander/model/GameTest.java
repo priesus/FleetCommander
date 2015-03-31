@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -115,6 +116,26 @@ public class GameTest {
 
 		verify(universe).runFactoryProductionCycle();
 		verify(universe).runShipTravellingCycle();
+	}
+
+	@Test
+	public void playersAreNotifiedOfTurnEnd() throws Exception {
+		// We don't care about invocations before this point
+		reset(john, jack);
+		startedGame.endTurn();
+
+		verify(john).notifyNewTurn(startedGame);
+		verify(jack).notifyNewTurn(startedGame);
+	}
+
+	@Test
+	public void playersAreNotifiedOfGameStart() throws Exception {
+		game.addPlayer(jack);
+		game.setUniverse(universe);
+		game.start();
+
+		verify(john).notifyNewTurn(game);
+		verify(jack).notifyNewTurn(game);
 	}
 
 }

@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.Game.NotEnoughPlayersException;
+import de.spries.fleetcommander.model.player.ComputerPlayer;
 import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.NotEnoughShipsException;
 import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
@@ -146,8 +148,16 @@ public class GameService {
 	private Game createSinglePlayerGame() {
 		Game game = new Game();
 		Player p = new Player("Player 1");
+		Player pc = new ComputerPlayer("Computer");
 		game.addPlayer(p);
-		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p)));
+		game.addPlayer(pc);
+		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p, pc)));
+		try {
+			game.start();
+		} catch (NotEnoughPlayersException e) {
+			// Cannot happen, because we just added enough players
+			throw new RuntimeException(e);
+		}
 		return game;
 	}
 }
