@@ -43,7 +43,7 @@
 						<span class="pull-right">Credits: {{runningGame.players[0].credits}}</span>
 					</div>
 					<div id="universe">
-						<div class="planet" ng-repeat="planet in runningGame.universe.planets" ng-click="clickPlanetHandler(planet)"
+						<div class="planet" ng-repeat="planet in runningGame.universe.planets track by planet.id" ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
 							<div class="planet-icon">
@@ -70,7 +70,7 @@
 						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
 							<div id="planetMenu"class="inner form-horizontal">
-								<button id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<button id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
 								<div class="form-group">
 									<h4>Build factories</h4>
 								</div>
