@@ -86,6 +86,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.buildFactory = function(planet) {
 				PlanetService.buildFactory($scope.runningGameId, $scope.runningGameToken, planet.id).success(function() {
+					$scope.selectedPlanet.factorySite.factoryCount++;
+					$scope.selectedPlanet.factorySite.availableSlots--;
 					$scope.reloadGame();
 				});
 			};
