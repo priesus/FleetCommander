@@ -127,6 +127,14 @@ public class UniverseTest {
 	}
 
 	@Test
+	public void sendingShipsToDifferentDestinationAddsAnotherShipFormation() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.sendShips(1, johnsHomePlanet, jacksHomePlanet, john);
+		List<ShipFormation> shipFormations = universe.getTravellingShipFormations();
+		assertThat(shipFormations, hasSize(2));
+	}
+
+	@Test
 	public void sendingShipsToSamePlanetDoesntAffectUniverseOrPlanetShipCount() throws Exception {
 		int shipsBefore = johnsHomePlanet.getShipCount();
 		universe.sendShips(1, johnsHomePlanet, johnsHomePlanet, john);

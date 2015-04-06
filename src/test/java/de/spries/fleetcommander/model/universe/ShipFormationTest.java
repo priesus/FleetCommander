@@ -91,6 +91,12 @@ public class ShipFormationTest {
 		assertThat(joiningFormation.getShipCount(), is(0));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void cannotMergeFormationsIfCommanderIsNotEqual() {
+		ShipFormation joiningFormation = new ShipFormation(1, PLANET, OTHER_PLANET, JACK);
+		joiningFormation.join(existingFormation);
+	}
+
 	@Test
 	public void landingOnDestinationTransfersShipsToPlanet() {
 		existingFormation.landOnDestination();
