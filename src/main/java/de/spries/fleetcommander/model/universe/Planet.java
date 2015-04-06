@@ -132,11 +132,17 @@ public class Planet {
 		return incomingShipCount;
 	}
 
-	public void landShips(int shipsToLand, Player player) {
-		if (!isInhabited() && shipsToLand > 0) {
-			inhabitant = player;
+	public void landShips(int shipsToLand, Player invader) {
+		if (shipsToLand <= 0) {
+			throw new IllegalArgumentException("Cannot land " + shipsToLand + " ships");
 		}
-		shipCount += shipsToLand;
+		if (!isInhabited()) {
+			inhabitant = invader;
+			shipCount += shipsToLand;
+		}
+		else if (isInhabitedBy(invader)) {
+			shipCount += shipsToLand;
+		}
 		incomingShipCount = 0;
 	}
 
