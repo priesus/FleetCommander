@@ -80,6 +80,10 @@ public class Planet {
 		return player.equals(inhabitant);
 	}
 
+	public Player getInhabitant() {
+		return inhabitant;
+	}
+
 	public int getShipCount() {
 		return (int) shipCount;
 	}
@@ -142,6 +146,13 @@ public class Planet {
 		}
 		else if (isInhabitedBy(invader)) {
 			shipCount += shipsToLand;
+		}
+		else {
+			shipCount -= shipsToLand;
+			if (shipCount < 0) {
+				inhabitant = invader;
+				shipCount *= -1;
+			}
 		}
 		incomingShipCount = 0;
 	}

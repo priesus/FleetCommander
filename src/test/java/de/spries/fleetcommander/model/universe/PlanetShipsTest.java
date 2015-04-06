@@ -106,4 +106,29 @@ public class PlanetShipsTest {
 		uninhabitedPlanet.landShips(1, john);
 		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
 	}
+
+	@Test
+	public void attackingWithSomeShipsReducesEnemyShips() throws Exception {
+		jacksHomePlanet.landShips(1, john);
+		assertThat(jacksHomePlanet.getShipCount(), is(5));
+		assertThat(jacksHomePlanet.getInhabitant(), is(jack));
+
+		jacksHomePlanet.landShips(2, john);
+		assertThat(jacksHomePlanet.getShipCount(), is(3));
+		assertThat(jacksHomePlanet.getInhabitant(), is(jack));
+	}
+
+	@Test
+	public void attackingWithEqualNumberOfShipsDestroysAllEnemyShips() throws Exception {
+		jacksHomePlanet.landShips(6, john);
+		assertThat(jacksHomePlanet.getShipCount(), is(0));
+		assertThat(jacksHomePlanet.getInhabitant(), is(jack));
+	}
+
+	@Test
+	public void attackingWithMoreShipsInhabitsEnemyPlanet() throws Exception {
+		jacksHomePlanet.landShips(7, john);
+		assertThat(jacksHomePlanet.getShipCount(), is(1));
+		assertThat(jacksHomePlanet.getInhabitant(), is(john));
+	}
 }
