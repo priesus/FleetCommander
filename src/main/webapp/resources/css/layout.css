@@ -78,8 +78,17 @@ h1 {
 
 .planet {
 	position: absolute;
-	color: #F8F8F8;
 	vertical-align: center;
+}
+
+.planet-friendly {
+	color: #aaf;
+}
+.planet-enemy {
+	color: #faa;
+}
+.planet-uninhabited {
+	color: #aaa;
 }
 
 .planet-icon {
@@ -89,7 +98,6 @@ h1 {
 }
 
 .planet-annotation {
-	color: #EEE;
 	font-size: 8px;
 }
 
