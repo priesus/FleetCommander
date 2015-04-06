@@ -45,9 +45,6 @@ public class Game {
 	}
 
 	public void endTurn(Player player) {
-		if (!hasStarted) {
-			throw new IllegalStateException("Game has not started, yet");
-		}
 		if (!players.contains(player)) {
 			throw new IllegalArgumentException(player + " doesn't participate in this game");
 		}
@@ -64,6 +61,9 @@ public class Game {
 	}
 
 	protected void endTurn() {
+		if (!hasStarted) {
+			throw new IllegalStateException("Game has not started, yet");
+		}
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 
