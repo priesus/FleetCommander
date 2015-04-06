@@ -56,7 +56,6 @@ public class Game {
 
 		if (turnFinishedPlayers.size() == players.size()) {
 			endTurn();
-			turnFinishedPlayers.clear();
 		}
 	}
 
@@ -66,6 +65,8 @@ public class Game {
 		}
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
+
+		turnFinishedPlayers.clear();
 
 		notifyAllPlayersForNewTurn();
 	}
