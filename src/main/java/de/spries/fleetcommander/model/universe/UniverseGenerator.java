@@ -18,7 +18,7 @@ public class UniverseGenerator {
 
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				Planet planet = new Planet(col * 10 + 5, row * 10 + 5, null);
+				Planet planet = new Planet(col * 10 + 5, row * 10 + 5);
 				planet.setId(planetId++);
 				planets.add(planet);
 			}

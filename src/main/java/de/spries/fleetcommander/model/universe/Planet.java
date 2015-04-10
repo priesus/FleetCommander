@@ -5,13 +5,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.spries.fleetcommander.model.common.IllegalActionException;
 import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
-import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
 
 public class Planet {
 
-	public static class NotPlayersOwnPlanetException extends Exception {
+	public static class NotPlayersOwnPlanetException extends IllegalActionException {
 		// Nothing to implement
 	}
 
@@ -105,19 +104,28 @@ public class Planet {
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 
-	public void buildFactory(Player player) throws NotPlayersOwnPlanetException, InsufficientCreditsException,
-			NoFactorySlotsAvailableException {
-		if (!player.equals(inhabitant)) {
-			throw new NotPlayersOwnPlanetException();
+	public void buildFactory(Player player) {
+		if (!canBuildFactory(player)) {
+			throw new IllegalActionException();
 		}
-		if (factorySite.hasAvailableSlots()) {
-			player.reduceCredits(FactorySite.FACTORY_COST);
-		}
+		player.reduceCredits(FactorySite.FACTORY_COST);
 		factorySite.buildFactory();
 	}
 
-	public void sendShipsAway(int shipsToSend, Player player) throws NotPlayersOwnPlanetException,
-			NotEnoughShipsException {
+	public boolean canBuildFactory(Player player) {
+		if (!player.equals(inhabitant)) {
+			return false;
+		}
+		if (!factorySite.hasAvailableSlots()) {
+			return false;
+		}
+		if (player.getCredits() < FactorySite.FACTORY_COST) {
+			return false;
+		}
+		return true;
+	}
+
+	public void sendShipsAway(int shipsToSend, Player player) {
 		if (!player.equals(inhabitant)) {
 			throw new NotPlayersOwnPlanetException();
 		}

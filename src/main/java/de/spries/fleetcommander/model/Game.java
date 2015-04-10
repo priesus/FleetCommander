@@ -9,10 +9,6 @@ import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.Universe;
 
 public class Game {
-	public static class NotEnoughPlayersException extends Exception {
-		// Nothing to do
-	}
-
 	private int id;
 	private List<Player> players;
 	private Set<Player> turnFinishedPlayers;
@@ -32,9 +28,9 @@ public class Game {
 		players.add(player);
 	}
 
-	public void start() throws NotEnoughPlayersException {
+	public void start() {
 		if (players.size() < 2) {
-			throw new NotEnoughPlayersException();
+			throw new IllegalStateException("At least 2 players required!");
 		}
 		if (universe == null) {
 			throw new IllegalStateException("No universe!");

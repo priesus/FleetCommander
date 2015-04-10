@@ -1,5 +1,7 @@
 package de.spries.fleetcommander.model.universe;
 
-public class NotEnoughShipsException extends Exception {
+import de.spries.fleetcommander.model.common.IllegalActionException;
+
+public class NotEnoughShipsException extends IllegalActionException {
 	// Nothing to implement
 }

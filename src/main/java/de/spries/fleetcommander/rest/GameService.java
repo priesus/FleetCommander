@@ -16,11 +16,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import de.spries.fleetcommander.model.Game;
-import de.spries.fleetcommander.model.Game.NotEnoughPlayersException;
+import de.spries.fleetcommander.model.common.IllegalActionException;
 import de.spries.fleetcommander.model.player.ComputerPlayer;
 import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.universe.NotEnoughShipsException;
-import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 import de.spries.fleetcommander.model.universe.UniverseGenerator;
 import de.spries.fleetcommander.persistence.GameStore;
 
@@ -102,7 +100,7 @@ public class GameService {
 		try {
 			game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
 			return getNoCacheResponseBuilder(Response.Status.OK).build();
-		} catch (NotPlayersOwnPlanetException | NotEnoughShipsException e) {
+		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
 	}
@@ -152,12 +150,7 @@ public class GameService {
 		game.addPlayer(p);
 		game.addPlayer(pc);
 		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p, pc)));
-		try {
-			game.start();
-		} catch (NotEnoughPlayersException e) {
-			// Cannot happen, because we just added enough players
-			throw new RuntimeException(e);
-		}
+		game.start();
 		return game;
 	}
 }

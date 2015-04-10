@@ -1,8 +1,10 @@
 package de.spries.fleetcommander.model.universe;
 
+import de.spries.fleetcommander.model.common.IllegalActionException;
+
 public class FactorySite {
 
-	public static class NoFactorySlotsAvailableException extends Exception {
+	public static class NoFactorySlotsAvailableException extends IllegalActionException {
 		// Nothing to implement
 	}
 
@@ -13,7 +15,7 @@ public class FactorySite {
 	private static final int FACTORY_SLOTS = 6;
 	private int factoryCount = 0;
 
-	protected void buildFactory() throws NoFactorySlotsAvailableException {
+	protected void buildFactory() {
 		if (FACTORY_SLOTS == factoryCount) {
 			throw new NoFactorySlotsAvailableException();
 		}

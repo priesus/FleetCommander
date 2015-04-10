@@ -4,10 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.common.IllegalActionException;
 
 public class Player {
 
-	public static class InsufficientCreditsException extends Exception {
+	public static class InsufficientCreditsException extends IllegalActionException {
 		// Nothing to implement
 	}
 
@@ -30,7 +31,7 @@ public class Player {
 		return credits;
 	}
 
-	public void reduceCredits(int debit) throws InsufficientCreditsException {
+	public void reduceCredits(int debit) {
 		if (debit > credits) {
 			throw new InsufficientCreditsException();
 		}

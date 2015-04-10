@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 
 public class Universe {
 
@@ -57,15 +56,13 @@ public class Universe {
 		travellingShipFormations.clear();
 	}
 
-	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId, Player player)
-			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
+	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId, Player player) {
 		Planet origin = getPlanetForId(originPlanetId);
 		Planet destination = getPlanetForId(destinationPlanetId);
 		sendShips(shipCount, origin, destination, player);
 	}
 
-	protected void sendShips(int shipCount, Planet origin, Planet destination, Player player)
-			throws NotPlayersOwnPlanetException, NotEnoughShipsException {
+	protected void sendShips(int shipCount, Planet origin, Planet destination, Player player) {
 		if (!planets.contains(origin) || !planets.contains(destination)) {
 			throw new IllegalArgumentException("origin & destination must be contained in universe");
 		}

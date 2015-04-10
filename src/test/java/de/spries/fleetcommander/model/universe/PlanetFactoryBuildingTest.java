@@ -13,13 +13,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import de.spries.fleetcommander.model.common.IllegalActionException;
 import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
 import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
-import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
 
 public class PlanetFactoryBuildingTest {
 
+	private static final int SUFFICIENT_CREDITS = FactorySite.FACTORY_COST;
+	private static final int INSUFFICIENT_CREDITS = SUFFICIENT_CREDITS - 1;
 	private Player jack;
 	private Player john;
 	private Planet johnsHomePlanet;
@@ -62,22 +64,23 @@ public class PlanetFactoryBuildingTest {
 		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + 1));
 	}
 
-	@Test(expected = NotPlayersOwnPlanetException.class)
-	public void cannotBuildFactoryOnUninhabitedPlanet() throws Exception {
+	@Test(expected = IllegalActionException.class)
+	public void buildFactoryOnUninhabitedPlanetThrowsException() throws Exception {
 		uninhabitedPlanet.buildFactory(john);
 	}
 
-	@Test(expected = NotPlayersOwnPlanetException.class)
-	public void cannotBuildFactoryOnOtherPlayersPlanet() throws Exception {
+	@Test(expected = IllegalActionException.class)
+	public void buildFactoryOnOtherPlayersPlanetThrowsException() throws Exception {
 		johnsHomePlanet.buildFactory(jack);
 	}
 
 	@Test
 	public void buildingFactoryReducesPlayerCredits() throws Exception {
+		doReturn(SUFFICIENT_CREDITS).when(john).getCredits();
 		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
 
 		johnsHomePlanet.buildFactory(john);
-		verify(john).reduceCredits(Mockito.eq(FactorySite.FACTORY_COST));
+		verify(john).reduceCredits(Mockito.eq(SUFFICIENT_CREDITS));
 	}
 
 	@Test
@@ -88,23 +91,62 @@ public class PlanetFactoryBuildingTest {
 		try {
 			johnsHomePlanet.buildFactory(john);
 			fail("Expected exception");
-		} catch (NoFactorySlotsAvailableException e) {
+		} catch (IllegalActionException e) {
 			// expected behavior
 		}
 		verify(john, never()).reduceCredits(Mockito.anyInt());
 	}
 
 	@Test
-	public void cannotBuildMoreFactoriesPlayerCannotAffort() throws Exception {
+	public void cannotBuildFactoryWithInsufficientCredits_() throws Exception {
 		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
 		doThrow(InsufficientCreditsException.class).when(john).reduceCredits(Mockito.anyInt());
 
 		try {
 			johnsHomePlanet.buildFactory(john);
 			fail("Expected exception");
-		} catch (InsufficientCreditsException e) {
+		} catch (IllegalActionException e) {
 			// expected behavior
 		}
 		verify(johnsFactorySite, never()).buildFactory();
+	}
+
+	@Test
+	public void cannotBuildFactoryWithInsufficientCredits() throws Exception {
+		doReturn(INSUFFICIENT_CREDITS).when(john).getCredits();
+		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
+
+		assertThat(johnsHomePlanet.canBuildFactory(john), is(false));
+		verify(john).getCredits();
+	}
+
+	@Test
+	public void cannotBuildFactoryWithoutAvailableSlots() throws Exception {
+		doReturn(SUFFICIENT_CREDITS).when(john).getCredits();
+		doReturn(false).when(johnsFactorySite).hasAvailableSlots();
+
+		assertThat(johnsHomePlanet.canBuildFactory(john), is(false));
+		verify(johnsFactorySite).hasAvailableSlots();
+	}
+
+	@Test
+	public void cannotBuildFactoryOnOtherPlayersPlanet() throws Exception {
+		doReturn(SUFFICIENT_CREDITS).when(john).getCredits();
+		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
+		assertThat(johnsHomePlanet.canBuildFactory(jack), is(false));
+	}
+
+	@Test
+	public void cannotBuildFactoryOnUninhabitedPlanet() throws Exception {
+		doReturn(SUFFICIENT_CREDITS).when(john).getCredits();
+		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
+		assertThat(uninhabitedPlanet.canBuildFactory(john), is(false));
+	}
+
+	@Test
+	public void canBuildFactory() throws Exception {
+		doReturn(SUFFICIENT_CREDITS).when(john).getCredits();
+		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
+		assertThat(johnsHomePlanet.canBuildFactory(john), is(true));
 	}
 }

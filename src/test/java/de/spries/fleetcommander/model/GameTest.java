@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.Game.NotEnoughPlayersException;
 import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.Universe;
 
@@ -40,7 +39,7 @@ public class GameTest {
 		startedGame.start();
 	}
 
-	@Test(expected = NotEnoughPlayersException.class)
+	@Test(expected = IllegalStateException.class)
 	public void gameRequiresAtLeastTwoPlayersToStart() throws Exception {
 		game.start();
 	}
