@@ -79,6 +79,7 @@ h1 {
 .planet {
 	position: absolute;
 	vertical-align: center;
+	cursor: pointer;
 }
 
 .planet-friendly {
