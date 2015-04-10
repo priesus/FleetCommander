@@ -62,9 +62,14 @@ fleetCommanderServices.factory('ShipService', [ '$http', function($http) {
 		sendShips : function(gameId, token, ships, origin, dest) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/universe/travellingShipFormations/' + ships + '/' + origin + '/' + dest,
+				url : 'rest/games/' + gameId + '/universe/travellingShipFormations',
 				headers : {
 					'Authorization' : 'Bearer ' + token
+				},
+				data : {
+					'shipCount' : ships,
+					'originPlanetId' : origin,
+					'destinationPlanetId' : dest
 				}
 			});
 		}

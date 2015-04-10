@@ -13,11 +13,13 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 
 public class GameServiceIT {
 
+	private static final String SEND_SHIPS_REQUEST_BODY = "{\"shipCount\": %d, \"originPlanetId\": %d, \"destinationPlanetId\": %d}";
 	private String gameUrl;
 	private String gameAuthToken;
 
@@ -60,7 +62,8 @@ public class GameServiceIT {
 
 	@Test
 	public void cannotSendShipsWithoutAuthorization() throws Exception {
-		when().post(gameUrl + "/universe/travellingShipFormations/1/1/2")
+		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, 1, 2);
+		when(body).post(gameUrl + "/universe/travellingShipFormations")
 				.then().statusCode(SC_UNAUTHORIZED);
 	}
 
@@ -70,7 +73,8 @@ public class GameServiceIT {
 		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
 		int otherPlanetId = (homePlanetId + 1) % 20;
 
-		whenAuthorized().post(gameUrl + "/universe/travellingShipFormations/1/" + homePlanetId + "/" + otherPlanetId)
+		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, homePlanetId, otherPlanetId);
+		whenAuthorized(body).post(gameUrl + "/universe/travellingShipFormations")
 				.then().statusCode(SC_OK);
 	}
 
@@ -80,7 +84,8 @@ public class GameServiceIT {
 		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
 		int otherPlanetId = (homePlanetId + 1) % 20;
 
-		whenAuthorized().post(gameUrl + "/universe/travellingShipFormations/1/" + otherPlanetId + "/" + homePlanetId)
+		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, otherPlanetId, homePlanetId);
+		whenAuthorized(body).post(gameUrl + "/universe/travellingShipFormations")
 				.then().statusCode(SC_CONFLICT);
 	}
 
@@ -137,11 +142,23 @@ public class GameServiceIT {
 	}
 
 	private RequestSpecification when() {
-		return given().port(80).when();
+		return when(null);
+	}
+
+	private RequestSpecification when(String jsonBody) {
+		RequestSpecification spec = given().port(80);
+		if (jsonBody != null) {
+			spec = spec.contentType(ContentType.JSON).body(jsonBody);
+		}
+		return spec.when();
 	}
 
 	private RequestSpecification whenAuthorized() {
-		return when().header("Authorization", "Bearer " + gameAuthToken);
+		return whenAuthorized(null);
+	}
+
+	private RequestSpecification whenAuthorized(String jsonBody) {
+		return when(jsonBody).header("Authorization", "Bearer " + gameAuthToken);
 	}
 
 }

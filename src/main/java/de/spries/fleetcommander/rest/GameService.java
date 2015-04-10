@@ -2,6 +2,7 @@ package de.spries.fleetcommander.rest;
 
 import java.util.Arrays;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,6 +24,12 @@ import de.spries.fleetcommander.persistence.GameStore;
 
 @Path("")
 public class GameService {
+
+	public static class ShipFormation {
+		public int shipCount;
+		public int originPlanetId;
+		public int destinationPlanetId;
+	}
 
 	@POST
 	@Path("games")
@@ -64,16 +71,14 @@ public class GameService {
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
 
-	// TODO accept parameters as JSON
 	@POST
-	@Path("games/{id:\\d+}/universe/travellingShipFormations/{ships:\\d+}/{origin:\\d+}/{dest:\\d+}")
-	public Response sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
-			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId) {
-
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("games/{id:\\d+}/universe/travellingShipFormations")
+	public Response sendShips(@PathParam("id") int gameId, ShipFormation ships) {
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
 		try {
-			game.getUniverse().sendShips(shipCount, originPlanetId, destinationPlanetId, player);
+			game.getUniverse().sendShips(ships.shipCount, ships.originPlanetId, ships.destinationPlanetId, player);
 			return getNoCacheResponseBuilder(Response.Status.OK).build();
 		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
@@ -83,13 +88,12 @@ public class GameService {
 	@POST
 	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
 	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId) {
-
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
 
 		try {
 			game.getUniverse().getPlanetForId(planetId).buildFactory(player);
-		} catch (Exception e) {
+		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
 

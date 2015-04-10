@@ -13,9 +13,13 @@ public class ComputerPlayer extends Player {
 	public void notifyNewTurn(Game game) {
 		super.notifyNewTurn(game);
 
-		Planet homePlanet = game.getUniverse().getHomePlanetOf(this);
-		while (homePlanet.canBuildFactory(this)) {
-			homePlanet.buildFactory(this);
+		try {
+			Planet homePlanet = game.getUniverse().getHomePlanetOf(this);
+			while (homePlanet.canBuildFactory(this)) {
+				homePlanet.buildFactory(this);
+			}
+		} catch (Exception e) {
+			// Just end the turn
 		}
 
 		game.endTurn(this);
