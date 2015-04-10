@@ -1,6 +1,5 @@
 package de.spries.fleetcommander.rest;
 
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import javax.ws.rs.DELETE;
@@ -25,10 +24,6 @@ import de.spries.fleetcommander.persistence.GameStore;
 @Path("")
 public class GameService {
 
-	//TODO move authorization check into a filter to avoid code duplication
-
-	private static final String AUTH_TOKEN_PREFIX = "Bearer ";
-
 	@POST
 	@Path("games")
 	public Response createGame() {
@@ -44,12 +39,7 @@ public class GameService {
 	@GET
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
-		String token = extractToken(httpHeaders);
-		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(id, token)) {
-			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
-		}
-
+	public Response getGame(@PathParam("id") int id) {
 		Game game = GameStore.INSTANCE.get(id);
 		return getNoCacheResponseBuilder(Response.Status.OK).entity(game).build();
 	}
@@ -57,25 +47,16 @@ public class GameService {
 	@DELETE
 	@Path("games/{id:\\d+}")
 	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
-		String token = extractToken(httpHeaders);
+		String token = GameAccessTokenFilter.extractAuthTokenFromHeaders(httpHeaders);
 
-		try {
-			GameAuthenticator.INSTANCE.deleteAuthToken(id, token);
-		} catch (GeneralSecurityException e) {
-			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
-		}
+		GameAuthenticator.INSTANCE.deleteAuthToken(id, token);
 		GameStore.INSTANCE.delete(id);
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
 
 	@POST
 	@Path("games/{id:\\d+}/turns")
-	public Response endTurn(@PathParam("id") int gameId, @Context HttpHeaders httpHeaders) {
-		String token = extractToken(httpHeaders);
-		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
-			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
-		}
-
+	public Response endTurn(@PathParam("id") int gameId) {
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
 		game.endTurn(player);
@@ -87,13 +68,7 @@ public class GameService {
 	@POST
 	@Path("games/{id:\\d+}/universe/travellingShipFormations/{ships:\\d+}/{origin:\\d+}/{dest:\\d+}")
 	public Response sendShips(@PathParam("id") int gameId, @PathParam("ships") int shipCount,
-			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId,
-			@Context HttpHeaders httpHeaders) {
-
-		String token = extractToken(httpHeaders);
-		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
-			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
-		}
+			@PathParam("origin") int originPlanetId, @PathParam("dest") int destinationPlanetId) {
 
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
@@ -107,12 +82,7 @@ public class GameService {
 
 	@POST
 	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
-	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId,
-			@Context HttpHeaders httpHeaders) {
-		String token = extractToken(httpHeaders);
-		if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
-			return getNoCacheResponseBuilder(Response.Status.UNAUTHORIZED).build();
-		}
+	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId) {
 
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
@@ -124,14 +94,6 @@ public class GameService {
 		}
 
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
-	}
-
-	private String extractToken(HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString("Authorization");
-		if (token != null && token.startsWith(AUTH_TOKEN_PREFIX)) {
-			return token.substring(AUTH_TOKEN_PREFIX.length());
-		}
-		return null;
 	}
 
 	private Response.ResponseBuilder getNoCacheResponseBuilder(Response.Status status) {

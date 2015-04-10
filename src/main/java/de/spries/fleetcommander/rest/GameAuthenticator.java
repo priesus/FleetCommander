@@ -1,6 +1,5 @@
 package de.spries.fleetcommander.rest;
 
-import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,9 +24,9 @@ public enum GameAuthenticator {
 		return token;
 	}
 
-	public void deleteAuthToken(int gameId, String token) throws GeneralSecurityException {
+	public void deleteAuthToken(int gameId, String token) {
 		if (!isAuthTokenValid(gameId, token)) {
-			throw new GeneralSecurityException("Invalid game id and token combination");
+			throw new IllegalArgumentException("Invalid game id and token combination");
 		}
 		gameTokens.remove(gameId);
 	}

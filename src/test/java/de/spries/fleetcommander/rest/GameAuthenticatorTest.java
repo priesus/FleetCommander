@@ -3,8 +3,6 @@ package de.spries.fleetcommander.rest;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.security.GeneralSecurityException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,12 +53,12 @@ public class GameAuthenticatorTest {
 		assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_ID, firstGameToken), is(false));
 	}
 
-	@Test(expected = GeneralSecurityException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void cannotDeleteTokenForInvalidToken() throws Exception {
 		GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_ID, INVALID_TOKEN);
 	}
 
-	@Test(expected = GeneralSecurityException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void cannotDeleteTokenForInexistentGameId() throws Exception {
 		GameAuthenticator.INSTANCE.deleteAuthToken(INEXISTENT_GAME_ID, firstGameToken);
 	}
