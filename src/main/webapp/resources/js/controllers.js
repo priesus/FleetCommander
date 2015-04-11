@@ -19,7 +19,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.startGame = function() {
-
 				GameService.create().success(function(data) {
 					$cookies.runningGameId = data.gameId;
 					$cookies.runningGameToken = data.gameAuthToken;

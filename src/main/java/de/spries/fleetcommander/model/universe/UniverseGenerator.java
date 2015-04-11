@@ -25,6 +25,9 @@ public class UniverseGenerator {
 		}
 
 		Collections.shuffle(planets);
+
+		planets = planets.subList(0, planets.size() / (6 - players.size()));
+
 		for (int i = 0; i < players.size(); i++) {
 			Planet oldUninhabitedPlanet = planets.get(i);
 			Planet newHomePlanet = new Planet(oldUninhabitedPlanet.getX(), oldUninhabitedPlanet.getY(), players.get(i));

@@ -47,6 +47,9 @@ public class GameService {
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGame(@PathParam("id") int id) {
+
+		//TODO players should only be able to see limited details of the universe (i.e. no enemy locations)
+
 		Game game = GameStore.INSTANCE.get(id);
 		return getNoCacheResponseBuilder(Response.Status.OK).entity(game).build();
 	}

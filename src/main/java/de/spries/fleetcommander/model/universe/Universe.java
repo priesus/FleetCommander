@@ -50,6 +50,7 @@ public class Universe {
 	}
 
 	public void runShipTravellingCycle() {
+		//TODO run travel cycle with regard to distances
 		for (ShipFormation shipFormation : travellingShipFormations) {
 			shipFormation.landOnDestination();
 		}

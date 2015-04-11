@@ -1,6 +1,6 @@
 package de.spries.fleetcommander.model.universe;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -8,6 +8,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 
@@ -20,9 +22,9 @@ public class UniverseGeneratorTest {
 	private static final List<Player> JOHN_ONLY = Arrays.asList(JOHN);
 
 	@Test
-	public void generatedUniverseHasDesiredSize() throws Exception {
+	public void generatedUniverseHasMorePlanetsThanPlayers() throws Exception {
 		Universe universe = UniverseGenerator.generate(JOHN_ONLY);
-		assertThat(universe.getPlanets(), hasSize(UniverseGenerator.PLANET_COUNT));
+		assertThat(universe.getPlanets().size(), greaterThan(JOHN_ONLY.size()));
 	}
 
 	@Test
@@ -40,9 +42,9 @@ public class UniverseGeneratorTest {
 	@Test
 	public void everyplanetHasAUniqueId() throws Exception {
 		Universe universe = UniverseGenerator.generate(JOHN_ONLY);
-		int planetCount = universe.getPlanets().size();
-		for (int i = 0; i < planetCount; i++) {
-			assertThat(universe.getPlanetForId(i), is(notNullValue()));
-		}
+		Set<Integer> planetIds = universe.getPlanets().parallelStream().map((p) -> p.getId())
+				.collect(Collectors.toSet());
+
+		assertThat(planetIds.size(), is(universe.getPlanets().size()));
 	}
 }
