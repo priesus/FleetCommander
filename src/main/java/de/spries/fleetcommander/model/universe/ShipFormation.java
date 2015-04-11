@@ -1,13 +1,20 @@
 package de.spries.fleetcommander.model.universe;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import de.spries.fleetcommander.model.Player;
 
 public class ShipFormation {
+
+	public static final int DISTANCE_PER_TURN = 8;
 
 	private int shipCount;
 	private Planet origin;
 	private Planet destination;
 	private Player commander;
+	private int distanceTravelled = 0;
+	private final double distanceOverall;
 
 	public ShipFormation(int shipCount, Planet origin, Planet destination, Player commander) {
 		if (shipCount <= 0) {
@@ -20,6 +27,7 @@ public class ShipFormation {
 		this.origin = origin;
 		this.destination = destination;
 		this.commander = commander;
+		distanceOverall = origin.distanceTo(destination);
 	}
 
 	public int getShipCount() {
@@ -40,7 +48,8 @@ public class ShipFormation {
 
 	public boolean canJoin(ShipFormation existingFormation) {
 		if (origin.equals(existingFormation.origin) && destination.equals(existingFormation.destination)
-				&& commander.equals(existingFormation.commander)) {
+				&& commander.equals(existingFormation.commander)
+				&& distanceTravelled == existingFormation.distanceTravelled) {
 			return true;
 		}
 		return false;
@@ -54,9 +63,30 @@ public class ShipFormation {
 		shipCount = 0;
 	}
 
-	public void landOnDestination() {
+	public void travel() {
+		distanceTravelled += DISTANCE_PER_TURN;
+		if (hasArrived()) {
+			landOnDestination();
+		}
+	}
+
+	protected void landOnDestination() {
 		destination.landShips(shipCount, commander);
 		shipCount = 0;
+	}
+
+	public boolean hasArrived() {
+		return distanceTravelled >= distanceOverall;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return EqualsBuilder.reflectionEquals(this, obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
 }

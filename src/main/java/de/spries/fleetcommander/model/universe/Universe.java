@@ -1,8 +1,8 @@
 package de.spries.fleetcommander.model.universe;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ import de.spries.fleetcommander.model.Player;
 public class Universe {
 
 	private final List<Planet> planets;
-	private List<ShipFormation> travellingShipFormations;
+	private Collection<ShipFormation> travellingShipFormations;
 
 	protected Universe(List<Planet> planets) {
 		if (CollectionUtils.isEmpty(planets)) {
@@ -24,7 +24,7 @@ public class Universe {
 			throw new IllegalArgumentException("planets must all have a distinct position: " + planets);
 		}
 		this.planets = Collections.unmodifiableList(planets);
-		travellingShipFormations = new ArrayList<>();
+		travellingShipFormations = new HashSet<>();
 	}
 
 	public List<Planet> getPlanets() {
@@ -50,11 +50,13 @@ public class Universe {
 	}
 
 	public void runShipTravellingCycle() {
-		//TODO run travel cycle with regard to distances
 		for (ShipFormation shipFormation : travellingShipFormations) {
-			shipFormation.landOnDestination();
+			shipFormation.travel();
 		}
-		travellingShipFormations.clear();
+
+		//TODO test this
+		travellingShipFormations = travellingShipFormations.parallelStream().filter((s) -> !s.hasArrived())
+				.collect(Collectors.toSet());
 	}
 
 	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId, Player player) {
@@ -98,7 +100,7 @@ public class Universe {
 		return null;
 	}
 
-	public List<ShipFormation> getTravellingShipFormations() {
+	public Collection<ShipFormation> getTravellingShipFormations() {
 		return travellingShipFormations;
 	}
 
