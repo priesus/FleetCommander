@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.model.player;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -17,6 +18,7 @@ public class ComputerPlayerTest {
 
 	private Player player;
 	private Game game;
+	private Universe universe;
 	private Planet homePlanet;
 
 	@Before
@@ -24,7 +26,7 @@ public class ComputerPlayerTest {
 		player = new ComputerPlayer("Computer");
 
 		game = mock(Game.class);
-		Universe universe = mock(Universe.class);
+		universe = mock(Universe.class);
 		homePlanet = mock(Planet.class);
 
 		doReturn(universe).when(game).getUniverse();
@@ -33,6 +35,13 @@ public class ComputerPlayerTest {
 
 	@Test
 	public void endsTurnInNewTurn() {
+		player.notifyNewTurn(game);
+		verify(game).endTurn(player);
+	}
+
+	@Test
+	public void stillEndsTurnWhenPlayerHasNoMoreHomePlanet() throws Exception {
+		doThrow(RuntimeException.class).when(universe).getHomePlanetOf(player);
 		player.notifyNewTurn(game);
 		verify(game).endTurn(player);
 	}
@@ -49,6 +58,13 @@ public class ComputerPlayerTest {
 		doReturn(true).doReturn(true).doReturn(false).when(homePlanet).canBuildFactory(player);
 		player.notifyNewTurn(game);
 		verify(homePlanet, times(2)).buildFactory(player);
+	}
+
+	@Test
+	public void stillEndsTurnWhenBuildingFactoryThrowsException() throws Exception {
+		doThrow(RuntimeException.class).when(homePlanet).buildFactory(player);
+		player.notifyNewTurn(game);
+		verify(game).endTurn(player);
 	}
 
 }
