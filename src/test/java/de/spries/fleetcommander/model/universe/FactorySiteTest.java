@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
+import de.spries.fleetcommander.model.common.IllegalActionException;
 
 public class FactorySiteTest {
 
@@ -23,7 +23,7 @@ public class FactorySiteTest {
 		}
 	}
 
-	@Test(expected = NoFactorySlotsAvailableException.class)
+	@Test(expected = IllegalActionException.class)
 	public void cannotBuildMoreFactoriesThanSlotsAvailable() throws Exception {
 		maxedOutFactorySite.buildFactory();
 	}

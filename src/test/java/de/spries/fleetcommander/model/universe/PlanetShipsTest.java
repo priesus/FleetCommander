@@ -8,8 +8,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.universe.Planet.NotPlayersOwnPlanetException;
+import de.spries.fleetcommander.model.Player;
+import de.spries.fleetcommander.model.common.IllegalActionException;
 
 public class PlanetShipsTest {
 
@@ -43,17 +43,17 @@ public class PlanetShipsTest {
 		assertThat(uninhabitedPlanet.getShipCount(), is(0));
 	}
 
-	@Test(expected = NotPlayersOwnPlanetException.class)
+	@Test(expected = IllegalActionException.class)
 	public void cannotSendShipsFromOtherPlayersPlanets() throws Exception {
 		jacksHomePlanet.sendShipsAway(1, john);
 	}
 
-	@Test(expected = NotPlayersOwnPlanetException.class)
+	@Test(expected = IllegalActionException.class)
 	public void cannotSendShipsFromUninhabitedPlanets() throws Exception {
 		uninhabitedPlanet.sendShipsAway(1, john);
 	}
 
-	@Test(expected = NotEnoughShipsException.class)
+	@Test(expected = IllegalActionException.class)
 	public void cannotSendMoreShipsThanLocatedOnPlanet() throws Exception {
 		int shipCount = johnsHomePlanet.getShipCount();
 		johnsHomePlanet.sendShipsAway(shipCount + 1, john);

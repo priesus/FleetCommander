@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.Player;
 
 public class UniverseTest {
 

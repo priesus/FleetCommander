@@ -4,10 +4,6 @@ import de.spries.fleetcommander.model.common.IllegalActionException;
 
 public class FactorySite {
 
-	public static class NoFactorySlotsAvailableException extends IllegalActionException {
-		// Nothing to implement
-	}
-
 	public static final int FACTORY_COST = 100;
 
 	private static final int CREDITS_PER_FACTORY_PER_TURN = 20;
@@ -17,7 +13,7 @@ public class FactorySite {
 
 	protected void buildFactory() {
 		if (FACTORY_SLOTS == factoryCount) {
-			throw new NoFactorySlotsAvailableException();
+			throw new IllegalActionException();
 		}
 		factoryCount++;
 	}

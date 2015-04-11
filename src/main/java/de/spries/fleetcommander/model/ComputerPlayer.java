@@ -1,6 +1,5 @@
-package de.spries.fleetcommander.model.player;
+package de.spries.fleetcommander.model;
 
-import de.spries.fleetcommander.model.Game;
 import de.spries.fleetcommander.model.universe.Planet;
 
 public class ComputerPlayer extends Player {

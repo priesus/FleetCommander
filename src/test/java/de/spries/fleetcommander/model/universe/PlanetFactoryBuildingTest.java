@@ -13,10 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import de.spries.fleetcommander.model.Player;
+import de.spries.fleetcommander.model.Player.InsufficientCreditsException;
 import de.spries.fleetcommander.model.common.IllegalActionException;
-import de.spries.fleetcommander.model.player.Player;
-import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
-import de.spries.fleetcommander.model.universe.FactorySite.NoFactorySlotsAvailableException;
 
 public class PlanetFactoryBuildingTest {
 
@@ -86,7 +85,7 @@ public class PlanetFactoryBuildingTest {
 	@Test
 	public void noCreditsRemovedWhenNoFactorySlotsAvailable() throws Exception {
 		doReturn(false).when(johnsFactorySite).hasAvailableSlots();
-		doThrow(NoFactorySlotsAvailableException.class).when(johnsFactorySite).buildFactory();
+		doThrow(IllegalActionException.class).when(johnsFactorySite).buildFactory();
 
 		try {
 			johnsHomePlanet.buildFactory(john);

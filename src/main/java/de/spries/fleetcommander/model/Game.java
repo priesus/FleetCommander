@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import de.spries.fleetcommander.model.player.Player;
 import de.spries.fleetcommander.model.universe.Universe;
 
 public class Game {

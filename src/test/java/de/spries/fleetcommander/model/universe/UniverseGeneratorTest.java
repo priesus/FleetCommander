@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.Player;
 
 public class UniverseGeneratorTest {
 

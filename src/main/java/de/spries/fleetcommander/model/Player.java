@@ -1,9 +1,8 @@
-package de.spries.fleetcommander.model.player;
+package de.spries.fleetcommander.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import de.spries.fleetcommander.model.Game;
 import de.spries.fleetcommander.model.common.IllegalActionException;
 
 public class Player {

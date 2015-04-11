@@ -1,6 +1,6 @@
 package de.spries.fleetcommander.model.universe;
 
-import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.Player;
 
 public class ShipFormation {
 

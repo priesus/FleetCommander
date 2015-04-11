@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.Player;
 
 public class UniverseGenerator {
 	public static final int PLANET_COUNT = 100;

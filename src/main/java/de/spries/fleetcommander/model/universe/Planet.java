@@ -5,14 +5,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import de.spries.fleetcommander.model.Player;
 import de.spries.fleetcommander.model.common.IllegalActionException;
-import de.spries.fleetcommander.model.player.Player;
 
 public class Planet {
-
-	public static class NotPlayersOwnPlanetException extends IllegalActionException {
-		// Nothing to implement
-	}
 
 	private static final int HOME_PLANET_STARTING_SHIPS = 6;
 
@@ -127,10 +123,10 @@ public class Planet {
 
 	public void sendShipsAway(int shipsToSend, Player player) {
 		if (!player.equals(inhabitant)) {
-			throw new NotPlayersOwnPlanetException();
+			throw new IllegalActionException();
 		}
 		if (shipsToSend > shipCount) {
-			throw new NotEnoughShipsException();
+			throw new IllegalActionException();
 		}
 
 		shipCount -= shipsToSend;

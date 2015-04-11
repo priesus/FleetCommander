@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.model.player;
+package de.spries.fleetcommander.model;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -10,7 +10,9 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.spries.fleetcommander.model.ComputerPlayer;
 import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.Player;
 import de.spries.fleetcommander.model.universe.Planet;
 import de.spries.fleetcommander.model.universe.Universe;
 

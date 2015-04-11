@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import de.spries.fleetcommander.model.player.Player;
+import de.spries.fleetcommander.model.Player;
 
 public class Universe {
 

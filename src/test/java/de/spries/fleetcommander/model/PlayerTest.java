@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.model.player;
+package de.spries.fleetcommander.model;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -6,7 +6,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.player.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.Player;
+import de.spries.fleetcommander.model.Player.InsufficientCreditsException;
 
 public class PlayerTest {
 
