@@ -93,6 +93,11 @@ public class PlanetShipsTest {
 	}
 
 	@Test
+	public void planetHasNoShipsIncomingInitially() throws Exception {
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+	}
+
+	@Test
 	public void addingIncomingShipsIncreasesIncomingShips() throws Exception {
 		uninhabitedPlanet.addIncomingShips(1);
 		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));

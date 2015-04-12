@@ -5,7 +5,9 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,23 +22,18 @@ public class UniverseShipsTest {
 
 	private static final int INEXISTENT_PLANET = 123456789;
 	private Player john;
-	private Player jack;
 	private Planet johnsHomePlanet;
-	private Planet jacksHomePlanet;
 	private Planet uninhabitedPlanet;
+	private Planet distantPlanet;
 	private Universe universe;
 
 	@Before
 	public void setUp() {
 		john = mock(Player.class);
-		jack = mock(Player.class);
-		johnsHomePlanet = new Planet(1, 1, john);
-		jacksHomePlanet = new Planet(5, 1, jack);
-		uninhabitedPlanet = new Planet(3, 3);
-		johnsHomePlanet.setId(0);
-		jacksHomePlanet.setId(1);
-		uninhabitedPlanet.setId(2);
-		universe = new Universe(Arrays.asList(johnsHomePlanet, uninhabitedPlanet, jacksHomePlanet));
+		johnsHomePlanet = mock(Planet.class);
+		uninhabitedPlanet = mock(Planet.class);
+		distantPlanet = mock(Planet.class);
+		universe = new Universe(Arrays.asList(johnsHomePlanet, uninhabitedPlanet, distantPlanet));
 	}
 
 	@Test
@@ -49,28 +46,9 @@ public class UniverseShipsTest {
 	}
 
 	@Test
-	public void planetHasNoShipsIncoming() throws Exception {
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
-	}
-
-	@Test
-	public void sendingShipsAddsIncomingShipsToDestinatopnPlanet() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
-	}
-
-	@Test
-	public void sendingMoreShipsAddsIncomingShipsToDestinatonPlanet() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		universe.sendShips(2, johnsHomePlanet, uninhabitedPlanet, john);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(3));
-	}
-
-	@Test
-	public void runningTravellingCycleRemovesIncomingShips() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		universe.runShipTravellingCycle();
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+	public void sendingShipsAddsIncomingShipsToDestinatonPlanet() throws Exception {
+		universe.sendShips(3, johnsHomePlanet, uninhabitedPlanet, john);
+		verify(uninhabitedPlanet).addIncomingShips(3);
 	}
 
 	@Test
@@ -86,7 +64,7 @@ public class UniverseShipsTest {
 	@Test
 	public void sendingShipsToDifferentDestinationAddsAnotherShipFormation() throws Exception {
 		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
-		universe.sendShips(1, johnsHomePlanet, jacksHomePlanet, john);
+		universe.sendShips(1, johnsHomePlanet, distantPlanet, john);
 		Collection<ShipFormation> shipFormations = universe.getTravellingShipFormations();
 		assertThat(shipFormations, hasSize(2));
 	}
@@ -110,26 +88,33 @@ public class UniverseShipsTest {
 	}
 
 	@Test
-	public void runningTravellingCycleRemovedShipsFromSpace() throws Exception {
-		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+	public void travellingToDistantPlanetTakesMultipleCycles() throws Exception {
+		doReturn(15.0).when(johnsHomePlanet).distanceTo(distantPlanet);
+		universe.sendShips(1, johnsHomePlanet, distantPlanet, john);
+
 		universe.runShipTravellingCycle();
-		assertThat(universe.getTravellingShipFormations(), is(empty()));
+		assertThat(universe.getTravellingShipFormations(), hasSize(1));
+
+		universe.runShipTravellingCycle();
+		assertThat(universe.getTravellingShipFormations(), hasSize(0));
 	}
 
 	@Test
 	public void shipsLandOnTargetPlanet() throws Exception {
 		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
 		universe.runShipTravellingCycle();
-		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
-		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+		verify(uninhabitedPlanet).landShips(1, john);
 	}
 
 	@Test
 	public void planetsAreIdentifiedByIdForTravellingShips() throws Exception {
-		universe.sendShips(1, johnsHomePlanet.getId(), uninhabitedPlanet.getId(), john);
-		universe.runShipTravellingCycle();
-		assertThat(uninhabitedPlanet.isInhabitedBy(john), is(true));
-		assertThat(uninhabitedPlanet.getShipCount(), is(1));
+		doReturn(1).when(johnsHomePlanet).getId();
+		doReturn(2).when(uninhabitedPlanet).getId();
+
+		universe.sendShips(1, 1, 2, john);
+
+		Collection<ShipFormation> shipFormations = universe.getTravellingShipFormations();
+		assertThat(shipFormations, hasItem(new ShipFormation(1, johnsHomePlanet, uninhabitedPlanet, john)));
 	}
 
 	@Test(expected = NoSuchElementException.class)
