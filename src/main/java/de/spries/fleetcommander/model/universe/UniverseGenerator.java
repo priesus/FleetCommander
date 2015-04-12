@@ -3,11 +3,15 @@ package de.spries.fleetcommander.model.universe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import de.spries.fleetcommander.model.Player;
 
 public class UniverseGenerator {
 	public static final int PLANET_COUNT = 100;
+	private static final int MIN_PLANET_OFFSET = -2;
+	private static final int MAX_PLANET_OFFSET = 2;
+	private static final Random rand = new Random();
 
 	/**
 	 * Prototype implementation for testing purposes
@@ -17,7 +21,10 @@ public class UniverseGenerator {
 
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
-				Planet planet = new Planet(col * 10 + 5, row * 10 + 5);
+				int offsetX = randomOffset();
+				int offsetY = randomOffset();
+
+				Planet planet = new Planet(col * 10 + 5 + offsetX, row * 10 + 5 + offsetY);
 				planets.add(planet);
 			}
 		}
@@ -39,6 +46,10 @@ public class UniverseGenerator {
 		}
 
 		return new Universe(planets);
+	}
+
+	private static int randomOffset() {
+		return rand.nextInt(MAX_PLANET_OFFSET - MIN_PLANET_OFFSET + 1) + MIN_PLANET_OFFSET;
 	}
 
 }
