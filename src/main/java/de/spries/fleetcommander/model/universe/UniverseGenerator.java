@@ -14,12 +14,10 @@ public class UniverseGenerator {
 	 */
 	public static Universe generate(List<Player> players) {
 		List<Planet> planets = new ArrayList<>(PLANET_COUNT);
-		int planetId = 0;
 
 		for (int row = 0; row < 10; row++) {
 			for (int col = 0; col < 10; col++) {
 				Planet planet = new Planet(col * 10 + 5, row * 10 + 5);
-				planet.setId(planetId++);
 				planets.add(planet);
 			}
 		}
@@ -27,6 +25,11 @@ public class UniverseGenerator {
 		Collections.shuffle(planets);
 
 		planets = planets.subList(0, planets.size() / (6 - players.size()));
+
+		int planetId = 0;
+		for (Planet planet : planets) {
+			planet.setId(planetId++);
+		}
 
 		for (int i = 0; i < players.size(); i++) {
 			Planet oldUninhabitedPlanet = planets.get(i);
