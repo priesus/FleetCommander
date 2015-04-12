@@ -1,6 +1,8 @@
 package de.spries.fleetcommander.model.universe;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -164,6 +166,34 @@ public class ShipFormationTest {
 		sf.travel();
 		verify(distantPlanet).landShips(1, JOHN);
 		assertThat(sf.hasArrived(), is(true));
+	}
+
+	@Test
+	public void distanceTravelledIncreasesWithEachCycle() throws Exception {
+		ShipFormation sf = new ShipFormation(1, originPlanet, moreDistantPlanet, JOHN);
+
+		sf.travel();
+		assertThat(sf.getDistanceTravelled(), is(1 * ShipFormation.DISTANCE_PER_TURN));
+		sf.travel();
+		assertThat(sf.getDistanceTravelled(), is(2 * ShipFormation.DISTANCE_PER_TURN));
+	}
+
+	@Test
+	public void formationPositionMovesTowardsDestination() throws Exception {
+		doReturn(0).when(originPlanet).getX();
+		doReturn(0).when(originPlanet).getY();
+		doReturn(15).when(distantPlanet).getX();
+		doReturn(15).when(distantPlanet).getY();
+
+		ShipFormation sf = new ShipFormation(1, originPlanet, distantPlanet, JOHN);
+		assertThat(sf.getPositionX(), is(0.0));
+		assertThat(sf.getPositionY(), is(0.0));
+
+		sf.travel();
+		assertThat(sf.getPositionX(), is(greaterThan(0.0)));
+		assertThat(sf.getPositionY(), is(greaterThan(0.0)));
+		assertThat(sf.getPositionX(), is(lessThan(15.0)));
+		assertThat(sf.getPositionY(), is(lessThan(15.0)));
 	}
 
 }

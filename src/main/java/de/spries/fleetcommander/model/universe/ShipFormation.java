@@ -79,6 +79,10 @@ public class ShipFormation {
 		return distanceTravelled >= distanceOverall;
 	}
 
+	public int getDistanceTravelled() {
+		return distanceTravelled;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);
@@ -87,6 +91,14 @@ public class ShipFormation {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	public double getPositionX() {
+		return origin.getX() + (destination.getX() - origin.getX()) * distanceTravelled / distanceOverall;
+	}
+
+	public double getPositionY() {
+		return origin.getY() + (destination.getY() - origin.getY()) * distanceTravelled / distanceOverall;
 	}
 
 }
