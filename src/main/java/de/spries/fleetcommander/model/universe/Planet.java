@@ -158,7 +158,7 @@ public class Planet {
 				shipCount *= -1;
 			}
 		}
-		incomingShipCount = 0;
+		incomingShipCount -= shipsToLand;
 	}
 
 	@Override

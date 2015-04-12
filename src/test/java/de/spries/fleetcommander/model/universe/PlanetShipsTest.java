@@ -101,8 +101,12 @@ public class PlanetShipsTest {
 	}
 
 	@Test
-	public void landingShipsResetsIncomingShips() throws Exception {
-		uninhabitedPlanet.addIncomingShips(1);
+	public void landingShipsReducesIncomingShips() throws Exception {
+		uninhabitedPlanet.addIncomingShips(2);
+
+		uninhabitedPlanet.landShips(1, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
+
 		uninhabitedPlanet.landShips(1, john);
 		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
 	}
