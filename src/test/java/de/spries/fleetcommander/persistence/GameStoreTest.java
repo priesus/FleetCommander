@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.core.Game;
 
 public class GameStoreTest {
 

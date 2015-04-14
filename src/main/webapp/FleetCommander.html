@@ -39,13 +39,13 @@
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar">
-						<span>{{runningGame.players[0].name}}</span>
-						<span class="pull-right">Credits: {{runningGame.players[0].credits}}</span>
+						<span>{{runningGame.me.name}}</span>
+						<span class="pull-right">Credits: {{runningGame.me.credits}}</span>
 					</div>
 					<div id="universe">
 						<div class="space-object"
 								ng-repeat="planet in runningGame.universe.planets track by planet.id"
-								ng-class="{'friendly': planet.inhabitant.name=='Player 1', 'enemy': planet.inhabitant.name=='Computer', 'planet-uninhabited': planet.inhabitant==undefined}"
+								ng-class="{'friendly': planet.inhabitedByMe, 'planet-uninhabited': !planet.inhabitedByMe}"
 								ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
@@ -53,10 +53,10 @@
 								<span class="glyphicon glyphicon-globe"></span>
 							</div>
 							
-							<div class="object-annotation object-annotation-top-left" ng-if="planet.inhabited==true">
+							<div class="object-annotation object-annotation-top-left" ng-if="planet.inhabitedByMe">
 								<span class="glyphicon glyphicon-flag"></span>
 							</div>
-							<div class="object-annotation object-annotation-top-right" ng-if="planet.homePlanet==true">
+							<div class="object-annotation object-annotation-top-right" ng-if="planet.myHomePlanet">
 								<span class="glyphicon glyphicon-home"></span>
 							</div>
 							<div class="object-annotation object-annotation-bottom-left" ng-if="planet.incomingShipCount>0">
@@ -66,10 +66,9 @@
 								{{planet.shipCount}}
 							</div>
 						</div>
-						<div class="space-object"
+						<div class="space-object friendly"
 								ng-repeat="ships in runningGame.universe.travellingShipFormations"
 								ng-hide="ships.distanceTravelled==0"
-								ng-class="{'friendly': ships.commander.name=='Player 1', 'enemy': ships.commander.name=='Computer'}"
 								style="top: {{ships.positionY / 100 * 334 - 7}}px; left: {{ships.positionX / 100 * 524 - 8}}px;">
 							
 							<div class="object-icon">

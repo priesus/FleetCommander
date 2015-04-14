@@ -59,7 +59,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.clickPlanetHandler = function(planet) {
-				if (!$scope.destinationSelectionActive && planet.inhabited && planet.inhabitant.name == 'Player 1') {
+				if (!$scope.destinationSelectionActive && planet.inhabitedByMe) {
 					// Open planet menu
 					$scope.selectedPlanet = planet;
 					$scope.showPlanetMenu = true;

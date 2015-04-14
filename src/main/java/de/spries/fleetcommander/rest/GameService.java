@@ -15,11 +15,12 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.spries.fleetcommander.model.ComputerPlayer;
-import de.spries.fleetcommander.model.Game;
-import de.spries.fleetcommander.model.Player;
-import de.spries.fleetcommander.model.common.IllegalActionException;
-import de.spries.fleetcommander.model.universe.UniverseGenerator;
+import de.spries.fleetcommander.model.core.ComputerPlayer;
+import de.spries.fleetcommander.model.core.Game;
+import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
+import de.spries.fleetcommander.model.core.universe.UniverseGenerator;
+import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.GameStore;
 
 @Path("")
@@ -48,10 +49,14 @@ public class GameService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGame(@PathParam("id") int id) {
 
-		//TODO players should only be able to see limited details of the universe (i.e. no enemy locations)
+		//TODO return player specific view
 
 		Game game = GameStore.INSTANCE.get(id);
-		return getNoCacheResponseBuilder(Response.Status.OK).entity(game).build();
+		Player player1 = game.getPlayers().get(0);
+
+		PlayerSpecificGame gameView = new PlayerSpecificGame(game, player1);
+
+		return getNoCacheResponseBuilder(Response.Status.OK).entity(gameView).build();
 	}
 
 	@DELETE

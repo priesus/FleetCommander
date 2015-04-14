@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.spries.fleetcommander.model.Game;
+import de.spries.fleetcommander.model.core.Game;
 
 public enum GameStore {
 	INSTANCE;
@@ -29,7 +29,7 @@ public enum GameStore {
 		gameStore.remove(id);
 	}
 
-	public Collection<Game> getGames() {
+	protected Collection<Game> getGames() {
 		return gameStore.values();
 	}
 
