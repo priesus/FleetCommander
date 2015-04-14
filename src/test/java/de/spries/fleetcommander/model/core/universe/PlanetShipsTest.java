@@ -10,8 +10,6 @@ import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
-import de.spries.fleetcommander.model.core.universe.FactorySite;
-import de.spries.fleetcommander.model.core.universe.Planet;
 
 public class PlanetShipsTest {
 
@@ -141,5 +139,12 @@ public class PlanetShipsTest {
 		jacksHomePlanet.landShips(7, john);
 		assertThat(jacksHomePlanet.getShipCount(), is(1));
 		assertThat(jacksHomePlanet.getInhabitant(), is(john));
+	}
+
+	@Test
+	public void invadingEnemyHomePlanetConvertsIntoRegularPlanet() throws Exception {
+		assertThat(jacksHomePlanet.isHomePlanet(), is(true));
+		jacksHomePlanet.landShips(7, john);
+		assertThat(jacksHomePlanet.isHomePlanet(), is(false));
 	}
 }

@@ -15,7 +15,7 @@ public class Planet {
 	private int id;
 	private final int x;
 	private final int y;
-	private final boolean isHomePlanet;
+	private boolean isHomePlanet;
 	private Player inhabitant;
 	private float shipCount;
 	private int incomingShipCount;
@@ -156,6 +156,7 @@ public class Planet {
 			if (shipCount < 0) {
 				inhabitant = invader;
 				shipCount *= -1;
+				isHomePlanet = false;
 			}
 		}
 		incomingShipCount -= shipsToLand;
