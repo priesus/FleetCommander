@@ -70,7 +70,7 @@ public class GameServiceIT {
 	@Test
 	public void canSendShipsWithAuthorization() throws Exception {
 		Response response = whenAuthorized().get(gameUrl);
-		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
 		int otherPlanetId = (homePlanetId + 1) % 20;
 
 		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, homePlanetId, otherPlanetId);
@@ -81,7 +81,7 @@ public class GameServiceIT {
 	@Test
 	public void cannotSendShipsFromWrongPlanet() throws Exception {
 		Response response = whenAuthorized().get(gameUrl);
-		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
 		int otherPlanetId = (homePlanetId + 1) % 20;
 
 		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, otherPlanetId, homePlanetId);
@@ -98,7 +98,7 @@ public class GameServiceIT {
 	@Test
 	public void canBuildFactoryWithAuthorization() throws Exception {
 		Response response = whenAuthorized().get(gameUrl);
-		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
 
 		whenAuthorized().post(gameUrl + "/universe/planets/" + homePlanetId + "/factories")
 				.then().statusCode(SC_OK);
@@ -107,7 +107,7 @@ public class GameServiceIT {
 	@Test
 	public void cannotBuildFactoryOnWrongPlanet() throws Exception {
 		Response response = whenAuthorized().get(gameUrl);
-		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanets[0].id");
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
 		int otherPlanetId = (homePlanetId + 1) % 20;
 
 		whenAuthorized().post(gameUrl + "/universe/planets/" + otherPlanetId + "/factories")
