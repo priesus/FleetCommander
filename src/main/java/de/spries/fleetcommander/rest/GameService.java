@@ -19,7 +19,7 @@ import de.spries.fleetcommander.model.core.ComputerPlayer;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
-import de.spries.fleetcommander.model.core.universe.UniverseGenerator;
+import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.GameStore;
 
@@ -123,7 +123,7 @@ public class GameService {
 		Player pc = new ComputerPlayer("Computer");
 		game.addPlayer(p);
 		game.addPlayer(pc);
-		game.setUniverse(UniverseGenerator.generate(Arrays.asList(p, pc)));
+		game.setUniverse(UniverseFactory.generate(Arrays.asList(p, pc)));
 		game.start();
 		return game;
 	}

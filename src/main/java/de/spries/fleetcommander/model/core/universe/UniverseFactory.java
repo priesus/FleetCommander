@@ -7,7 +7,7 @@ import java.util.Random;
 
 import de.spries.fleetcommander.model.core.Player;
 
-public class UniverseGenerator {
+public class UniverseFactory {
 	public static final int PLANET_COUNT = 100;
 	private static final int MIN_PLANET_OFFSET = -2;
 	private static final int MAX_PLANET_OFFSET = 2;
