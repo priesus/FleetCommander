@@ -1,7 +1,9 @@
 package de.spries.fleetcommander.model.core;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -10,8 +12,6 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.core.Game;
-import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class GameTest {
@@ -55,6 +55,19 @@ public class GameTest {
 	public void playerIsAddedToPlayersList() throws Exception {
 		game.addPlayer(john);
 		assertThat(game.getPlayers(), hasItem(john));
+	}
+
+	@Test
+	public void gameHasAMaximumOf6Players() throws Exception {
+		for (int i = 0; i < 5; i++) {
+			game.addPlayer(mock(Player.class));
+		}
+		try {
+			game.addPlayer(mock(Player.class));
+			fail("Expected exception");
+		} catch (Exception e) {
+			assertThat(e.getMessage(), containsString("Limit of 6 players reached"));
+		}
 	}
 
 	@Test(expected = IllegalStateException.class)

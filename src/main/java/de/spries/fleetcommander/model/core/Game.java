@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class Game {
+	private static final int MAX_PLAYERS = 6;
 	private int id;
 	private List<Player> players;
 	private Set<Player> turnFinishedPlayers;
@@ -23,6 +25,9 @@ public class Game {
 	public void addPlayer(Player player) {
 		if (hasStarted) {
 			throw new IllegalStateException("Game has already started");
+		}
+		if (players.size() >= MAX_PLAYERS) {
+			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
 		}
 		players.add(player);
 	}
