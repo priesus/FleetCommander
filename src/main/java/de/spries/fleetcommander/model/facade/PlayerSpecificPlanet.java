@@ -40,11 +40,15 @@ public class PlayerSpecificPlanet {
 		return originalPlanet.isInhabitedBy(viewingPlayer);
 	}
 
-	public Integer getShipCount() {
+	public int getShipCount() {
 		if (isInhabitedByMe()) {
 			return originalPlanet.getShipCount();
 		}
-		return null;
+		return 0;
+	}
+
+	public int getIncomingShipCount() {
+		return originalPlanet.getIncomingShipCount(viewingPlayer);
 	}
 
 	public FactorySite getFactorySite() {

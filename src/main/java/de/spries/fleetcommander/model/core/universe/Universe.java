@@ -71,7 +71,7 @@ public class Universe {
 		}
 
 		origin.sendShipsAway(shipCount, player);
-		destination.addIncomingShips(shipCount);
+		destination.addIncomingShips(shipCount, player);
 
 		ShipFormation newShipFormation = new ShipFormation(shipCount, origin, destination, player);
 		ShipFormation joinableFormation = getJoinableShipFormation(newShipFormation);

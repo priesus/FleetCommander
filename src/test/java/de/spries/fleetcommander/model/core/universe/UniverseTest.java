@@ -19,9 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.Planet;
-import de.spries.fleetcommander.model.core.universe.ShipFormation;
-import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class UniverseTest {
 
@@ -87,7 +84,7 @@ public class UniverseTest {
 	@Test
 	public void sendingShipsAddsIncomingShipsToDestinatonPlanet() throws Exception {
 		universe.sendShips(3, johnsHomePlanet, uninhabitedPlanet, john);
-		verify(uninhabitedPlanet).addIncomingShips(3);
+		verify(uninhabitedPlanet).addIncomingShips(3, john);
 	}
 
 	@Test

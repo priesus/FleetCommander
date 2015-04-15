@@ -94,26 +94,33 @@ public class PlanetShipsTest {
 
 	@Test
 	public void planetHasNoShipsIncomingInitially() throws Exception {
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(john), is(0));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(jack), is(0));
 	}
 
 	@Test
 	public void addingIncomingShipsIncreasesIncomingShips() throws Exception {
-		uninhabitedPlanet.addIncomingShips(1);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
-		uninhabitedPlanet.addIncomingShips(2);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(3));
+		uninhabitedPlanet.addIncomingShips(1, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(john), is(1));
+
+		uninhabitedPlanet.addIncomingShips(1, jack);
+		uninhabitedPlanet.addIncomingShips(2, john);
+		assertThat(uninhabitedPlanet.getIncomingShipCount(john), is(3));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(jack), is(1));
 	}
 
 	@Test
 	public void landingShipsReducesIncomingShips() throws Exception {
-		uninhabitedPlanet.addIncomingShips(2);
+		uninhabitedPlanet.addIncomingShips(2, john);
+		uninhabitedPlanet.addIncomingShips(2, jack);
 
 		uninhabitedPlanet.landShips(1, john);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(1));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(john), is(1));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(jack), is(2));
 
 		uninhabitedPlanet.landShips(1, john);
-		assertThat(uninhabitedPlanet.getIncomingShipCount(), is(0));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(john), is(0));
+		assertThat(uninhabitedPlanet.getIncomingShipCount(jack), is(2));
 	}
 
 	@Test

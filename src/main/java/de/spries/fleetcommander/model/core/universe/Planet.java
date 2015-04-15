@@ -1,5 +1,8 @@
 package de.spries.fleetcommander.model.core.universe;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,7 +21,7 @@ public class Planet {
 	private boolean isHomePlanet;
 	private Player inhabitant;
 	private float shipCount;
-	private int incomingShipCount;
+	private Map<Player, Integer> incomingShipsPerPlayer;
 
 	private FactorySite factorySite = new FactorySite();
 
@@ -29,7 +32,7 @@ public class Planet {
 	public Planet(int x, int y, Player inhabitant) {
 		this.x = x;
 		this.y = y;
-		incomingShipCount = 0;
+		incomingShipsPerPlayer = new HashMap<>();
 		if (inhabitant != null) {
 			shipCount = HOME_PLANET_STARTING_SHIPS;
 			this.inhabitant = inhabitant;
@@ -132,12 +135,15 @@ public class Planet {
 		shipCount -= shipsToSend;
 	}
 
-	public void addIncomingShips(int ships) {
-		incomingShipCount += ships;
+	public void addIncomingShips(int ships, Player player) {
+		incomingShipsPerPlayer.putIfAbsent(player, 0);
+		incomingShipsPerPlayer.put(player, incomingShipsPerPlayer.get(player) + ships);
+
 	}
 
-	public int getIncomingShipCount() {
-		return incomingShipCount;
+	public int getIncomingShipCount(Player player) {
+		Integer incShips = incomingShipsPerPlayer.get(player);
+		return incShips != null ? incShips : 0;
 	}
 
 	public void landShips(int shipsToLand, Player invader) {
@@ -159,7 +165,7 @@ public class Planet {
 				isHomePlanet = false;
 			}
 		}
-		incomingShipCount -= shipsToLand;
+		addIncomingShips(shipsToLand * -1, invader);
 	}
 
 	@Override

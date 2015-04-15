@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.Planet;
-import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet;
 
 public class PlayerSpecificPlanetTest {
 
@@ -76,8 +75,14 @@ public class PlayerSpecificPlanetTest {
 
 	@Test
 	public void doesNotReturnShipCountForOtherPlayers() {
-		assertThat(otherPlayersPlanet.getShipCount(), is(nullValue()));
+		assertThat(otherPlayersPlanet.getShipCount(), is(0));
 		verify(originalPlanet, never()).getShipCount();
+	}
+
+	@Test
+	public void forwardsCallToGetIncomingShips() {
+		ownPlanet.getIncomingShipCount();
+		verify(originalPlanet).getIncomingShipCount(self);
 	}
 
 	@Test
