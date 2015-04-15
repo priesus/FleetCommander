@@ -26,12 +26,6 @@ import de.spries.fleetcommander.persistence.GameStore;
 @Path("")
 public class GameService {
 
-	public static class ShipFormation {
-		public int shipCount;
-		public int originPlanetId;
-		public int destinationPlanetId;
-	}
-
 	@POST
 	@Path("games")
 	public Response createGame() {
@@ -82,11 +76,12 @@ public class GameService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("games/{id:\\d+}/universe/travellingShipFormations")
-	public Response sendShips(@PathParam("id") int gameId, ShipFormation ships) {
+	public Response sendShips(@PathParam("id") int gameId, ShipFormationParams ships) {
 		Game game = GameStore.INSTANCE.get(gameId);
 		Player player = game.getPlayers().get(0);
 		try {
-			game.getUniverse().sendShips(ships.shipCount, ships.originPlanetId, ships.destinationPlanetId, player);
+			game.getUniverse().sendShips(ships.getShipCount(), ships.getOriginPlanetId(),
+					ships.getDestinationPlanetId(), player);
 			return getNoCacheResponseBuilder(Response.Status.OK).build();
 		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
