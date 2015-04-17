@@ -24,9 +24,9 @@ public enum GameAuthenticator {
 		return token;
 	}
 
-	public void deleteAuthToken(int gameId, String token) {
-		if (!isAuthTokenValid(gameId, token)) {
-			throw new IllegalArgumentException("Invalid game id and token combination");
+	public void deleteAuthToken(int gameId) {
+		if (!gameTokens.containsKey(gameId)) {
+			throw new IllegalArgumentException("There is no token for this game!");
 		}
 		gameTokens.remove(gameId);
 	}

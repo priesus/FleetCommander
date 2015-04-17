@@ -6,8 +6,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.service.core.GameAuthenticator;
-
 public class GameAuthenticatorTest {
 
 	private static final String INVALID_TOKEN = "invalid token";
@@ -51,18 +49,13 @@ public class GameAuthenticatorTest {
 
 	@Test
 	public void deletingTokenInvalidatesToken() throws Exception {
-		GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_ID, firstGameToken);
+		GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_ID);
 		assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_ID, firstGameToken), is(false));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void cannotDeleteTokenForInvalidToken() throws Exception {
-		GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_ID, INVALID_TOKEN);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
 	public void cannotDeleteTokenForInexistentGameId() throws Exception {
-		GameAuthenticator.INSTANCE.deleteAuthToken(INEXISTENT_GAME_ID, firstGameToken);
+		GameAuthenticator.INSTANCE.deleteAuthToken(INEXISTENT_GAME_ID);
 	}
 
 }

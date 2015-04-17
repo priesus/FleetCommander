@@ -10,8 +10,6 @@ import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
 
 public class GamesService {
 
-	//TODO write tests
-
 	public GameAccessParams createNewGame(String playerName) {
 		Game game = new Game();
 		Player p = new Player(playerName);
@@ -26,12 +24,15 @@ public class GamesService {
 
 	public PlayerSpecificGame getGame(int gameId) {
 		Game game = GameStore.INSTANCE.get(gameId);
-		Player player = game.getPlayers().get(0);
-		return new PlayerSpecificGame(game, player);
+		if (game != null) {
+			Player player = game.getPlayers().get(0);
+			return new PlayerSpecificGame(game, player);
+		}
+		throw new IllegalArgumentException("The game doesn't exist on the server");
 	}
 
-	public void deleteGame(int gameId, String authToken) {
-		GameAuthenticator.INSTANCE.deleteAuthToken(gameId, authToken);
+	public void deleteGame(int gameId) {
+		GameAuthenticator.INSTANCE.deleteAuthToken(gameId);
 		GameStore.INSTANCE.delete(gameId);
 	}
 
@@ -40,8 +41,8 @@ public class GamesService {
 		game.addComputerPlayer();
 	}
 
-	public void startGame(int gameId, GameParams params) {
-		if (params.getIsStarted() == true) {
+	public void modifyGame(int gameId, GameParams params) {
+		if (Boolean.TRUE.equals(params.getIsStarted())) {
 			PlayerSpecificGame game = getGame(gameId);
 			game.start();
 		}

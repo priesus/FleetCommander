@@ -1,13 +1,13 @@
 package de.spries.fleetcommander.service.core.dto;
 
 public class GameParams {
-	private boolean isStarted;
+	private Boolean isStarted;
 
-	public boolean getIsStarted() {
+	public Boolean getIsStarted() {
 		return isStarted;
 	}
 
-	public void setIsStarted(boolean isStarted) {
+	public void setIsStarted(Boolean isStarted) {
 		this.isStarted = isStarted;
 	}
 

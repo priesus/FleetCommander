@@ -8,8 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,6 +25,7 @@ public class GamesRestService {
 
 	@POST
 	@Path("games")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response createGame() {
 		GameAccessParams accessParams = SERVICE.createNewGame("Player 1");
 
@@ -45,9 +44,8 @@ public class GamesRestService {
 
 	@DELETE
 	@Path("games/{id:\\d+}")
-	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
-		String token = GameAccessTokenFilter.extractAuthTokenFromHeaders(httpHeaders);
-		SERVICE.deleteGame(id, token);
+	public Response quitGame(@PathParam("id") int id) {
+		SERVICE.deleteGame(id);
 		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
@@ -61,7 +59,7 @@ public class GamesRestService {
 	@POST
 	@Path("games/{id:\\d+}")
 	public Response startGame(@PathParam("id") int gameId, GameParams params) {
-		SERVICE.startGame(gameId, params);
+		SERVICE.modifyGame(gameId, params);
 		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 

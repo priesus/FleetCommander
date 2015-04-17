@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.service.rest;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -28,11 +29,14 @@ public class GamesRestServiceIT {
 		Response response = when().post("/rest/games");
 
 		gameUrl = response.getHeader("Location");
-		gameAuthToken = response.getBody().jsonPath().getString("gameAuthToken");
+		gameAuthToken = response.getBody().jsonPath().getString("authToken");
 
 		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
 		assertThat(response.getStatusCode(), is(SC_CREATED));
+
+		whenAuthorized().post(gameUrl + "/players").then().statusCode(SC_ACCEPTED);
+		whenAuthorized("{\"isStarted\": true}").post(gameUrl).then().statusCode(SC_ACCEPTED);
 	}
 
 	@Test
@@ -57,7 +61,7 @@ public class GamesRestServiceIT {
 	@Test
 	public void canEndTurnWithAuthorization() throws Exception {
 		whenAuthorized().post(gameUrl + "/turns")
-				.then().statusCode(SC_OK);
+				.then().statusCode(SC_ACCEPTED);
 	}
 
 	@Test
@@ -75,7 +79,7 @@ public class GamesRestServiceIT {
 
 		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, homePlanetId, otherPlanetId);
 		whenAuthorized(body).post(gameUrl + "/universe/travellingShipFormations")
-				.then().statusCode(SC_OK);
+				.then().statusCode(SC_ACCEPTED);
 	}
 
 	@Test
@@ -101,7 +105,7 @@ public class GamesRestServiceIT {
 		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
 
 		whenAuthorized().post(gameUrl + "/universe/planets/" + homePlanetId + "/factories")
-				.then().statusCode(SC_OK);
+				.then().statusCode(SC_ACCEPTED);
 	}
 
 	@Test
@@ -123,13 +127,13 @@ public class GamesRestServiceIT {
 	@Test
 	public void canQuitGameWithAuthorization() throws Exception {
 		whenAuthorized().delete(gameUrl)
-				.then().statusCode(SC_OK);
+				.then().statusCode(SC_ACCEPTED);
 	}
 
 	@Test
 	public void quittingGameInvalidatesToken() throws Exception {
 		whenAuthorized().delete(gameUrl)
-				.then().statusCode(SC_OK);
+				.then().statusCode(SC_ACCEPTED);
 
 		whenAuthorized().get(gameUrl)
 				.then().statusCode(SC_UNAUTHORIZED);
