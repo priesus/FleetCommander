@@ -72,8 +72,8 @@ public class PlayerSpecificPlanet {
 		return HashCodeBuilder.reflectionHashCode(this);
 	}
 
-	protected static PlayerSpecificPlanet convert(Planet homePlanet, Player viewingPlayer) {
-		return new PlayerSpecificPlanet(homePlanet, viewingPlayer);
+	protected static PlayerSpecificPlanet convert(Planet planet, Player viewingPlayer) {
+		return new PlayerSpecificPlanet(planet, viewingPlayer);
 	}
 
 	protected static List<PlayerSpecificPlanet> convert(List<Planet> planets, Player viewingPlayer) {

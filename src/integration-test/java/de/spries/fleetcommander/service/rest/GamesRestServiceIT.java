@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.rest;
+package de.spries.fleetcommander.service.rest;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
@@ -17,7 +17,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 
-public class GameServiceIT {
+public class GamesRestServiceIT {
 
 	private static final String SEND_SHIPS_REQUEST_BODY = "{\"shipCount\": %d, \"originPlanetId\": %d, \"destinationPlanetId\": %d}";
 	private String gameUrl;

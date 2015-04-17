@@ -1,10 +1,12 @@
-package de.spries.fleetcommander.rest;
+package de.spries.fleetcommander.service.core;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.spries.fleetcommander.service.core.GameAuthenticator;
 
 public class GameAuthenticatorTest {
 

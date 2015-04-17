@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.rest;
+package de.spries.fleetcommander.service.rest;
 
 public class ShipFormationParams {
 	private int shipCount;

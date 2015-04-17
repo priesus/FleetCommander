@@ -27,6 +27,10 @@ public class PlayerSpecificUniverse {
 		return planets;
 	}
 
+	public PlayerSpecificPlanet getPlanet(int planetId) {
+		return PlayerSpecificPlanet.convert(originalUniverse.getPlanetForId(planetId), viewingPlayer);
+	}
+
 	public PlayerSpecificPlanet getHomePlanet() {
 		return homePlanet;
 	}

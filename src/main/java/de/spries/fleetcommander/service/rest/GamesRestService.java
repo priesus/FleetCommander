@@ -1,6 +1,4 @@
-package de.spries.fleetcommander.rest;
-
-import java.util.Arrays;
+package de.spries.fleetcommander.service.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -15,41 +13,33 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.spries.fleetcommander.model.core.ComputerPlayer;
-import de.spries.fleetcommander.model.core.Game;
-import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
-import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
-import de.spries.fleetcommander.persistence.GameStore;
+import de.spries.fleetcommander.service.core.GameAccessParams;
+import de.spries.fleetcommander.service.core.GamesService;
 
 @Path("")
-public class GameService {
+public class GamesRestService {
+
+	private static final GamesService SERVICE = new GamesService();
 
 	@POST
 	@Path("games")
 	public Response createGame() {
-		Game game = createSinglePlayerGame();
-		int gameId = GameStore.INSTANCE.create(game);
-		game.setId(gameId);
-		String token = GameAuthenticator.INSTANCE.createAuthToken(gameId);
+		GameAccessParams accessParams = SERVICE.createNewGame("Player 1");
 
-		return getNoCacheResponseBuilder(Response.Status.CREATED).header("Location", "/rest/games/" + gameId)
-				.entity("{\"gameAuthToken\": \"" + token + "\", \"gameId\": \"" + gameId + "\"}").build();
+		return getNoCacheResponseBuilder(Response.Status.CREATED)
+				.header("Location", "/rest/games/" + accessParams.getGameId())
+				.entity(accessParams.toJson()).build();
 	}
 
 	@GET
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGame(@PathParam("id") int id) {
-
-		//TODO return player specific view
-
-		Game game = GameStore.INSTANCE.get(id);
-		Player player1 = game.getPlayers().get(0);
-
-		PlayerSpecificGame gameView = new PlayerSpecificGame(game, player1);
-
+		//TODO use player id
+		String playerId = "abcdefghijk";
+		PlayerSpecificGame gameView = SERVICE.getGame(id, playerId);
 		return getNoCacheResponseBuilder(Response.Status.OK).entity(gameView).build();
 	}
 
@@ -57,19 +47,15 @@ public class GameService {
 	@Path("games/{id:\\d+}")
 	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
 		String token = GameAccessTokenFilter.extractAuthTokenFromHeaders(httpHeaders);
-
-		GameAuthenticator.INSTANCE.deleteAuthToken(id, token);
-		GameStore.INSTANCE.delete(id);
+		SERVICE.deleteGame(id, token);
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
 
 	@POST
 	@Path("games/{id:\\d+}/turns")
 	public Response endTurn(@PathParam("id") int gameId) {
-		Game game = GameStore.INSTANCE.get(gameId);
-		Player player = game.getPlayers().get(0);
-		game.endTurn(player);
-
+		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
+		game.endTurn();
 		return getNoCacheResponseBuilder(Response.Status.OK).build();
 	}
 
@@ -77,11 +63,11 @@ public class GameService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("games/{id:\\d+}/universe/travellingShipFormations")
 	public Response sendShips(@PathParam("id") int gameId, ShipFormationParams ships) {
-		Game game = GameStore.INSTANCE.get(gameId);
-		Player player = game.getPlayers().get(0);
+		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
+
 		try {
 			game.getUniverse().sendShips(ships.getShipCount(), ships.getOriginPlanetId(),
-					ships.getDestinationPlanetId(), player);
+					ships.getDestinationPlanetId());
 			return getNoCacheResponseBuilder(Response.Status.OK).build();
 		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
@@ -91,11 +77,10 @@ public class GameService {
 	@POST
 	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
 	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId) {
-		Game game = GameStore.INSTANCE.get(gameId);
-		Player player = game.getPlayers().get(0);
+		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
 
 		try {
-			game.getUniverse().getPlanetForId(planetId).buildFactory(player);
+			game.getUniverse().getPlanet(planetId).buildFactory();
 		} catch (IllegalActionException e) {
 			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
 		}
@@ -110,16 +95,5 @@ public class GameService {
 		cc.setMustRevalidate(true);
 
 		return Response.status(status).cacheControl(cc);
-	}
-
-	private Game createSinglePlayerGame() {
-		Game game = new Game();
-		Player p = new Player("Player 1");
-		Player pc = new ComputerPlayer("Computer");
-		game.addPlayer(p);
-		game.addPlayer(pc);
-		game.setUniverse(UniverseFactory.generate(Arrays.asList(p, pc)));
-		game.start();
-		return game;
 	}
 }

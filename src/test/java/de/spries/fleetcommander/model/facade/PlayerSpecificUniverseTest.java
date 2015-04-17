@@ -17,8 +17,6 @@ import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.ShipFormation;
 import de.spries.fleetcommander.model.core.universe.Universe;
-import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet;
-import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse;
 
 public class PlayerSpecificUniverseTest {
 
@@ -58,6 +56,12 @@ public class PlayerSpecificUniverseTest {
 	@Test
 	public void returnsPlayerSpecificPlanets() {
 		assertThat(ownUniverseView.getPlanets(), hasSize(1));
+	}
+
+	@Test
+	public void returnsPlayerSpecificPlanet() {
+		ownUniverseView.getPlanet(1);
+		verify(originalUniverse).getPlanetForId(1);
 	}
 
 	@Test

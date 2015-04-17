@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.rest;
+package de.spries.fleetcommander.service.rest;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -10,6 +10,8 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
+
+import de.spries.fleetcommander.service.core.GameAuthenticator;
 
 /**
  * This request filter is supposed to block unauthorized access to game data.

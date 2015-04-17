@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.rest;
+package de.spries.fleetcommander.service.core;
 
 import java.util.Map;
 import java.util.UUID;
