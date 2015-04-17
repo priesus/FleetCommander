@@ -15,8 +15,10 @@ import javax.ws.rs.core.Response;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
-import de.spries.fleetcommander.service.core.GameAccessParams;
 import de.spries.fleetcommander.service.core.GamesService;
+import de.spries.fleetcommander.service.core.dto.GameAccessParams;
+import de.spries.fleetcommander.service.core.dto.GameParams;
+import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
 
 @Path("")
 public class GamesRestService {
@@ -28,19 +30,17 @@ public class GamesRestService {
 	public Response createGame() {
 		GameAccessParams accessParams = SERVICE.createNewGame("Player 1");
 
-		return getNoCacheResponseBuilder(Response.Status.CREATED)
+		return noCacheResponse(Response.Status.CREATED)
 				.header("Location", "/rest/games/" + accessParams.getGameId())
-				.entity(accessParams.toJson()).build();
+				.entity(accessParams).build();
 	}
 
 	@GET
 	@Path("games/{id:\\d+}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGame(@PathParam("id") int id) {
-		//TODO use player id
-		String playerId = "abcdefghijk";
-		PlayerSpecificGame gameView = SERVICE.getGame(id, playerId);
-		return getNoCacheResponseBuilder(Response.Status.OK).entity(gameView).build();
+		PlayerSpecificGame gameView = SERVICE.getGame(id);
+		return noCacheResponse(Response.Status.OK).entity(gameView).build();
 	}
 
 	@DELETE
@@ -48,47 +48,55 @@ public class GamesRestService {
 	public Response quitGame(@PathParam("id") int id, @Context HttpHeaders httpHeaders) {
 		String token = GameAccessTokenFilter.extractAuthTokenFromHeaders(httpHeaders);
 		SERVICE.deleteGame(id, token);
-		return getNoCacheResponseBuilder(Response.Status.OK).build();
+		return noCacheResponse(Response.Status.ACCEPTED).build();
+	}
+
+	@POST
+	@Path("games/{id:\\d+}/players")
+	public Response addComputerPlayer(@PathParam("id") int gameId) {
+		SERVICE.addComputerPlayer(gameId);
+		return noCacheResponse(Response.Status.ACCEPTED).build();
+	}
+
+	@POST
+	@Path("games/{id:\\d+}")
+	public Response startGame(@PathParam("id") int gameId, GameParams params) {
+		SERVICE.startGame(gameId, params);
+		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
 	@POST
 	@Path("games/{id:\\d+}/turns")
 	public Response endTurn(@PathParam("id") int gameId) {
-		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
-		game.endTurn();
-		return getNoCacheResponseBuilder(Response.Status.OK).build();
+		SERVICE.endTurn(gameId);
+		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("games/{id:\\d+}/universe/travellingShipFormations")
 	public Response sendShips(@PathParam("id") int gameId, ShipFormationParams ships) {
-		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
-
 		try {
-			game.getUniverse().sendShips(ships.getShipCount(), ships.getOriginPlanetId(),
-					ships.getDestinationPlanetId());
-			return getNoCacheResponseBuilder(Response.Status.OK).build();
+			SERVICE.sendShips(gameId, ships);
+			return noCacheResponse(Response.Status.ACCEPTED).build();
 		} catch (IllegalActionException e) {
-			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
+			return noCacheResponse(Response.Status.CONFLICT).build();
 		}
 	}
 
 	@POST
 	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
 	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId) {
-		PlayerSpecificGame game = SERVICE.getGame(gameId, null);
-
 		try {
-			game.getUniverse().getPlanet(planetId).buildFactory();
+			SERVICE.buildFactory(gameId, planetId);
 		} catch (IllegalActionException e) {
-			return getNoCacheResponseBuilder(Response.Status.CONFLICT).build();
+			return noCacheResponse(Response.Status.CONFLICT).build();
 		}
 
-		return getNoCacheResponseBuilder(Response.Status.OK).build();
+		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
-	private Response.ResponseBuilder getNoCacheResponseBuilder(Response.Status status) {
+	private Response.ResponseBuilder noCacheResponse(Response.Status status) {
 		CacheControl cc = new CacheControl();
 		cc.setNoCache(true);
 		cc.setMaxAge(-1);

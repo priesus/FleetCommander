@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.service.core;
+package de.spries.fleetcommander.service.core.dto;
 
 public class GameAccessParams {
 
@@ -18,8 +18,4 @@ public class GameAccessParams {
 		return authToken;
 	}
 
-	public String toJson() {
-		return "{\"gameAuthToken\": \"" + authToken + "\", \"gameId\": \""
-				+ gameId + "\"}";
-	}
 }

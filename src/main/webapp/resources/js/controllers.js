@@ -3,11 +3,12 @@ var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderSer
 fleetCommanderApp.controller('GamesCtrl', [
 		'$scope',
 		'$cookies',
-		'GameService',
-		'TurnService',
-		'PlanetService',
-		'ShipService',
-		function($scope, $cookies, GameService, TurnService, PlanetService, ShipService) {
+		'GamesService',
+		'PlayersService',
+		'TurnsService',
+		'PlanetsService',
+		'ShipsService',
+		function($scope, $cookies, GamesService, PlayersService, TurnsService, PlanetsService, ShipsService) {
 
 			$scope.isIngame = false;
 			$scope.showPlanetMenu = false;
@@ -15,33 +16,39 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.blockingActionInProgress = false;
 
 			$scope.hasActiveGame = function() {
-				return $cookies.runningGameId !== undefined;
+				return $cookies.gameId !== undefined;
 			};
 
 			$scope.startGame = function() {
-				GameService.create().success(function(data) {
-					$cookies.runningGameId = data.gameId;
-					$cookies.runningGameToken = data.gameAuthToken;
-					$scope.resumeGame();
+				GamesService.create().success(function(data) {
+					$scope.gameId = data.gameId;
+					$scope.gameToken = data.authToken;
+					PlayersService.addComputerPlayer($scope.gameId, $scope.gameToken).success(function() {
+						GamesService.start($scope.gameId, $scope.gameToken).success(function() {
+							$cookies.gameId = $scope.gameId;
+							$cookies.gameToken = $scope.gameToken;
+							$scope.resumeGame();
+						})
+					})
 				});
 			};
 
 			$scope.resumeGame = function() {
-				$scope.runningGameId = $cookies.runningGameId;
-				$scope.runningGameToken = $cookies.runningGameToken;
+				$scope.gameId = $cookies.gameId;
+				$scope.gameToken = $cookies.gameToken;
 				$scope.isIngame = true;
 				$scope.reloadGame();
 			};
 
 			$scope.reloadGame = function() {
-				GameService.get($scope.runningGameId, $scope.runningGameToken).success(function(data) {
+				GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.runningGame = data;
 				});
 			};
 
 			$scope.endTurn = function() {
 				$scope.blockingActionInProgress = true;
-				TurnService.endTurn($scope.runningGameId, $scope.runningGameToken).success(function() {
+				TurnsService.endTurn($scope.gameId, $scope.gameToken).success(function() {
 					$scope.reloadGame();
 					$scope.blockingActionInProgress = false;
 					$scope.showPlanetMenu = false;
@@ -52,10 +59,10 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.quitGame = function() {
-				GameService.quit($scope.runningGameId, $scope.runningGameToken);
+				GamesService.quit($scope.gameId, $scope.gameToken);
 				$scope.isIngame = false;
 				delete $scope.runningGame;
-				delete $cookies.runningGameId;
+				delete $cookies.gameId;
 			};
 
 			$scope.clickPlanetHandler = function(planet) {
@@ -67,10 +74,11 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 				} else if ($scope.destinationSelectionActive) {
 					// Send ships from previously selected planet to this planet
-					ShipService.sendShips($scope.runningGameId, $scope.runningGameToken, $scope.shipCount,
-							$scope.selectedPlanet.id, planet.id).success(function() {
-						$scope.reloadGame();
-					});
+					ShipsService
+							.sendShips($scope.gameId, $scope.gameToken, $scope.shipCount, $scope.selectedPlanet.id, planet.id)
+							.success(function() {
+								$scope.reloadGame();
+							});
 					$scope.destinationSelectionActive = false;
 				}
 			};
@@ -84,7 +92,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.buildFactory = function(planet) {
-				PlanetService.buildFactory($scope.runningGameId, $scope.runningGameToken, planet.id).success(function() {
+				PlanetsService.buildFactory($scope.gameId, $scope.gameToken, planet.id).success(function() {
 					$scope.selectedPlanet.factorySite.factoryCount++;
 					$scope.selectedPlanet.factorySite.availableSlots--;
 					$scope.reloadGame();

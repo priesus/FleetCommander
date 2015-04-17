@@ -4,8 +4,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.spries.fleetcommander.model.core.ComputerPlayer;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class PlayerSpecificGame {
 
@@ -18,8 +20,11 @@ public class PlayerSpecificGame {
 	public PlayerSpecificGame(Game originalGame, Player viewingPlayer) {
 		this.originalGame = originalGame;
 		this.viewingPlayer = viewingPlayer;
-		specificUniverse = PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);
+
 		me = new OwnPlayer(viewingPlayer);
+		if (originalGame.getUniverse() != null) {
+			specificUniverse = PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);
+		}
 		List<Player> otherOriginalPlayers = originalGame.getPlayers().parallelStream()
 				.filter((p) -> !p.equals(viewingPlayer)).collect(Collectors.toList());
 		otherPlayers = OtherPlayer.convert(otherOriginalPlayers);
@@ -27,6 +32,20 @@ public class PlayerSpecificGame {
 
 	public int getId() {
 		return originalGame.getId();
+	}
+
+	public void addComputerPlayer() {
+		int numOtherPlayers = getOtherPlayers().size();
+		originalGame.addPlayer(new ComputerPlayer("Computer " + numOtherPlayers));
+	}
+
+	public boolean isStarted() {
+		return originalGame.isStarted();
+	}
+
+	public void start() {
+		originalGame.setUniverse(UniverseFactory.generate(originalGame.getPlayers()));
+		originalGame.start();
 	}
 
 	public void endTurn() {

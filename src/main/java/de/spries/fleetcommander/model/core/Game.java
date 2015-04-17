@@ -44,6 +44,10 @@ public class Game {
 		notifyAllPlayersForNewTurn();
 	}
 
+	public boolean isStarted() {
+		return hasStarted;
+	}
+
 	public void endTurn(Player player) {
 		if (!players.contains(player)) {
 			throw new IllegalArgumentException(player + " doesn't participate in this game");

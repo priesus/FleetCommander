@@ -1,6 +1,6 @@
 var fleetCommanderServices = angular.module('fleetCommanderServices', [ 'ngResource' ]);
 
-fleetCommanderServices.factory('GameService', [ '$http', function($http) {
+fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 	return {
 		create : function() {
 			return $http({
@@ -25,11 +25,37 @@ fleetCommanderServices.factory('GameService', [ '$http', function($http) {
 					'Authorization' : 'Bearer ' + token
 				}
 			});
+		},
+		start : function(gameId, token) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games/' + gameId,
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				},
+				data : {
+					isStarted : true
+				}
+			});
 		}
 	};
 } ]);
 
-fleetCommanderServices.factory('TurnService', [ '$http', function($http) {
+fleetCommanderServices.factory('PlayersService', [ '$http', function($http) {
+	return {
+		addComputerPlayer : function(gameId, token) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games/' + gameId + '/players',
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				}
+			});
+		}
+	};
+} ]);
+
+fleetCommanderServices.factory('TurnsService', [ '$http', function($http) {
 	return {
 		endTurn : function(gameId, token) {
 			return $http({
@@ -43,7 +69,7 @@ fleetCommanderServices.factory('TurnService', [ '$http', function($http) {
 	};
 } ]);
 
-fleetCommanderServices.factory('PlanetService', [ '$http', function($http) {
+fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 	return {
 		buildFactory : function(gameId, token, planetId) {
 			return $http({
@@ -57,7 +83,7 @@ fleetCommanderServices.factory('PlanetService', [ '$http', function($http) {
 	};
 } ]);
 
-fleetCommanderServices.factory('ShipService', [ '$http', function($http) {
+fleetCommanderServices.factory('ShipsService', [ '$http', function($http) {
 	return {
 		sendShips : function(gameId, token, ships, origin, dest) {
 			return $http({
