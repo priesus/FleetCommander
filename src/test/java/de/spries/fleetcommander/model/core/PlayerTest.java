@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.Player.InsufficientCreditsException;
 
 public class PlayerTest {
@@ -23,6 +22,24 @@ public class PlayerTest {
 	public void playerHasNameAndCredits() {
 		assertThat(john.getName(), is("John"));
 		assertThat(john.getCredits(), is(Player.STARTING_CREDITS));
+	}
+
+	@Test
+	public void stillEqualAfterCreditRecieval() {
+		Player john2 = new Player("John");
+		assertThat(john, is(john2));
+
+		john2.addCredits(1);
+		assertThat(john, is(john2));
+	}
+
+	@Test
+	public void stillSameHashCodeAfterCreditRecieval() {
+		Player john2 = new Player("John");
+		assertThat(john.hashCode(), is(john2.hashCode()));
+
+		john2.addCredits(1);
+		assertThat(john.hashCode(), is(john2.hashCode()));
 	}
 
 	@Test(expected = InsufficientCreditsException.class)
