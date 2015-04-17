@@ -105,7 +105,7 @@ public class Planet {
 
 	public void buildFactory(Player player) {
 		if (!canBuildFactory(player)) {
-			throw new IllegalActionException();
+			throw new IllegalActionException("You cannot build a factory right now");
 		}
 		player.reduceCredits(FactorySite.FACTORY_COST);
 		factorySite.buildFactory();
@@ -126,10 +126,10 @@ public class Planet {
 
 	public void sendShipsAway(int shipsToSend, Player player) {
 		if (!player.equals(inhabitant)) {
-			throw new IllegalActionException();
+			throw new IllegalActionException("You can only send ships from your own planets!");
 		}
 		if (shipsToSend > shipCount) {
-			throw new IllegalActionException();
+			throw new IllegalActionException("You don't have that many ships to send!");
 		}
 
 		shipCount -= shipsToSend;

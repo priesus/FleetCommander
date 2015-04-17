@@ -13,7 +13,7 @@ public class FactorySite {
 
 	protected void buildFactory() {
 		if (FACTORY_SLOTS == factoryCount) {
-			throw new IllegalActionException();
+			throw new IllegalActionException("No more space for factories!");
 		}
 		factoryCount++;
 	}

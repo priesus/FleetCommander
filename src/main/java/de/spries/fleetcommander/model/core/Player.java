@@ -7,7 +7,10 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 public class Player {
 
 	public static class InsufficientCreditsException extends IllegalActionException {
-		// Nothing to implement
+
+		public InsufficientCreditsException(String msg) {
+			super(msg);
+		}
 	}
 
 	protected static final int STARTING_CREDITS = 500;
@@ -31,7 +34,7 @@ public class Player {
 
 	public void reduceCredits(int debit) {
 		if (debit > credits) {
-			throw new InsufficientCreditsException();
+			throw new InsufficientCreditsException("You don't have sufficient credits!");
 		}
 		credits -= debit;
 	}
