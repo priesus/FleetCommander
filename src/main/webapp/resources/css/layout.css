@@ -77,7 +77,6 @@ h1 {
 }
 
 /* In-Game screen */
-
 .game-status-bar {
 	text-align: left;
 }
@@ -98,9 +97,19 @@ h1 {
 .friendly {
 	color: #aaf;
 }
+
+.friendly-dark {
+	color: #3e3e97;
+}
+
 .enemy {
 	color: #f88;
 }
+
+.enemy-dark {
+	color: #973e3e;
+}
+
 .planet-uninhabited {
 	color: #aaa;
 }

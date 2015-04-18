@@ -51,15 +51,15 @@
 								</div>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="addComputerPlayer()">Add Computer Player</button>
+									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == runningGame.otherPlayers.length">Add Computer Player</button>
 								</div>
 								
 								<div class="form-group">
 									<div class="col-xs-10 col-xs-offset-1">
-										<div class="player-slot col-xs-6 list-group-item">
+										<div class="player-slot col-xs-6 list-group-item friendly-dark">
 											{{runningGame.me.name}}
 										</div>
-										<div class="player-slot col-xs-6 list-group-item" ng-repeat="otherPlayer in runningGame.otherPlayers">
+										<div class="player-slot col-xs-6 list-group-item enemy-dark" ng-repeat="otherPlayer in runningGame.otherPlayers">
 											{{otherPlayer.name}}
 										</div>
 										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - runningGame.otherPlayers.length) track by $index">
