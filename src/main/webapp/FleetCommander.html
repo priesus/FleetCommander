@@ -19,7 +19,7 @@
 			<div id="game-box" class="inner">
 				<h1>Fleet Commander</h1>
 				
-				<div ng-hide="isIngame">
+				<div ng-show="gameScreen == 'home'">
 					<p>
 						Conquer the universe by growing your own fleet of space fighters
 						to invade other player's planets in this turn-based strategy game!
@@ -30,10 +30,50 @@
 					</p>
 					
 					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()">{{'Resume game'}}</button>
-					<button class="btn btn-default" ng-click="startGame()">Start new game!</button>
+					<button class="btn btn-default" ng-click="createNewGame()">Start new game!</button>
 				</div>
 				
-				<div ng-show="isIngame">
+				<div ng-show="gameScreen == 'players'">
+					<div class="game-menu">
+						<button class="btn btn-default" ng-click="startGame()">Play!</button>
+					</div>
+					
+					<div class="game-status-bar">
+						&nbsp;
+					</div>
+					
+					<div class="ingame-screen">
+						<div class="outer"><div class="middle">
+							<div class="ingame-menu inner form-horizontal">
+								<button ng-click="quitGame()" type="button" class="close"><span>&times;</span></button>
+								<div class="form-group">
+									<h4>Players</h4>
+								</div>
+								
+								<div class="form-group">
+									<button class="btn btn-default" ng-click="addComputerPlayer()">Add Computer Player</button>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-xs-10 col-xs-offset-1">
+										<div class="player-slot col-xs-6 list-group-item">
+											{{runningGame.me.name}}
+										</div>
+										<div class="player-slot col-xs-6 list-group-item" ng-repeat="otherPlayer in runningGame.otherPlayers">
+											{{otherPlayer.name}}
+										</div>
+										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - runningGame.otherPlayers.length) track by $index">
+											&nbsp;
+										</div>
+									</div>
+								</div>
+							</div>
+						</div></div>
+					</div>
+					
+				</div>
+				
+				<div ng-show="gameScreen == 'ingame'">
 					<div class="game-menu">
 						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress">End turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
@@ -42,7 +82,7 @@
 						<span>{{runningGame.me.name}}</span>
 						<span class="pull-right">Credits: {{runningGame.me.credits}}</span>
 					</div>
-					<div id="universe">
+					<div class="ingame-screen">
 						<div class="space-object"
 								ng-repeat="planet in runningGame.universe.planets track by planet.id"
 								ng-class="{'friendly': planet.inhabitedByMe, 'planet-uninhabited': !planet.inhabitedByMe}"
@@ -80,21 +120,21 @@
 							</div>
 						</div>
 						
-						<div id="selectPlanetNote" ng-show="destinationSelectionActive">
+						<div class="select-planet-note" ng-show="destinationSelectionActive">
 							Select a destination planet...
 						</div>
 						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
-							<div id="planetMenu"class="inner form-horizontal">
-								<button id="closePlanetMenuBtn" ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
+							<div class="ingame-menu inner form-horizontal">
+								<button ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
 								<div class="form-group">
 									<h4>Build factories</h4>
 								</div>
 								<div class="form-group">
-									<div class="factorySlot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
+									<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
 										<img src="resources/img/factory.svg" height="19px" width="19px">
 									</div>
-									<div class="factorySlot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
+									<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
 										&nbsp;
 									</div>
 								</div>

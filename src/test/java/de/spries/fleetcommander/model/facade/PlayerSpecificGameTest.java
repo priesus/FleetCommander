@@ -57,7 +57,7 @@ public class PlayerSpecificGameTest {
 
 		ArgumentCaptor<Player> argument = ArgumentCaptor.forClass(Player.class);
 		verify(originalGame).addPlayer(argument.capture());
-		assertThat(argument.getValue().getName(), is("Computer 1"));
+		assertThat(argument.getValue().getName(), is("Computer 2"));
 	}
 
 	@Test

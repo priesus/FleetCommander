@@ -10,7 +10,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 		'ShipsService',
 		function($scope, $cookies, GamesService, PlayersService, TurnsService, PlanetsService, ShipsService) {
 
-			$scope.isIngame = false;
+			$scope.gameScreen = 'home';
 			$scope.showPlanetMenu = false;
 			$scope.destinationSelectionActive = false;
 			$scope.blockingActionInProgress = false;
@@ -19,24 +19,33 @@ fleetCommanderApp.controller('GamesCtrl', [
 				return $cookies.gameId !== undefined;
 			};
 
-			$scope.startGame = function() {
+			$scope.createNewGame = function() {
 				GamesService.create().success(function(data) {
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.authToken;
-					PlayersService.addComputerPlayer($scope.gameId, $scope.gameToken).success(function() {
-						GamesService.start($scope.gameId, $scope.gameToken).success(function() {
-							$cookies.gameId = $scope.gameId;
-							$cookies.gameToken = $scope.gameToken;
-							$scope.resumeGame();
-						})
-					})
+					$scope.gameScreen = 'players';
+					$scope.addComputerPlayer();
+				});
+			};
+
+			$scope.addComputerPlayer = function() {
+				PlayersService.addComputerPlayer($scope.gameId, $scope.gameToken).success(function() {
+					$scope.reloadGame();
+				});
+			};
+
+			$scope.startGame = function() {
+				GamesService.start($scope.gameId, $scope.gameToken).success(function() {
+					$cookies.gameId = $scope.gameId;
+					$cookies.gameToken = $scope.gameToken;
+					$scope.resumeGame();
 				});
 			};
 
 			$scope.resumeGame = function() {
 				$scope.gameId = $cookies.gameId;
 				$scope.gameToken = $cookies.gameToken;
-				$scope.isIngame = true;
+				$scope.gameScreen = 'ingame';
 				$scope.reloadGame();
 			};
 
@@ -60,7 +69,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.quitGame = function() {
 				GamesService.quit($scope.gameId, $scope.gameToken);
-				$scope.isIngame = false;
+				$scope.gameScreen = 'home';
 				delete $scope.runningGame;
 				delete $cookies.gameId;
 			};

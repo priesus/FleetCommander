@@ -9,7 +9,7 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class Game {
-	private static final int MAX_PLAYERS = 6;
+	public static final int MAX_PLAYERS = 6;
 	private int id;
 	private List<Player> players;
 	private Set<Player> turnFinishedPlayers;

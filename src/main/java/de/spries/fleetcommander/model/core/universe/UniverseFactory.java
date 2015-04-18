@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
 
 public class UniverseFactory {
@@ -31,7 +32,7 @@ public class UniverseFactory {
 
 		Collections.shuffle(planets);
 
-		planets = planets.subList(0, planets.size() / (6 - players.size()));
+		planets = planets.subList(0, planets.size() / (1 + Game.MAX_PLAYERS - players.size()));
 
 		int planetId = 0;
 		for (Planet planet : planets) {

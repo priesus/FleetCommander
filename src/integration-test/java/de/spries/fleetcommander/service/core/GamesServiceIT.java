@@ -44,8 +44,14 @@ public class GamesServiceIT {
 	@Test
 	public void canAddComputerPlayer() throws Exception {
 		assertThat(service.getGame(gameId).getOtherPlayers(), hasSize(0));
+
 		service.addComputerPlayer(gameId);
 		assertThat(service.getGame(gameId).getOtherPlayers(), hasSize(1));
+		assertThat(service.getGame(gameId).getOtherPlayers().get(0).getName(), is("Computer 1"));
+
+		service.addComputerPlayer(gameId);
+		assertThat(service.getGame(gameId).getOtherPlayers(), hasSize(2));
+		assertThat(service.getGame(gameId).getOtherPlayers().get(1).getName(), is("Computer 2"));
 	}
 
 	@Test

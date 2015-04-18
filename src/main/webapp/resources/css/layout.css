@@ -65,11 +65,17 @@ h1 {
 	
 }
 
+.player-slot {
+	display: inline-block;
+}
+
+/* In-Game screen */
+
 .game-status-bar {
 	text-align: left;
 }
 
-#universe {
+.ingame-screen {
 	height: 350px;
 	width: 540px;
 	background-color: black;
@@ -126,7 +132,7 @@ h1 {
 	right: 0;
 }
 
-#selectPlanetNote {
+.select-planet-note {
 	position: absolute;
 	bottom: 5px;
 	left: 5px;
@@ -136,7 +142,7 @@ h1 {
 	padding: 1px 15px;
 }
 
-#planetMenu {
+.ingame-menu {
 	position: relative;
 	width: 75%;
 	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
@@ -146,7 +152,7 @@ h1 {
 	background: #f0f0f0;
 }
 
-.factorySlot {
+.factory-slot {
 	height: 25px;
 	width: 25px;
 	border: 1px solid #333;

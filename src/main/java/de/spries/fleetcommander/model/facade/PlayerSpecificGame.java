@@ -1,6 +1,5 @@
 package de.spries.fleetcommander.model.facade;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +14,7 @@ public class PlayerSpecificGame {
 	private Player viewingPlayer;
 	private PlayerSpecificUniverse specificUniverse;
 	private OwnPlayer me;
-	private Collection<OtherPlayer> otherPlayers;
+	private List<OtherPlayer> otherPlayers;
 
 	public PlayerSpecificGame(Game originalGame, Player viewingPlayer) {
 		this.originalGame = originalGame;
@@ -35,7 +34,7 @@ public class PlayerSpecificGame {
 	}
 
 	public void addComputerPlayer() {
-		int numOtherPlayers = getOtherPlayers().size();
+		int numOtherPlayers = getOtherPlayers().size() + 1;
 		originalGame.addPlayer(new ComputerPlayer("Computer " + numOtherPlayers));
 	}
 
@@ -60,7 +59,7 @@ public class PlayerSpecificGame {
 		return me;
 	}
 
-	public Collection<OtherPlayer> getOtherPlayers() {
+	public List<OtherPlayer> getOtherPlayers() {
 		return otherPlayers;
 	}
 }
