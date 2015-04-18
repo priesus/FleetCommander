@@ -40,6 +40,10 @@ public class PlayerSpecificPlanet {
 		return originalPlanet.isInhabitedBy(viewingPlayer);
 	}
 
+	public boolean isKnownAsEnemyPlanet() {
+		return originalPlanet.isKnownAsEnemyPlanet(viewingPlayer);
+	}
+
 	public int getShipCount() {
 		if (isInhabitedByMe()) {
 			return originalPlanet.getShipCount();

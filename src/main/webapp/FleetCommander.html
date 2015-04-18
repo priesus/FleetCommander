@@ -85,7 +85,7 @@
 					<div class="ingame-screen">
 						<div class="space-object"
 								ng-repeat="planet in runningGame.universe.planets track by planet.id"
-								ng-class="{'friendly': planet.inhabitedByMe, 'planet-uninhabited': !planet.inhabitedByMe}"
+								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'planet-uninhabited': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
 								ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							

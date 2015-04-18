@@ -66,6 +66,12 @@ public class PlayerSpecificPlanetTest {
 	}
 
 	@Test
+	public void forwardsCallToIsKnownAsEnemyPlanet() {
+		ownPlanet.isKnownAsEnemyPlanet();
+		verify(originalPlanet).isKnownAsEnemyPlanet(self);
+	}
+
+	@Test
 	public void forwardsCallToGetShipCountForSelf() {
 		doReturn(true).when(originalPlanet).isInhabitedBy(self);
 

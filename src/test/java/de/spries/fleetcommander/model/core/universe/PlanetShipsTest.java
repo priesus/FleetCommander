@@ -154,4 +154,27 @@ public class PlanetShipsTest {
 		jacksHomePlanet.landShips(7, john);
 		assertThat(jacksHomePlanet.isHomePlanet(), is(false));
 	}
+
+	@Test
+	public void ownPlanetIsNotEnemyPlanet() throws Exception {
+		assertThat(johnsHomePlanet.isKnownAsEnemyPlanet(john), is(false));
+	}
+
+	@Test
+	public void enemyPlanetIsNotRecognizedBeforeVisited() throws Exception {
+		assertThat(jacksHomePlanet.isKnownAsEnemyPlanet(john), is(false));
+	}
+
+	@Test
+	public void enemyPlanetIsRecognizedAfterUnsuccessfulAttack() throws Exception {
+		jacksHomePlanet.landShips(1, john);
+		assertThat(jacksHomePlanet.isKnownAsEnemyPlanet(john), is(true));
+	}
+
+	@Test
+	public void enemyPlanetIsNoMoreEnemyAfterSuccessfulAttack() throws Exception {
+		jacksHomePlanet.landShips(1, john);
+		jacksHomePlanet.landShips(7, john);
+		assertThat(jacksHomePlanet.isKnownAsEnemyPlanet(john), is(false));
+	}
 }

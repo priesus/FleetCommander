@@ -22,6 +22,7 @@ public class Planet {
 	private Player inhabitant;
 	private float shipCount;
 	private Map<Player, Integer> incomingShipsPerPlayer;
+	private Map<Player, Boolean> knownAsEnemyPlanetBy;
 
 	private FactorySite factorySite = new FactorySite();
 
@@ -33,6 +34,7 @@ public class Planet {
 		this.x = x;
 		this.y = y;
 		incomingShipsPerPlayer = new HashMap<>();
+		knownAsEnemyPlanetBy = new HashMap<>();
 		if (inhabitant != null) {
 			shipCount = HOME_PLANET_STARTING_SHIPS;
 			this.inhabitant = inhabitant;
@@ -163,9 +165,18 @@ public class Planet {
 				inhabitant = invader;
 				shipCount *= -1;
 				isHomePlanet = false;
+				knownAsEnemyPlanetBy.remove(invader);
+			}
+			else {
+				knownAsEnemyPlanetBy.put(invader, true);
 			}
 		}
 		addIncomingShips(shipsToLand * -1, invader);
+	}
+
+	public boolean isKnownAsEnemyPlanet(Player viewingPlayer) {
+		Boolean isKnownAsEnemyPlanet = knownAsEnemyPlanetBy.get(viewingPlayer);
+		return Boolean.TRUE.equals(isKnownAsEnemyPlanet);
 	}
 
 	@Override
