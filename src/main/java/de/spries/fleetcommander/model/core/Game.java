@@ -52,12 +52,14 @@ public class Game {
 		if (!players.contains(player)) {
 			throw new IllegalArgumentException(player + " doesn't participate in this game");
 		}
-		if (turnFinishedPlayers.contains(player)) {
-			throw new IllegalArgumentException(player + " already has finished the turn");
+
+		synchronized (turnFinishedPlayers) {
+			if (turnFinishedPlayers.contains(player)) {
+				throw new IllegalArgumentException(player + " already has finished the turn");
+			}
+
+			turnFinishedPlayers.add(player);
 		}
-
-		turnFinishedPlayers.add(player);
-
 		if (turnFinishedPlayers.size() == players.size()) {
 			endTurn();
 		}
