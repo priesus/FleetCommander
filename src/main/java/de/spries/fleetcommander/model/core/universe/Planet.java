@@ -1,9 +1,11 @@
 package de.spries.fleetcommander.model.core.universe;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -25,7 +27,7 @@ public class Planet {
 	private Player inhabitant;
 	private float shipCount;
 	private Map<Player, Integer> incomingShipsPerPlayer;
-	private Map<Player, Boolean> knownAsEnemyPlanetBy;
+	private Set<Player> knownAsEnemyPlanetBy;
 
 	private FactorySite factorySite = new FactorySite();
 
@@ -37,7 +39,7 @@ public class Planet {
 		this.x = x;
 		this.y = y;
 		incomingShipsPerPlayer = new HashMap<>();
-		knownAsEnemyPlanetBy = new HashMap<>();
+		knownAsEnemyPlanetBy = new HashSet<>();
 		if (inhabitant != null) {
 			shipCount = HOME_PLANET_STARTING_SHIPS;
 			this.inhabitant = inhabitant;
@@ -163,23 +165,26 @@ public class Planet {
 			shipCount += shipsToLand;
 		}
 		else {
+			// invasion
 			shipCount -= shipsToLand;
 			if (shipCount < 0) {
+				// Successful invasion
+				knownAsEnemyPlanetBy.add(inhabitant);
 				inhabitant = invader;
 				shipCount *= -1;
 				isHomePlanet = false;
 				knownAsEnemyPlanetBy.remove(invader);
 			}
 			else {
-				knownAsEnemyPlanetBy.put(invader, true);
+				// Invaders defeated
+				knownAsEnemyPlanetBy.add(invader);
 			}
 		}
 		addIncomingShips(shipsToLand * -1, invader);
 	}
 
 	public boolean isKnownAsEnemyPlanet(Player viewingPlayer) {
-		Boolean isKnownAsEnemyPlanet = knownAsEnemyPlanetBy.get(viewingPlayer);
-		return Boolean.TRUE.equals(isKnownAsEnemyPlanet);
+		return knownAsEnemyPlanetBy.contains(viewingPlayer);
 	}
 
 	@Override

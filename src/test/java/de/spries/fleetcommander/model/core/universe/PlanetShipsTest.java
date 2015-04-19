@@ -17,6 +17,7 @@ public class PlanetShipsTest {
 	private Player john;
 	private Planet johnsHomePlanet;
 	private Planet jacksHomePlanet;
+	private Planet jacksPlanet;
 	private Planet uninhabitedPlanet;
 	private FactorySite johnsFactorySite;
 
@@ -28,6 +29,8 @@ public class PlanetShipsTest {
 		johnsHomePlanet = new Planet(0, 0, john);
 		jacksHomePlanet = new Planet(1, 1, jack);
 		uninhabitedPlanet = new Planet(0, 0);
+		jacksPlanet = new Planet(0, 0);
+		jacksPlanet.landShips(1, jack);
 
 		johnsFactorySite = mock(FactorySite.class);
 		johnsHomePlanet.setFactorySite(johnsFactorySite);
@@ -176,5 +179,12 @@ public class PlanetShipsTest {
 		jacksHomePlanet.landShips(1, john);
 		jacksHomePlanet.landShips(7, john);
 		assertThat(jacksHomePlanet.isKnownAsEnemyPlanet(john), is(false));
+	}
+
+	@Test
+	public void successfullyInvadedPlanetBecomesEnemyPlanetForInvadedPlayer() throws Exception {
+		jacksPlanet.landShips(5, john);
+		assertThat(jacksPlanet.getInhabitant(), is(john));
+		assertThat(jacksPlanet.isKnownAsEnemyPlanet(jack), is(true));
 	}
 }
