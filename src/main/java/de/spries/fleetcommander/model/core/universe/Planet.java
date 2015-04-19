@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.core.universe;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -224,5 +225,16 @@ public class Planet {
 
 	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
 		return allPlanets.parallelStream().filter((p) -> p.isHomePlanet()).collect(Collectors.toList());
+	}
+
+	public static List<Planet> sortByDistance(List<Planet> planets, Planet referencePlanet) {
+		Comparator<Planet> distanceComparator = new Comparator<Planet>() {
+
+			@Override
+			public int compare(Planet o1, Planet o2) {
+				return Double.compare(o1.distanceTo(referencePlanet), o2.distanceTo(referencePlanet));
+			}
+		};
+		return planets.parallelStream().sorted(distanceComparator).collect(Collectors.toList());
 	}
 }

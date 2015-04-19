@@ -7,12 +7,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.core.ComputerPlayer;
-import de.spries.fleetcommander.model.core.Game;
-import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
@@ -33,6 +32,8 @@ public class ComputerPlayerTest {
 
 		doReturn(universe).when(game).getUniverse();
 		doReturn(homePlanet).when(universe).getHomePlanetOf(player);
+		doReturn(Arrays.asList(homePlanet)).when(universe).getPlanets();
+		doReturn(true).when(homePlanet).isInhabitedBy(player);
 	}
 
 	@Test
