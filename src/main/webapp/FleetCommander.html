@@ -139,7 +139,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0" class="btn btn-default">Build Factory</button>
+									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !runningGame.me.canAffordFactory" class="btn btn-default">Build Factory</button>
 								</div>
 								<form name="sendShipsForm">
 									<div class="form-group">

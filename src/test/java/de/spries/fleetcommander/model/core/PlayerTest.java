@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.core.universe.FactorySite;
 
 public class PlayerTest {
 
@@ -22,6 +23,17 @@ public class PlayerTest {
 	public void playerHasNameAndCredits() {
 		assertThat(john.getName(), is("John"));
 		assertThat(john.getCredits(), is(Player.STARTING_CREDITS));
+	}
+
+	@Test
+	public void playerCanAffordAFactoryIfEnougnMoney() throws Exception {
+		assertThat(john.canAffordFactory(), is(true));
+
+		john.setCredits(FactorySite.FACTORY_COST);
+		assertThat(john.canAffordFactory(), is(true));
+
+		john.reduceCredits(1);
+		assertThat(john.canAffordFactory(), is(false));
 	}
 
 	@Test

@@ -24,4 +24,10 @@ public class OwnPlayerTest {
 		viewingPlayer.getCredits();
 		verify(originalPlayer).getCredits();
 	}
+
+	@Test
+	public void forwardsCallToCanAffordFactory() throws Exception {
+		viewingPlayer.getCanAffordFactory();
+		verify(originalPlayer).canAffordFactory();
+	}
 }

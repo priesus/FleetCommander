@@ -3,6 +3,7 @@ package de.spries.fleetcommander.model.core;
 import org.apache.commons.lang3.StringUtils;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
+import de.spries.fleetcommander.model.core.universe.FactorySite;
 
 public class Player {
 
@@ -30,6 +31,10 @@ public class Player {
 
 	public int getCredits() {
 		return credits;
+	}
+
+	public boolean canAffordFactory() {
+		return credits >= FactorySite.FACTORY_COST;
 	}
 
 	public void reduceCredits(int debit) {
@@ -82,4 +87,10 @@ public class Player {
 		return true;
 	}
 
+	/**
+	 * For use in tests only
+	 */
+	protected void setCredits(int credits) {
+		this.credits = credits;
+	}
 }

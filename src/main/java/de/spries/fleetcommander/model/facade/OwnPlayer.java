@@ -11,4 +11,8 @@ public class OwnPlayer extends OtherPlayer {
 	public Integer getCredits() {
 		return originalPlayer.getCredits();
 	}
+
+	public boolean getCanAffordFactory() {
+		return originalPlayer.canAffordFactory();
+	}
 }
