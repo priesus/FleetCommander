@@ -1,5 +1,8 @@
 package de.spries.fleetcommander.model.core.universe;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -99,6 +102,11 @@ public class ShipFormation {
 
 	public double getPositionY() {
 		return origin.getY() + (destination.getY() - origin.getY()) * distanceTravelled / distanceOverall;
+	}
+
+	public static Collection<ShipFormation> filterByCommander(Collection<ShipFormation> shipFormations, Player commander) {
+		return shipFormations.parallelStream()
+				.filter((s) -> s.getCommander().equals(commander)).collect(Collectors.toList());
 	}
 
 }

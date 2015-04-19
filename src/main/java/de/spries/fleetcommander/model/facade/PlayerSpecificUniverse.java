@@ -2,7 +2,6 @@ package de.spries.fleetcommander.model.facade;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.ShipFormation;
@@ -40,8 +39,7 @@ public class PlayerSpecificUniverse {
 	}
 
 	public Collection<ShipFormation> getTravellingShipFormations() {
-		return originalUniverse.getTravellingShipFormations().parallelStream()
-				.filter((s) -> s.getCommander().equals(viewingPlayer)).collect(Collectors.toList());
+		return ShipFormation.filterByCommander(originalUniverse.getTravellingShipFormations(), viewingPlayer);
 	}
 
 	protected static PlayerSpecificUniverse convert(Universe universe, Player viewingPlayer) {

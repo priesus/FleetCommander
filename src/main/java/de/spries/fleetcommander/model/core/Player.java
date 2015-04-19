@@ -1,5 +1,8 @@
 package de.spries.fleetcommander.model.core;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
@@ -92,5 +95,10 @@ public class Player {
 	 */
 	protected void setCredits(int credits) {
 		this.credits = credits;
+	}
+
+	public static List<Player> filterAllOtherPlayers(List<Player> players, Player viewingPlayer) {
+		return players.parallelStream()
+				.filter((p) -> !p.equals(viewingPlayer)).collect(Collectors.toList());
 	}
 }

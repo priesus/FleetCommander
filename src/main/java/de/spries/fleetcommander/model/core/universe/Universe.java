@@ -29,11 +29,11 @@ public class Universe {
 	}
 
 	public Collection<Planet> getHomePlanets() {
-		return planets.parallelStream().filter((p) -> p.isHomePlanet()).collect(Collectors.toList());
+		return Planet.filterHomePlanets(planets);
 	}
 
 	public Planet getHomePlanetOf(Player player) {
-		Optional<Planet> homePlanet = planets.parallelStream().filter((p) -> p.isHomePlanetOf(player)).findFirst();
+		Optional<Planet> homePlanet = Planet.filterHomePlanet(planets, player);
 		if (!homePlanet.isPresent()) {
 			throw new IllegalStateException("player " + player + " has no home planet");
 		}
@@ -61,7 +61,7 @@ public class Universe {
 		sendShips(shipCount, origin, destination, player);
 	}
 
-	protected void sendShips(int shipCount, Planet origin, Planet destination, Player player) {
+	public void sendShips(int shipCount, Planet origin, Planet destination, Player player) {
 		if (!planets.contains(origin) || !planets.contains(destination)) {
 			throw new IllegalArgumentException("origin & destination must be contained in universe");
 		}
@@ -84,7 +84,7 @@ public class Universe {
 	}
 
 	public Planet getPlanetForId(int planetId) {
-		return planets.parallelStream().filter((p) -> p.getId() == planetId).findFirst().get();
+		return Planet.findById(planets, planetId);
 	}
 
 	private ShipFormation getJoinableShipFormation(ShipFormation newShipFormation) {

@@ -1,7 +1,6 @@
 package de.spries.fleetcommander.model.facade;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import de.spries.fleetcommander.model.core.ComputerPlayer;
 import de.spries.fleetcommander.model.core.Game;
@@ -24,8 +23,7 @@ public class PlayerSpecificGame {
 		if (originalGame.getUniverse() != null) {
 			specificUniverse = PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);
 		}
-		List<Player> otherOriginalPlayers = originalGame.getPlayers().parallelStream()
-				.filter((p) -> !p.equals(viewingPlayer)).collect(Collectors.toList());
+		List<Player> otherOriginalPlayers = Player.filterAllOtherPlayers(originalGame.getPlayers(), viewingPlayer);
 		otherPlayers = OtherPlayer.convert(otherOriginalPlayers);
 	}
 

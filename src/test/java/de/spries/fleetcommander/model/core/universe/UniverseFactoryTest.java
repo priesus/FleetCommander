@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.Universe;
-import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class UniverseFactoryTest {
 
@@ -42,7 +40,7 @@ public class UniverseFactoryTest {
 	}
 
 	@Test
-	public void everyplanetHasAUniqueId() throws Exception {
+	public void everyPlanetHasAUniqueId() throws Exception {
 		Universe universe = UniverseFactory.generate(JOHN_ONLY);
 		Set<Integer> planetIds = universe.getPlanets().parallelStream().map((p) -> p.getId())
 				.collect(Collectors.toSet());

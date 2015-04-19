@@ -1,7 +1,10 @@
 package de.spries.fleetcommander.model.core.universe;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -199,5 +202,22 @@ public class Planet {
 	 */
 	protected void setFactorySite(FactorySite factorySite) {
 		this.factorySite = factorySite;
+	}
+
+	public static List<Planet> filterByInhabitant(List<Planet> allPlanets, Player inhabitant) {
+		return allPlanets.parallelStream().filter((p) -> p.isInhabitedBy(inhabitant))
+				.collect(Collectors.toList());
+	}
+
+	public static Planet findById(List<Planet> planets, int planetId) {
+		return planets.parallelStream().filter((p) -> p.getId() == planetId).findFirst().get();
+	}
+
+	public static Optional<Planet> filterHomePlanet(List<Planet> planets, Player player) {
+		return planets.parallelStream().filter((p) -> p.isHomePlanetOf(player)).findFirst();
+	}
+
+	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
+		return allPlanets.parallelStream().filter((p) -> p.isHomePlanet()).collect(Collectors.toList());
 	}
 }
