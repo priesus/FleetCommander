@@ -11,6 +11,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.spries.fleetcommander.service.core.GameAuthenticator;
 
 /**
@@ -20,6 +23,8 @@ import de.spries.fleetcommander.service.core.GameAuthenticator;
 @Provider
 @PreMatching
 public class GameAccessTokenFilter implements ContainerRequestFilter {
+
+	private static final Logger LOGGER = LogManager.getLogger(GameAccessTokenFilter.class.getName());
 
 	public static final String AUTH_HEADER = "Authorization";
 	public static final String AUTH_TOKEN_PREFIX = "Bearer ";
@@ -36,6 +41,7 @@ public class GameAccessTokenFilter implements ContainerRequestFilter {
 
 			String token = extractAuthTokenFromContext(requestCtx);
 			if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
+				LOGGER.warn("Game {}: Unauthorized access with token {}", gameId, token);
 				requestCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 			}
 		}
