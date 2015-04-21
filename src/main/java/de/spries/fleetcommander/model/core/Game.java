@@ -78,7 +78,7 @@ public class Game {
 	}
 
 	private void notifyAllPlayersForNewTurn() {
-		players.parallelStream().forEach((p) -> p.notifyNewTurn(this));
+		players.stream().forEach((p) -> p.notifyNewTurn(this));
 	}
 
 	public int getId() {
