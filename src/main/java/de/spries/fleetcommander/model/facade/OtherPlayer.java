@@ -18,8 +18,8 @@ public class OtherPlayer {
 	}
 
 	protected static List<OtherPlayer> convert(List<Player> otherPlayers) {
-		return otherPlayers.parallelStream()
-				.map((p) -> new OtherPlayer(p))
+		return otherPlayers.stream()
+				.map(p -> new OtherPlayer(p))
 				.collect(Collectors.toList());
 	}
 

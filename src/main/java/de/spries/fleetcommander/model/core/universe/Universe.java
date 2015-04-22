@@ -52,7 +52,7 @@ public class Universe {
 			shipFormation.travel();
 		}
 
-		travellingShipFormations = travellingShipFormations.parallelStream().filter((s) -> !s.hasArrived())
+		travellingShipFormations = travellingShipFormations.stream().filter(s -> !s.hasArrived())
 				.collect(Collectors.toSet());
 	}
 

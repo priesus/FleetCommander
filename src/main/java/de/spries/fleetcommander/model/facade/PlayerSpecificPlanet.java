@@ -81,7 +81,7 @@ public class PlayerSpecificPlanet {
 	}
 
 	protected static List<PlayerSpecificPlanet> convert(List<Planet> planets, Player viewingPlayer) {
-		return planets.parallelStream().map((p) -> convert(p, viewingPlayer))
+		return planets.stream().map(p -> convert(p, viewingPlayer))
 				.collect(Collectors.toList());
 	}
 }

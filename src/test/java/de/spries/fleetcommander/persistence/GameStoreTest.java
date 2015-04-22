@@ -69,7 +69,7 @@ public class GameStoreTest {
 
 		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 		Set<Integer> ids = forkJoinPool.submit(
-				() -> games.parallelStream().map((g) -> GameStore.INSTANCE.create(g)).collect(Collectors.toSet()))
+				() -> games.parallelStream().map(g -> GameStore.INSTANCE.create(g)).collect(Collectors.toSet()))
 				.get();
 
 		assertThat(ids, hasSize(100));

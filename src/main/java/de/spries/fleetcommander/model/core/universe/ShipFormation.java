@@ -105,8 +105,8 @@ public class ShipFormation {
 	}
 
 	public static Collection<ShipFormation> filterByCommander(Collection<ShipFormation> shipFormations, Player commander) {
-		return shipFormations.parallelStream()
-				.filter((s) -> s.getCommander().equals(commander)).collect(Collectors.toList());
+		return shipFormations.stream()
+				.filter(s -> s.getCommander().equals(commander)).collect(Collectors.toList());
 	}
 
 }

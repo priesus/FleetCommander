@@ -98,7 +98,7 @@ public class Player {
 	}
 
 	public static List<Player> filterAllOtherPlayers(List<Player> players, Player viewingPlayer) {
-		return players.parallelStream()
-				.filter((p) -> !p.equals(viewingPlayer)).collect(Collectors.toList());
+		return players.stream()
+				.filter(p -> !p.equals(viewingPlayer)).collect(Collectors.toList());
 	}
 }

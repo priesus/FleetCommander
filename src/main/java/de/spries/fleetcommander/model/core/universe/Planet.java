@@ -211,20 +211,20 @@ public class Planet {
 	}
 
 	public static List<Planet> filterByInhabitant(List<Planet> allPlanets, Player inhabitant) {
-		return allPlanets.parallelStream().filter((p) -> p.isInhabitedBy(inhabitant))
+		return allPlanets.stream().filter(p -> p.isInhabitedBy(inhabitant))
 				.collect(Collectors.toList());
 	}
 
 	public static Planet findById(List<Planet> planets, int planetId) {
-		return planets.parallelStream().filter((p) -> p.getId() == planetId).findFirst().get();
+		return planets.stream().filter(p -> p.getId() == planetId).findFirst().get();
 	}
 
 	public static Optional<Planet> filterHomePlanet(List<Planet> planets, Player player) {
-		return planets.parallelStream().filter((p) -> p.isHomePlanetOf(player)).findFirst();
+		return planets.stream().filter(p -> p.isHomePlanetOf(player)).findFirst();
 	}
 
 	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
-		return allPlanets.parallelStream().filter((p) -> p.isHomePlanet()).collect(Collectors.toList());
+		return allPlanets.stream().filter(p -> p.isHomePlanet()).collect(Collectors.toList());
 	}
 
 	public static List<Planet> sortByDistance(List<Planet> planets, Planet referencePlanet) {
@@ -235,6 +235,6 @@ public class Planet {
 				return Double.compare(o1.distanceTo(referencePlanet), o2.distanceTo(referencePlanet));
 			}
 		};
-		return planets.parallelStream().sorted(distanceComparator).collect(Collectors.toList());
+		return planets.stream().sorted(distanceComparator).collect(Collectors.toList());
 	}
 }

@@ -42,7 +42,7 @@ public class UniverseFactoryTest {
 	@Test
 	public void everyPlanetHasAUniqueId() throws Exception {
 		Universe universe = UniverseFactory.generate(JOHN_ONLY);
-		Set<Integer> planetIds = universe.getPlanets().parallelStream().map((p) -> p.getId())
+		Set<Integer> planetIds = universe.getPlanets().stream().map(p -> p.getId())
 				.collect(Collectors.toSet());
 
 		assertThat(planetIds.size(), is(universe.getPlanets().size()));

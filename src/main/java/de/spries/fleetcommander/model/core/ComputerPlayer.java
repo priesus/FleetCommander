@@ -26,8 +26,8 @@ public class ComputerPlayer extends Player {
 			Planet homePlanet = universe.getHomePlanetOf(this);
 			List<Planet> allPlanets = universe.getPlanets();
 			List<Planet> myPlanets = Planet.filterByInhabitant(allPlanets, this);
-			List<Planet> enemyPlanets = allPlanets.parallelStream()
-					.filter((p) -> p.isKnownAsEnemyPlanet(this))
+			List<Planet> enemyPlanets = allPlanets.stream()
+					.filter(p -> p.isKnownAsEnemyPlanet(this))
 					.collect(Collectors.toList());
 
 			//TODO refactor into factory building strategy
@@ -43,8 +43,8 @@ public class ComputerPlayer extends Player {
 			//TODO refactor into fleet coordination strategy
 
 			if (enemyPlanets.isEmpty()) {
-				List<Planet> uninvadedPlanets = allPlanets.parallelStream()
-						.filter((p) -> !p.isInhabitedBy(this) && p.getIncomingShipCount(this) == 0)
+				List<Planet> uninvadedPlanets = allPlanets.stream()
+						.filter(p -> !p.isInhabitedBy(this) && p.getIncomingShipCount(this) == 0)
 						.collect(Collectors.toList());
 				uninvadedPlanets = Planet.sortByDistance(uninvadedPlanets, homePlanet);
 				List<Planet> planetsToInvade = uninvadedPlanets.subList(0, homePlanet.getShipCount());
