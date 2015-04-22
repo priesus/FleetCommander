@@ -32,8 +32,8 @@ public class PlayerSpecificGame {
 	}
 
 	public void addComputerPlayer() {
-		int numOtherPlayers = getOtherPlayers().size() + 1;
-		originalGame.addPlayer(new ComputerPlayer("Computer " + numOtherPlayers));
+		int numOtherPlayers = getOtherPlayers().size();
+		originalGame.addPlayer(new ComputerPlayer("Computer " + (numOtherPlayers + 1)));
 	}
 
 	public boolean isStarted() {

@@ -17,8 +17,8 @@ public class Game {
 	private boolean hasStarted;
 
 	public Game() {
-		players = new ArrayList<>();
-		turnFinishedPlayers = new HashSet<>();
+		players = new ArrayList<>(MAX_PLAYERS);
+		turnFinishedPlayers = new HashSet<>(MAX_PLAYERS);
 		hasStarted = false;
 	}
 
@@ -53,13 +53,11 @@ public class Game {
 			throw new IllegalArgumentException(player + " doesn't participate in this game");
 		}
 
-		synchronized (turnFinishedPlayers) {
-			if (turnFinishedPlayers.contains(player)) {
-				throw new IllegalArgumentException(player + " already has finished the turn");
-			}
-
-			turnFinishedPlayers.add(player);
+		if (turnFinishedPlayers.contains(player)) {
+			throw new IllegalArgumentException(player + " already has finished the turn");
 		}
+
+		turnFinishedPlayers.add(player);
 		if (turnFinishedPlayers.size() == players.size()) {
 			endTurn();
 		}
@@ -73,6 +71,9 @@ public class Game {
 		universe.runShipTravellingCycle();
 
 		turnFinishedPlayers.clear();
+
+		//TODO remove defeated players?
+		//TODO treat defeated players planets & ships
 
 		notifyAllPlayersForNewTurn();
 	}

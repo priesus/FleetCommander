@@ -47,6 +47,7 @@ public class Universe {
 	}
 
 	public void runShipTravellingCycle() {
+		//TODO let ships that are close to targets arrive first
 		for (ShipFormation shipFormation : travellingShipFormations) {
 			shipFormation.travel();
 		}
