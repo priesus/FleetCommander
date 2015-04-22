@@ -11,19 +11,14 @@ public class PlayerSpecificUniverse {
 
 	private Universe originalUniverse;
 	private Player viewingPlayer;
-	private List<PlayerSpecificPlanet> planets;
-	private PlayerSpecificPlanet homePlanet;
 
 	public PlayerSpecificUniverse(Universe originalUniverse, Player viewingPlayer) {
 		this.originalUniverse = originalUniverse;
 		this.viewingPlayer = viewingPlayer;
-
-		planets = PlayerSpecificPlanet.convert(originalUniverse.getPlanets(), viewingPlayer);
-		homePlanet = PlayerSpecificPlanet.convert(originalUniverse.getHomePlanetOf(viewingPlayer), viewingPlayer);
 	}
 
 	public List<PlayerSpecificPlanet> getPlanets() {
-		return planets;
+		return PlayerSpecificPlanet.convert(originalUniverse.getPlanets(), viewingPlayer);
 	}
 
 	public PlayerSpecificPlanet getPlanet(int planetId) {
@@ -31,7 +26,7 @@ public class PlayerSpecificUniverse {
 	}
 
 	public PlayerSpecificPlanet getHomePlanet() {
-		return homePlanet;
+		return PlayerSpecificPlanet.convert(originalUniverse.getHomePlanetOf(viewingPlayer), viewingPlayer);
 	}
 
 	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId) {

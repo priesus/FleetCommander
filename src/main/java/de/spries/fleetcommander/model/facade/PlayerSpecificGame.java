@@ -11,20 +11,10 @@ public class PlayerSpecificGame {
 
 	private Game originalGame;
 	private Player viewingPlayer;
-	private PlayerSpecificUniverse specificUniverse;
-	private OwnPlayer me;
-	private List<OtherPlayer> otherPlayers;
 
 	public PlayerSpecificGame(Game originalGame, Player viewingPlayer) {
 		this.originalGame = originalGame;
 		this.viewingPlayer = viewingPlayer;
-
-		me = new OwnPlayer(viewingPlayer);
-		if (originalGame.getUniverse() != null) {
-			specificUniverse = PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);
-		}
-		List<Player> otherOriginalPlayers = Player.filterAllOtherPlayers(originalGame.getPlayers(), viewingPlayer);
-		otherPlayers = OtherPlayer.convert(otherOriginalPlayers);
 	}
 
 	public int getId() {
@@ -50,14 +40,18 @@ public class PlayerSpecificGame {
 	}
 
 	public PlayerSpecificUniverse getUniverse() {
-		return specificUniverse;
+		if (originalGame.getUniverse() != null) {
+			return PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);
+		}
+		return null;
 	}
 
 	public OwnPlayer getMe() {
-		return me;
+		return new OwnPlayer(viewingPlayer);
 	}
 
 	public List<OtherPlayer> getOtherPlayers() {
-		return otherPlayers;
+		List<Player> otherOriginalPlayers = Player.filterAllOtherPlayers(originalGame.getPlayers(), viewingPlayer);
+		return OtherPlayer.convert(otherOriginalPlayers);
 	}
 }
