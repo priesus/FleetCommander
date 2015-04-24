@@ -1,4 +1,5 @@
-var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderServices', 'ngAnimate', 'ngCookies' ]);
+var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderServices', 'ngAnimate', 'ngCookies',
+		'ngTouch' ]);
 
 fleetCommanderApp.controller('GamesCtrl', [
 		'$scope',
