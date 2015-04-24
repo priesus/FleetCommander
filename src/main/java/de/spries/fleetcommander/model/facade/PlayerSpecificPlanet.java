@@ -8,9 +8,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.FactorySite;
+import de.spries.fleetcommander.model.core.universe.HasCoordinates;
 import de.spries.fleetcommander.model.core.universe.Planet;
 
-public class PlayerSpecificPlanet {
+public class PlayerSpecificPlanet implements HasCoordinates {
 
 	private Planet originalPlanet;
 	private Player viewingPlayer;
@@ -24,10 +25,12 @@ public class PlayerSpecificPlanet {
 		return originalPlanet.getId();
 	}
 
+	@Override
 	public int getX() {
 		return originalPlanet.getX();
 	}
 
+	@Override
 	public int getY() {
 		return originalPlanet.getY();
 	}
@@ -42,6 +45,10 @@ public class PlayerSpecificPlanet {
 
 	public boolean isKnownAsEnemyPlanet() {
 		return originalPlanet.isKnownAsEnemyPlanet(viewingPlayer);
+	}
+
+	public boolean canBuildFactory() {
+		return originalPlanet.canBuildFactory(viewingPlayer);
 	}
 
 	public int getShipCount() {
@@ -74,6 +81,11 @@ public class PlayerSpecificPlanet {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+	public static List<PlayerSpecificPlanet> filterMyPlanets(List<PlayerSpecificPlanet> allPlanets) {
+		return allPlanets.stream().filter(p -> p.isInhabitedByMe())
+				.collect(Collectors.toList());
 	}
 
 	protected static PlayerSpecificPlanet convert(Planet planet, Player viewingPlayer) {

@@ -1,6 +1,5 @@
 package de.spries.fleetcommander.model.core.universe;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
-public class Planet {
+public class Planet implements HasCoordinates {
 
 	private static final int HOME_PLANET_STARTING_SHIPS = 6;
 
@@ -59,10 +58,12 @@ public class Planet {
 		this.id = id;
 	}
 
+	@Override
 	public int getX() {
 		return x;
 	}
 
+	@Override
 	public int getY() {
 		return y;
 	}
@@ -103,12 +104,6 @@ public class Planet {
 		if (inhabitant != null) {
 			inhabitant.addCredits(factorySite.getProducedCreditsPerTurn());
 		}
-	}
-
-	public double distanceTo(Planet other) {
-		int distanceX = x - other.getX();
-		int distanceY = y - other.getY();
-		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 
 	public void buildFactory(Player player) {
@@ -210,11 +205,6 @@ public class Planet {
 		this.factorySite = factorySite;
 	}
 
-	public static List<Planet> filterByInhabitant(List<Planet> allPlanets, Player inhabitant) {
-		return allPlanets.stream().filter(p -> p.isInhabitedBy(inhabitant))
-				.collect(Collectors.toList());
-	}
-
 	public static Planet findById(List<Planet> planets, int planetId) {
 		return planets.stream().filter(p -> p.getId() == planetId).findFirst().get();
 	}
@@ -225,16 +215,5 @@ public class Planet {
 
 	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
 		return allPlanets.stream().filter(p -> p.isHomePlanet()).collect(Collectors.toList());
-	}
-
-	public static List<Planet> sortByDistance(List<Planet> planets, Planet referencePlanet) {
-		Comparator<Planet> distanceComparator = new Comparator<Planet>() {
-
-			@Override
-			public int compare(Planet o1, Planet o2) {
-				return Double.compare(o1.distanceTo(referencePlanet), o2.distanceTo(referencePlanet));
-			}
-		};
-		return planets.stream().sorted(distanceComparator).collect(Collectors.toList());
 	}
 }

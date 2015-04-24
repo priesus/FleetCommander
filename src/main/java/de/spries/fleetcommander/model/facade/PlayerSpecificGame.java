@@ -2,7 +2,9 @@ package de.spries.fleetcommander.model.facade;
 
 import java.util.List;
 
-import de.spries.fleetcommander.model.core.ComputerPlayer;
+import de.spries.fleetcommander.model.ai.AggressiveFleetStrategy;
+import de.spries.fleetcommander.model.ai.ComputerPlayer;
+import de.spries.fleetcommander.model.ai.DefaultBuildingStrategy;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.universe.UniverseFactory;
@@ -23,7 +25,9 @@ public class PlayerSpecificGame {
 
 	public void addComputerPlayer() {
 		int numOtherPlayers = getOtherPlayers().size();
-		originalGame.addPlayer(new ComputerPlayer("Computer " + (numOtherPlayers + 1)));
+		String name = "Computer " + (numOtherPlayers + 1);
+		ComputerPlayer player = new ComputerPlayer(name, new DefaultBuildingStrategy(), new AggressiveFleetStrategy());
+		originalGame.addPlayer(player);
 	}
 
 	public boolean isStarted() {

@@ -72,6 +72,12 @@ public class PlayerSpecificPlanetTest {
 	}
 
 	@Test
+	public void forwardsCallToCanBuildFactory() throws Exception {
+		ownPlanet.canBuildFactory();
+		verify(originalPlanet).canBuildFactory(self);
+	}
+
+	@Test
 	public void forwardsCallToGetShipCountForSelf() {
 		doReturn(true).when(originalPlanet).isInhabitedBy(self);
 

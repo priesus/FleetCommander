@@ -33,6 +33,7 @@ public class GamesService {
 		Game game = GameStore.INSTANCE.get(gameId);
 		LOGGER.debug("Game {}: Get", gameId);
 		if (game != null) {
+			//TODO introduce player (id) as parameter
 			Player player = game.getPlayers().get(0);
 			return new PlayerSpecificGame(game, player);
 		}
