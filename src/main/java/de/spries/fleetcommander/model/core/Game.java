@@ -41,7 +41,7 @@ public class Game {
 		}
 		hasStarted = true;
 
-		notifyAllPlayersForNewTurn();
+		notifyActivePlayersForNewTurn();
 	}
 
 	public boolean isStarted() {
@@ -58,7 +58,7 @@ public class Game {
 		}
 
 		turnFinishedPlayers.add(player);
-		if (turnFinishedPlayers.size() == players.size()) {
+		if (turnFinishedPlayers.size() == players.stream().filter(Player::isActive).count()) {
 			endTurn();
 		}
 	}
@@ -72,14 +72,19 @@ public class Game {
 
 		turnFinishedPlayers.clear();
 
-		//TODO remove defeated players?
-		//TODO treat defeated players planets & ships
+		deactivateDefeatedPlayers();
 
-		notifyAllPlayersForNewTurn();
+		//TODO prevent inactive players from making actions
+
+		notifyActivePlayersForNewTurn();
 	}
 
-	private void notifyAllPlayersForNewTurn() {
-		players.stream().forEach(p -> p.notifyNewTurn(this));
+	private void deactivateDefeatedPlayers() {
+		players.forEach(p -> p.setActive(null != universe.getHomePlanetOf(p)));
+	}
+
+	private void notifyActivePlayersForNewTurn() {
+		players.stream().filter(Player::isActive).forEach(p -> p.notifyNewTurn(this));
 	}
 
 	public int getId() {

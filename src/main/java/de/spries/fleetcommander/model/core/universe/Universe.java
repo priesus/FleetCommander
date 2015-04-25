@@ -34,10 +34,10 @@ public class Universe {
 
 	public Planet getHomePlanetOf(Player player) {
 		Optional<Planet> homePlanet = Planet.filterHomePlanet(planets, player);
-		if (!homePlanet.isPresent()) {
-			throw new IllegalStateException("player " + player + " has no home planet");
+		if (homePlanet.isPresent()) {
+			return homePlanet.get();
 		}
-		return homePlanet.get();
+		return null;
 	}
 
 	public void runFactoryProductionCycle() {
@@ -48,9 +48,7 @@ public class Universe {
 
 	public void runShipTravellingCycle() {
 		//TODO let ships that are close to targets arrive first
-		for (ShipFormation shipFormation : travellingShipFormations) {
-			shipFormation.travel();
-		}
+		travellingShipFormations.stream().forEach(s -> s.travel());
 
 		travellingShipFormations = travellingShipFormations.stream().filter(s -> !s.hasArrived())
 				.collect(Collectors.toSet());

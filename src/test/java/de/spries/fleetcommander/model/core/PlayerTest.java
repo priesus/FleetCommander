@@ -20,9 +20,18 @@ public class PlayerTest {
 	}
 
 	@Test
-	public void playerHasNameAndCredits() {
+	public void newPlayerHasName() {
 		assertThat(john.getName(), is("John"));
+	}
+
+	@Test
+	public void newPlayerHasCredits() {
 		assertThat(john.getCredits(), is(Player.STARTING_CREDITS));
+	}
+
+	@Test
+	public void newPlayerIsActive() {
+		assertThat(john.isActive(), is(true));
 	}
 
 	@Test

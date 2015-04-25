@@ -4,14 +4,15 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class GameTest {
@@ -22,6 +23,7 @@ public class GameTest {
 	private Player jack;
 	private Player john;
 	private Player otherPlayer;
+	private Planet someHomePlanet;
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,6 +40,8 @@ public class GameTest {
 		startedGame.addPlayer(jack);
 		startedGame.setUniverse(universe);
 		startedGame.start();
+
+		someHomePlanet = mock(Planet.class);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -99,6 +103,8 @@ public class GameTest {
 
 	@Test
 	public void turnDoesntEndBeforeAllPlayersHaveEndedTheirTurn() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		startedGame.endTurn(john);
 
 		verify(universe, never()).runFactoryProductionCycle();
@@ -107,14 +113,29 @@ public class GameTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void cannotEndPlayerTurnTwiceBeforeGameTurnEnded() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		startedGame.endTurn(john);
 		startedGame.endTurn(john);
 	}
 
 	@Test
 	public void turnEndsAfterAllPlayersHaveEndedTheirTurn() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		startedGame.endTurn(john);
 		startedGame.endTurn(jack);
+
+		verify(universe).runFactoryProductionCycle();
+		verify(universe).runShipTravellingCycle();
+	}
+
+	@Test
+	public void turnEndsAfterAllActivePlayersHaveEndedTheirTurn() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(false).when(jack).isActive();
+
+		startedGame.endTurn(john);
 
 		verify(universe).runFactoryProductionCycle();
 		verify(universe).runShipTravellingCycle();
@@ -122,6 +143,8 @@ public class GameTest {
 
 	@Test
 	public void turnEndsOnlyOnceAfterAllPlayersHaveEndedTheirTurn() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		startedGame.endTurn(john);
 		startedGame.endTurn(jack);
 
@@ -132,9 +155,9 @@ public class GameTest {
 	}
 
 	@Test
-	public void playersAreNotifiedOfTurnEnd() throws Exception {
-		// We don't care about invocations before this point
-		reset(john, jack);
+	public void activePlayersAreNotifiedOfTurnEnd() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		startedGame.endTurn();
 
 		verify(john).notifyNewTurn(startedGame);
@@ -142,7 +165,29 @@ public class GameTest {
 	}
 
 	@Test
+	public void defeatedPlayersAreNotNotifiedOfTurnEnd() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(false).when(jack).isActive();
+		startedGame.endTurn();
+
+		verify(john).notifyNewTurn(startedGame);
+		verify(jack, never()).notifyNewTurn(startedGame);
+	}
+
+	@Test
+	public void setsDefeatedPlayersInactive() throws Exception {
+		doReturn(someHomePlanet).when(universe).getHomePlanetOf(john);
+		doReturn(null).when(universe).getHomePlanetOf(jack);
+		startedGame.endTurn();
+
+		verify(john).setActive(true);
+		verify(jack).setActive(false);
+	}
+
+	@Test
 	public void playersAreNotifiedOfGameStart() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		game.addPlayer(jack);
 		game.setUniverse(universe);
 		game.start();

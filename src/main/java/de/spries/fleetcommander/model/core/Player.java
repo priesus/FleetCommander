@@ -22,10 +22,12 @@ public class Player {
 
 	private String name;
 	private int credits;
+	private boolean active;
 
 	public Player(String name) {
 		this.name = name;
 		credits = STARTING_CREDITS;
+		active = true;
 	}
 
 	public String getName() {
@@ -34,6 +36,14 @@ public class Player {
 
 	public int getCredits() {
 		return credits;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public boolean canAffordFactory() {

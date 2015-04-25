@@ -3,6 +3,7 @@ package de.spries.fleetcommander.model.core.universe;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -33,10 +34,10 @@ public class UniverseFactoryTest {
 		assertThat(universe.getHomePlanetOf(JOHN), is(notNullValue()));
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void everyPlayerHasToHaveAHomePlanet() throws Exception {
+	@Test
+	public void playersNotParticipatingInGameDontHaveAHomePlanet() throws Exception {
 		Universe universe = UniverseFactory.generate(JOHN_ONLY);
-		universe.getHomePlanetOf(OTHER_PLAYER);
+		assertThat(universe.getHomePlanetOf(OTHER_PLAYER), is(nullValue()));
 	}
 
 	@Test
