@@ -20,11 +20,11 @@
 				<h1>Fleet Commander</h1>
 				
 				<div ng-show="gameScreen == 'home'">
-					<p>
+					<p class="paragraph">
 						Conquer the universe by growing your own fleet of space fighters
 						to invade other player's planets in this turn-based strategy game!
 					</p>
-					<p>
+					<p class="paragraph">
 						You win the game by defeating your opponent fleet commanders
 						by taking over their home planets!
 					</p>
@@ -51,18 +51,18 @@
 								</div>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == runningGame.otherPlayers.length">Add Computer Player</button>
+									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == game.otherPlayers.length">Add Computer Player</button>
 								</div>
 								
 								<div class="form-group">
 									<div class="col-xs-10 col-xs-offset-1">
 										<div class="player-slot col-xs-6 list-group-item friendly-dark">
-											{{runningGame.me.name}}
+											{{game.me.name}}
 										</div>
-										<div class="player-slot col-xs-6 list-group-item enemy-dark" ng-repeat="otherPlayer in runningGame.otherPlayers">
+										<div class="player-slot col-xs-6 list-group-item enemy-dark" ng-repeat="otherPlayer in game.otherPlayers">
 											{{otherPlayer.name}}
 										</div>
-										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - runningGame.otherPlayers.length) track by $index">
+										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
 											&nbsp;
 										</div>
 									</div>
@@ -79,12 +79,12 @@
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar">
-						<span>{{runningGame.me.name}}</span>
-						<span class="pull-right">Credits: {{runningGame.me.credits}}</span>
+						<span>{{game.me.name}}</span>
+						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
 					<div class="ingame-screen">
 						<div class="space-object"
-								ng-repeat="planet in runningGame.universe.planets track by planet.id"
+								ng-repeat="planet in game.universe.planets track by planet.id"
 								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'planet-uninhabited': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
 								ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
@@ -107,7 +107,7 @@
 							</div>
 						</div>
 						<div class="space-object friendly"
-								ng-repeat="ships in runningGame.universe.travellingShipFormations"
+								ng-repeat="ships in game.universe.travellingShipFormations"
 								ng-hide="ships.distanceTravelled==0"
 								style="top: {{ships.positionY / 100 * 334 - 7}}px; left: {{ships.positionX / 100 * 524 - 8}}px;">
 							
@@ -139,7 +139,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !runningGame.me.canAffordFactory" class="btn btn-default">Build Factory</button>
+									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !game.me.canAffordFactory" class="btn btn-default">Build Factory</button>
 								</div>
 								<form name="sendShipsForm">
 									<div class="form-group">

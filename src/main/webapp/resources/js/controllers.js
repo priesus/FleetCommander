@@ -52,7 +52,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.reloadGame = function() {
 				GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
-					$scope.runningGame = data;
+					$scope.game = data;
 				});
 			};
 
@@ -71,7 +71,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.quitGame = function() {
 				GamesService.quit($scope.gameId, $scope.gameToken);
 				$scope.gameScreen = 'home';
-				delete $scope.runningGame;
+				delete $scope.game;
 				delete $cookies.gameId;
 			};
 

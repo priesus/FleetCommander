@@ -19,9 +19,18 @@ html, body {
 	user-select: none;
 }
 
+.paragraph {
+	font-family: Munro, Arial, sans-serif;
+}
+
 @font-face {
 	font-family: 'Silkscreen';
 	src: url(../fonts/slkscr.ttf) format('truetype');
+}
+
+@font-face {
+	font-family: 'Munro';
+	src: url(../fonts/Munro.ttf) format('truetype');
 }
 
 .outer {
@@ -160,7 +169,7 @@ h1 {
 
 .ingame-menu {
 	position: relative;
-	width: 75%;
+	width: 90%;
 	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
 	padding: 10px;
 	float: none;
