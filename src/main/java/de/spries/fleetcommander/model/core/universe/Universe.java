@@ -99,4 +99,8 @@ public class Universe {
 		return travellingShipFormations;
 	}
 
+	public void setEventBus(TurnEventBus turnEventBus) {
+		planets.stream().forEach(p -> p.setEventBus(turnEventBus));
+	}
+
 }

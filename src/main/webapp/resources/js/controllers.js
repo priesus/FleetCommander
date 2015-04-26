@@ -62,6 +62,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.reloadGame();
 					$scope.blockingActionInProgress = false;
 					$scope.showPlanetMenu = false;
+					$scope.showTurnEvents = true;
 					$scope.destinationSelectionActive = false;
 				}).error(function() {
 					$scope.blockingActionInProgress = false;

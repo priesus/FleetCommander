@@ -3,6 +3,7 @@ package de.spries.fleetcommander.model.facade;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -68,6 +69,12 @@ public class PlayerSpecificUniverseTest {
 	public void returnsPlayerSpecificHomePlanet() {
 		assertThat(ownUniverseView.getHomePlanet(), is(new PlayerSpecificPlanet(myHomePlanet, self)));
 		assertThat(otherUniverseView.getHomePlanet(), is(new PlayerSpecificPlanet(otherPlayersHomePlanet, otherPlayer)));
+	}
+
+	@Test
+	public void returnsNullHomePlanetForDefeatedPlayers() {
+		doReturn(null).when(originalUniverse).getHomePlanetOf(self);
+		assertThat(ownUniverseView.getHomePlanet(), is(nullValue()));
 	}
 
 	@Test

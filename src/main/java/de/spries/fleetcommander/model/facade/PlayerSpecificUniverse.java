@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.ShipFormation;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
@@ -26,7 +27,11 @@ public class PlayerSpecificUniverse {
 	}
 
 	public PlayerSpecificPlanet getHomePlanet() {
-		return PlayerSpecificPlanet.convert(originalUniverse.getHomePlanetOf(viewingPlayer), viewingPlayer);
+		Planet homePlanet = originalUniverse.getHomePlanetOf(viewingPlayer);
+		if (homePlanet != null) {
+			return PlayerSpecificPlanet.convert(homePlanet, viewingPlayer);
+		}
+		return null;
 	}
 
 	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId) {

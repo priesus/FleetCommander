@@ -17,6 +17,10 @@ public class OtherPlayer {
 		return originalPlayer.getName();
 	}
 
+	public boolean isActive() {
+		return originalPlayer.isActive();
+	}
+
 	protected static List<OtherPlayer> convert(List<Player> otherPlayers) {
 		return otherPlayers.stream()
 				.map(p -> new OtherPlayer(p))

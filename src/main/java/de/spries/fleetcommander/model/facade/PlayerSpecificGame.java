@@ -6,7 +6,9 @@ import de.spries.fleetcommander.model.ai.AggressiveFleetStrategy;
 import de.spries.fleetcommander.model.ai.ComputerPlayer;
 import de.spries.fleetcommander.model.ai.DefaultBuildingStrategy;
 import de.spries.fleetcommander.model.core.Game;
+import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.TurnEvents;
 import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class PlayerSpecificGame {
@@ -30,8 +32,16 @@ public class PlayerSpecificGame {
 		originalGame.addPlayer(player);
 	}
 
-	public boolean isStarted() {
-		return originalGame.isStarted();
+	public GameStatus getStatus() {
+		return originalGame.getStatus();
+	}
+
+	public PlayerSpecificTurnEvents getPreviousTurnEvents() {
+		TurnEvents events = originalGame.getPreviousTurnEvents();
+		if (events != null) {
+			return new PlayerSpecificTurnEvents(events, viewingPlayer);
+		}
+		return null;
 	}
 
 	public void start() {

@@ -2,6 +2,7 @@ package de.spries.fleetcommander.model.facade;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -25,7 +26,7 @@ import de.spries.fleetcommander.model.core.universe.Universe;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.management.*")
-@PrepareForTest(PlayerSpecificUniverse.class)
+@PrepareForTest({ PlayerSpecificUniverse.class, PlayerSpecificTurnEvents.class })
 public class PlayerSpecificGameTest {
 
 	private Game originalGame;
@@ -42,6 +43,7 @@ public class PlayerSpecificGameTest {
 		doReturn("Myself").when(self).getName();
 
 		PowerMockito.mockStatic(PlayerSpecificUniverse.class);
+		PowerMockito.mockStatic(PlayerSpecificTurnEvents.class);
 
 		doReturn(Arrays.asList(self, otherPlayer)).when(originalGame).getPlayers();
 		ownGame = new PlayerSpecificGame(originalGame, self);
@@ -70,9 +72,21 @@ public class PlayerSpecificGameTest {
 	}
 
 	@Test
-	public void forwardsCallToIsStarted() {
-		ownGame.isStarted();
-		verify(originalGame).isStarted();
+	public void forwardsCallToGetStatus() {
+		ownGame.getStatus();
+		verify(originalGame).getStatus();
+	}
+
+	@Test
+	public void forwardsCallToGetPreviousTurnEvents() throws Exception {
+		ownGame.getPreviousTurnEvents();
+		verify(originalGame).getPreviousTurnEvents();
+	}
+
+	@Test
+	public void returnsNullTurnEventsIfOriginalGameHasNoEventsYet() throws Exception {
+		doReturn(null).when(originalGame).getPreviousTurnEvents();
+		assertThat(ownGame.getPreviousTurnEvents(), is(nullValue()));
 	}
 
 	@Test

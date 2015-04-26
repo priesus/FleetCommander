@@ -4,6 +4,9 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,20 +23,27 @@ public class PlanetShipsTest {
 	private Planet jacksPlanet;
 	private Planet uninhabitedPlanet;
 	private FactorySite johnsFactorySite;
+	private TurnEventBus eventBus;
 
 	@Before
 	public void setUp() {
 		john = mock(Player.class);
 		jack = mock(Player.class);
+		eventBus = mock(TurnEventBus.class);
 
 		johnsHomePlanet = new Planet(0, 0, john);
 		jacksHomePlanet = new Planet(1, 1, jack);
 		uninhabitedPlanet = new Planet(0, 0);
+		jacksHomePlanet.setEventBus(eventBus);
+		uninhabitedPlanet.setEventBus(eventBus);
 		jacksPlanet = new Planet(0, 0);
+		jacksPlanet.setEventBus(eventBus);
 		jacksPlanet.landShips(1, jack);
 
 		johnsFactorySite = mock(FactorySite.class);
 		johnsHomePlanet.setFactorySite(johnsFactorySite);
+
+		reset(eventBus);
 	}
 
 	@Test
@@ -186,5 +196,28 @@ public class PlanetShipsTest {
 		jacksPlanet.landShips(5, john);
 		assertThat(jacksPlanet.getInhabitant(), is(john));
 		assertThat(jacksPlanet.isKnownAsEnemyPlanet(jack), is(true));
+	}
+
+	@Test
+	public void conqueringUninhabitedPlanetFiresEvent() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		verify(eventBus).fireConqueredUninhabitedPlanet(john);
+		verifyNoMoreInteractions(eventBus);
+	}
+
+	@Test
+	public void conqueringEnemyPlanetFiresEventsForBothPlayers() throws Exception {
+		jacksHomePlanet.landShips(20, john);
+		verify(eventBus).fireConqueredEnemyPlanet(john);
+		verify(eventBus).fireLostPlanet(jack);
+		verifyNoMoreInteractions(eventBus);
+	}
+
+	@Test
+	public void defendingPlanetFiresEventsForBothPlayers() throws Exception {
+		jacksHomePlanet.landShips(1, john);
+		verify(eventBus).fireLostShipFormation(john);
+		verify(eventBus).fireDefendedPlanet(jack);
+		verifyNoMoreInteractions(eventBus);
 	}
 }

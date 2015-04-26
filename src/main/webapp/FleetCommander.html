@@ -124,6 +124,39 @@
 							Select a destination planet...
 						</div>
 						
+						<div class="outer" ng-show="showTurnEvents"><div class="middle">
+							<div class="ingame-menu inner form-horizontal">
+								<button ng-click="showTurnEvents=false" type="button" class="close"><span>&times;</span></button>
+								
+								<div ng-show="game.status == 'OVER' && game.me.active">
+									<h3>You win the game!</h3>
+									<ul class="paragraph list-unstyled friendly-dark">
+										<li>All of your enemies home planets have been conquered!</li>
+									</ul>
+								</div>
+								
+								<div ng-show="!game.me.active">
+									<h3>You lose!</h3>
+									<ul class="paragraph list-unstyled enemy-dark">
+										<li>Your home planet has been conquered by enemy ships.</li>
+									</ul>
+								</div>
+								
+								<div ng-show="game.status != 'OVER'">
+									<h3>Recent events</h3>
+									<ul class="paragraph list-unstyled">
+										<li ng-show="!game.previousTurnEvents.hasEvents">Nothing exciting happened...</li>
+										<li ng-show="game.previousTurnEvents.conqueredEnemyPlanets > 0" class="friendly-dark">You conquered {{game.previousTurnEvents.conqueredEnemyPlanets}} enemy planets!</li>
+										<li ng-show="game.previousTurnEvents.conqueredUninhabitedPlanets > 0" class="friendly-dark">You inhabited {{game.previousTurnEvents.conqueredUninhabitedPlanets}} uninhabited planets.</li>
+										<li ng-show="game.previousTurnEvents.lostShipFormations > 0" class="enemy-dark">You lost contact to {{game.previousTurnEvents.lostShipFormations}} ship formations that invaded foreign planets!</li>
+										<li ng-show="game.previousTurnEvents.defendedPlanets > 0" class="enemy-dark">{{game.previousTurnEvents.defendedPlanets}} enemy ship formations attacked your planets, but your fleet was able to stand their ground.</li>
+										<li ng-show="game.previousTurnEvents.lostPlanets > 0" class="enemy-dark">Enemy ships conquered {{game.previousTurnEvents.lostPlanets}} of your planets!</li>
+									</ul>
+								</div>
+								<button ng-click="showTurnEvents=false"  class="btn btn-default">Ok</button>
+							</div>
+						</div></div>
+						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
 							<div class="ingame-menu inner form-horizontal">
 								<button ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>

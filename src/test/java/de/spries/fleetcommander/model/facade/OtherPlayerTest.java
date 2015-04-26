@@ -24,4 +24,10 @@ public class OtherPlayerTest {
 		viewingPlayer.getName();
 		verify(originalPlayer).getName();
 	}
+
+	@Test
+	public void forwardsCallToIsActive() {
+		viewingPlayer.isActive();
+		verify(originalPlayer).isActive();
+	}
 }

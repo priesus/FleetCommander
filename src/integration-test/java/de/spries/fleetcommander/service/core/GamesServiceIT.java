@@ -10,6 +10,7 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
 
@@ -57,18 +58,18 @@ public class GamesServiceIT {
 	@Test
 	public void canStartGame() throws Exception {
 		service.addComputerPlayer(gameId);
-		assertThat(service.getGame(gameId).isStarted(), is(false));
+		assertThat(service.getGame(gameId).getStatus(), is(GameStatus.PENDING));
 
 		GameParams params = new GameParams();
 		service.modifyGame(gameId, params);
-		assertThat(service.getGame(gameId).isStarted(), is(false));
+		assertThat(service.getGame(gameId).getStatus(), is(GameStatus.PENDING));
 
 		params.setIsStarted(false);
 		service.modifyGame(gameId, params);
-		assertThat(service.getGame(gameId).isStarted(), is(false));
+		assertThat(service.getGame(gameId).getStatus(), is(GameStatus.PENDING));
 
 		params.setIsStarted(true);
 		service.modifyGame(gameId, params);
-		assertThat(service.getGame(gameId).isStarted(), is(true));
+		assertThat(service.getGame(gameId).getStatus(), is(GameStatus.RUNNING));
 	}
 }

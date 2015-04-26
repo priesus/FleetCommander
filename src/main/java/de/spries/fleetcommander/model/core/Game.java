@@ -9,22 +9,29 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
 public class Game {
+	public enum GameStatus {
+		PENDING,
+		RUNNING,
+		OVER
+	}
+
 	public static final int MAX_PLAYERS = 6;
 	private int id;
 	private List<Player> players;
 	private Set<Player> turnFinishedPlayers;
 	private Universe universe;
-	private boolean hasStarted;
+	private GameStatus status;
+	private TurnEvents previousTurnEvents;
 
 	public Game() {
 		players = new ArrayList<>(MAX_PLAYERS);
 		turnFinishedPlayers = new HashSet<>(MAX_PLAYERS);
-		hasStarted = false;
+		status = GameStatus.PENDING;
 	}
 
 	public void addPlayer(Player player) {
-		if (hasStarted) {
-			throw new IllegalStateException("Game has already started");
+		if (!GameStatus.PENDING.equals(status)) {
+			throw new IllegalStateException("It's too late to add players");
 		}
 		if (players.size() >= MAX_PLAYERS) {
 			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
@@ -39,13 +46,15 @@ public class Game {
 		if (universe == null) {
 			throw new IllegalStateException("No universe!");
 		}
-		hasStarted = true;
+		previousTurnEvents = new TurnEvents(players);
+		universe.setEventBus(previousTurnEvents);
+		status = GameStatus.RUNNING;
 
 		notifyActivePlayersForNewTurn();
 	}
 
-	public boolean isStarted() {
-		return hasStarted;
+	public GameStatus getStatus() {
+		return status;
 	}
 
 	public void endTurn(Player player) {
@@ -64,19 +73,26 @@ public class Game {
 	}
 
 	protected void endTurn() {
-		if (!hasStarted) {
-			throw new IllegalStateException("Game has not started, yet");
+		if (GameStatus.PENDING.equals(status)) {
+			throw new IllegalStateException("Game is not in progress");
 		}
+
+		previousTurnEvents.clear();
+		turnFinishedPlayers.clear();
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 
-		turnFinishedPlayers.clear();
-
 		deactivateDefeatedPlayers();
 
+		long numActivePlayers = players.stream().filter(p -> p.isActive()).count();
+		if (numActivePlayers <= 1) {
+			status = GameStatus.OVER;
+		}
 		//TODO prevent inactive players from making actions
 
-		notifyActivePlayersForNewTurn();
+		if (!GameStatus.OVER.equals(status)) {
+			notifyActivePlayersForNewTurn();
+		}
 	}
 
 	private void deactivateDefeatedPlayers() {
@@ -105,6 +121,10 @@ public class Game {
 
 	public List<Player> getPlayers() {
 		return new ArrayList<>(players);
+	}
+
+	public TurnEvents getPreviousTurnEvents() {
+		return previousTurnEvents;
 	}
 
 }

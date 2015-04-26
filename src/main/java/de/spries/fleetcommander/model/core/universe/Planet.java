@@ -31,6 +31,8 @@ public class Planet implements HasCoordinates {
 
 	private FactorySite factorySite = new FactorySite();
 
+	private TurnEventBus turnEventBus;
+
 	public Planet(int x, int y) {
 		this(x, y, null);
 	}
@@ -154,6 +156,7 @@ public class Planet implements HasCoordinates {
 			throw new IllegalArgumentException("Cannot land " + shipsToLand + " ships");
 		}
 		if (!isInhabited()) {
+			turnEventBus.fireConqueredUninhabitedPlanet(invader);
 			inhabitant = invader;
 			shipCount += shipsToLand;
 		}
@@ -165,6 +168,8 @@ public class Planet implements HasCoordinates {
 			shipCount -= shipsToLand;
 			if (shipCount < 0) {
 				// Successful invasion
+				turnEventBus.fireLostPlanet(inhabitant);
+				turnEventBus.fireConqueredEnemyPlanet(invader);
 				knownAsEnemyPlanetBy.add(inhabitant);
 				inhabitant = invader;
 				shipCount *= -1;
@@ -173,6 +178,8 @@ public class Planet implements HasCoordinates {
 			}
 			else {
 				// Invaders defeated
+				turnEventBus.fireDefendedPlanet(inhabitant);
+				turnEventBus.fireLostShipFormation(invader);
 				knownAsEnemyPlanetBy.add(invader);
 			}
 		}
@@ -181,6 +188,10 @@ public class Planet implements HasCoordinates {
 
 	public boolean isKnownAsEnemyPlanet(Player viewingPlayer) {
 		return knownAsEnemyPlanetBy.contains(viewingPlayer);
+	}
+
+	public void setEventBus(TurnEventBus turnEventBus) {
+		this.turnEventBus = turnEventBus;
 	}
 
 	@Override

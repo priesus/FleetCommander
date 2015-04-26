@@ -162,4 +162,15 @@ public class UniverseTest {
 	public void destinationPlanetIsInvalidId() throws Exception {
 		universe.sendShips(1, johnsHomePlanet.getId(), INEXISTENT_PLANET, john);
 	}
+
+	@Test
+	public void setsEventBusForAllContainedPlanets() throws Exception {
+		TurnEventBus eventBus = mock(TurnEventBus.class);
+		universe.setEventBus(eventBus);
+
+		verify(johnsHomePlanet).setEventBus(eventBus);
+		verify(jacksHomePlanet).setEventBus(eventBus);
+		verify(uninhabitedPlanet).setEventBus(eventBus);
+		verify(distantPlanet).setEventBus(eventBus);
+	}
 }
