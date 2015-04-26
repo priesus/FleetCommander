@@ -89,6 +89,9 @@ h1 {
 .game-status-bar {
 	text-align: left;
 }
+.other-players-status-bar {
+	text-align: center;
+}
 
 .ingame-screen {
 	height: 350px;
@@ -107,7 +110,7 @@ h1 {
 	color: #aaf;
 }
 
-.friendly-dark {
+.friendly-foreground {
 	color: #3e3e97;
 }
 
@@ -115,11 +118,11 @@ h1 {
 	color: #f88;
 }
 
-.enemy-dark {
+.enemy-foreground {
 	color: #973e3e;
 }
 
-.planet-uninhabited {
+.neutral {
 	color: #aaa;
 }
 

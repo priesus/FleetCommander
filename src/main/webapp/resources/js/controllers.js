@@ -13,6 +13,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.gameScreen = 'home';
 			$scope.showPlanetMenu = false;
+			$scope.showTurnEvents = false;
 			$scope.destinationSelectionActive = false;
 			$scope.blockingActionInProgress = false;
 
@@ -48,7 +49,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.gameToken = $cookies.gameToken;
 				$scope.reloadGame().success(function() {
 					$scope.gameScreen = 'ingame';
-					$scope.showTurnEvents = true;
 				});
 			};
 
@@ -73,6 +73,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.quitGame = function() {
 				GamesService.quit($scope.gameId, $scope.gameToken);
+				$scope.showTurnEvents = false;
 				$scope.gameScreen = 'home';
 				delete $scope.game;
 				delete $cookies.gameId;

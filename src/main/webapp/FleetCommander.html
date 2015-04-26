@@ -56,10 +56,10 @@
 								
 								<div class="form-group">
 									<div class="col-xs-10 col-xs-offset-1">
-										<div class="player-slot col-xs-6 list-group-item friendly-dark">
+										<div class="player-slot col-xs-6 list-group-item friendly-foreground">
 											{{game.me.name}}
 										</div>
-										<div class="player-slot col-xs-6 list-group-item enemy-dark" ng-repeat="otherPlayer in game.otherPlayers">
+										<div class="player-slot col-xs-6 list-group-item enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers">
 											{{otherPlayer.name}}
 										</div>
 										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
@@ -78,14 +78,14 @@
 						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status == 'OVER'">End turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
-					<div class="game-status-bar">
+					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
 						<span>{{game.me.name}}</span>
 						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
 					<div class="ingame-screen">
 						<div class="space-object"
 								ng-repeat="planet in game.universe.planets track by planet.id"
-								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'planet-uninhabited': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
+								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
 								ng-click="clickPlanetHandler(planet)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
@@ -130,14 +130,14 @@
 								
 								<div ng-show="game.status == 'OVER' && game.me.active">
 									<h3>You win the game!</h3>
-									<ul class="paragraph list-unstyled friendly-dark">
+									<ul class="paragraph list-unstyled friendly-foreground">
 										<li>All of your enemies home planets have been conquered!</li>
 									</ul>
 								</div>
 								
 								<div ng-show="!game.me.active">
 									<h3>You lose!</h3>
-									<ul class="paragraph list-unstyled enemy-dark">
+									<ul class="paragraph list-unstyled enemy-foreground">
 										<li>Your home planet has been conquered by enemy ships.</li>
 									</ul>
 								</div>
@@ -146,11 +146,11 @@
 									<h3>Recent events</h3>
 									<ul class="paragraph list-unstyled">
 										<li ng-show="!game.previousTurnEvents.hasEvents">Nothing exciting happened...</li>
-										<li ng-show="game.previousTurnEvents.conqueredEnemyPlanets > 0" class="friendly-dark">You conquered {{game.previousTurnEvents.conqueredEnemyPlanets}} enemy planets!</li>
-										<li ng-show="game.previousTurnEvents.conqueredUninhabitedPlanets > 0" class="friendly-dark">You inhabited {{game.previousTurnEvents.conqueredUninhabitedPlanets}} uninhabited planets.</li>
-										<li ng-show="game.previousTurnEvents.lostShipFormations > 0" class="enemy-dark">You lost contact to {{game.previousTurnEvents.lostShipFormations}} ship formations that invaded foreign planets!</li>
-										<li ng-show="game.previousTurnEvents.defendedPlanets > 0" class="enemy-dark">{{game.previousTurnEvents.defendedPlanets}} enemy ship formations attacked your planets, but your fleet was able to stand their ground.</li>
-										<li ng-show="game.previousTurnEvents.lostPlanets > 0" class="enemy-dark">Enemy ships conquered {{game.previousTurnEvents.lostPlanets}} of your planets!</li>
+										<li ng-show="game.previousTurnEvents.conqueredEnemyPlanets > 0" class="friendly-foreground">You conquered {{game.previousTurnEvents.conqueredEnemyPlanets}} enemy planets!</li>
+										<li ng-show="game.previousTurnEvents.conqueredUninhabitedPlanets > 0" class="friendly-foreground">You inhabited {{game.previousTurnEvents.conqueredUninhabitedPlanets}} uninhabited planets.</li>
+										<li ng-show="game.previousTurnEvents.lostShipFormations > 0" class="enemy-foreground">You lost contact to {{game.previousTurnEvents.lostShipFormations}} ship formations that invaded foreign planets!</li>
+										<li ng-show="game.previousTurnEvents.defendedPlanets > 0" class="enemy-foreground">{{game.previousTurnEvents.defendedPlanets}} enemy ship formations attacked your planets, but your fleet was able to stand their ground.</li>
+										<li ng-show="game.previousTurnEvents.lostPlanets > 0" class="enemy-foreground">Enemy ships conquered {{game.previousTurnEvents.lostPlanets}} of your planets!</li>
 									</ul>
 								</div>
 								<button ng-click="showTurnEvents=false"  class="btn btn-default">Ok</button>
@@ -193,6 +193,12 @@
 								</form>
 							</div>
 						</div></div>
+					</div>
+					
+					<div class="other-players-status-bar" ng-show="game.otherPlayers.length > 1">
+						<ul class="list-inline">
+								<li ng-class="{'enemy-foreground': otherPlayer.active, 'neutral': !otherPlayer.active}" ng-repeat="otherPlayer in game.otherPlayers">{{otherPlayer.name}}</li>
+							</ul>
 					</div>
 				</div>
 				
