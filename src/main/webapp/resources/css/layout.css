@@ -100,10 +100,16 @@ h1 {
 	position: relative;
 }
 
-.space-object {
+.planet {
 	position: absolute;
 	vertical-align: center;
 	cursor: pointer;
+	z-index: 5;
+}
+
+.travellingShip {
+	position: absolute;
+	vertical-align: center;
 }
 
 .friendly {
@@ -168,6 +174,7 @@ h1 {
 	border-radius: 5px;
 	background: #f0f0f0;
 	padding: 1px 15px;
+	z-index: 10;
 }
 
 .ingame-menu {
@@ -178,6 +185,7 @@ h1 {
 	float: none;
 	border-radius: 5px;
 	background: #f0f0f0;
+	z-index: 10;
 }
 
 .factory-slot {
