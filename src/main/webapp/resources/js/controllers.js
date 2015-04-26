@@ -80,6 +80,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.clickPlanetHandler = function(planet) {
+				if ($scope.game.status == 'OVER')
+					return;
 				if (!$scope.destinationSelectionActive && planet.inhabitedByMe) {
 					// Open planet menu
 					$scope.selectedPlanet = planet;
