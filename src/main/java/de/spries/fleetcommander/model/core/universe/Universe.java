@@ -47,9 +47,7 @@ public class Universe {
 	}
 
 	public void runShipTravellingCycle() {
-		//TODO let ships that are close to targets arrive first
-		travellingShipFormations.stream().forEach(s -> s.travel());
-
+		travellingShipFormations.stream().sorted(ShipFormation.CLOSE_TO_TARGET_FIRST).forEach(s -> s.travel());
 		travellingShipFormations = travellingShipFormations.stream().filter(s -> !s.hasArrived())
 				.collect(Collectors.toSet());
 	}

@@ -3,6 +3,7 @@ package de.spries.fleetcommander.model.core.universe;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -13,8 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.Planet;
-import de.spries.fleetcommander.model.core.universe.ShipFormation;
 
 public class ShipFormationTest {
 
@@ -164,10 +163,12 @@ public class ShipFormationTest {
 		sf.travel();
 		verify(distantPlanet, never()).landShips(1, JOHN);
 		assertThat(sf.hasArrived(), is(false));
+		assertThat(sf.getDistanceRemaining(), is(greaterThan(0.)));
 
 		sf.travel();
 		verify(distantPlanet).landShips(1, JOHN);
 		assertThat(sf.hasArrived(), is(true));
+		assertThat(sf.getDistanceRemaining(), is(lessThanOrEqualTo(0.)));
 	}
 
 	@Test

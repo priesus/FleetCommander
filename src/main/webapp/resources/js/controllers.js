@@ -46,12 +46,14 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.resumeGame = function() {
 				$scope.gameId = $cookies.gameId;
 				$scope.gameToken = $cookies.gameToken;
-				$scope.gameScreen = 'ingame';
-				$scope.reloadGame();
+				$scope.reloadGame().success(function() {
+					$scope.gameScreen = 'ingame';
+					$scope.showTurnEvents = true;
+				});
 			};
 
 			$scope.reloadGame = function() {
-				GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
+				return GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.game = data;
 				});
 			};

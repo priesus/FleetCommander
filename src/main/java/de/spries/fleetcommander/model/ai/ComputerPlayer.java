@@ -22,7 +22,6 @@ public class ComputerPlayer extends Player {
 
 	@Override
 	public void notifyNewTurn(Game game) {
-		//TODO what if the player was defeated?
 		try {
 			playTurn(new PlayerSpecificGame(game, this));
 		} catch (Exception e) {

@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.model.core.universe;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,6 +12,13 @@ import de.spries.fleetcommander.model.core.Player;
 public class ShipFormation {
 
 	public static final int DISTANCE_PER_TURN = 8;
+	public static final Comparator<ShipFormation> CLOSE_TO_TARGET_FIRST = new Comparator<ShipFormation>() {
+
+		@Override
+		public int compare(ShipFormation o1, ShipFormation o2) {
+			return Double.compare(o1.getDistanceRemaining(), o2.getDistanceRemaining());
+		}
+	};
 
 	private int shipCount;
 	private Planet origin;
@@ -79,11 +87,23 @@ public class ShipFormation {
 	}
 
 	public boolean hasArrived() {
-		return distanceTravelled >= distanceOverall;
+		return getDistanceRemaining() <= 0;
 	}
 
 	public int getDistanceTravelled() {
 		return distanceTravelled;
+	}
+
+	public double getDistanceRemaining() {
+		return distanceOverall - distanceTravelled;
+	}
+
+	public double getPositionX() {
+		return origin.getX() + (destination.getX() - origin.getX()) * distanceTravelled / distanceOverall;
+	}
+
+	public double getPositionY() {
+		return origin.getY() + (destination.getY() - origin.getY()) * distanceTravelled / distanceOverall;
 	}
 
 	@Override
@@ -94,14 +114,6 @@ public class ShipFormation {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this);
-	}
-
-	public double getPositionX() {
-		return origin.getX() + (destination.getX() - origin.getX()) * distanceTravelled / distanceOverall;
-	}
-
-	public double getPositionY() {
-		return origin.getY() + (destination.getY() - origin.getY()) * distanceTravelled / distanceOverall;
 	}
 
 	public static Collection<ShipFormation> filterByCommander(Collection<ShipFormation> shipFormations, Player commander) {
