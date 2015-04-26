@@ -21,6 +21,11 @@ public class ComputerPlayer extends Player {
 	}
 
 	@Override
+	public boolean isHumanPlayer() {
+		return false;
+	}
+
+	@Override
 	public void notifyNewTurn(Game game) {
 		try {
 			playTurn(new PlayerSpecificGame(game, this));

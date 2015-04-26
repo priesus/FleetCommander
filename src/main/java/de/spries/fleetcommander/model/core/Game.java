@@ -85,7 +85,8 @@ public class Game {
 		deactivateDefeatedPlayers();
 
 		long numActivePlayers = players.stream().filter(p -> p.isActive()).count();
-		if (numActivePlayers <= 1) {
+		long numActiveHumanPlayers = players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
+		if (numActivePlayers <= 1 || numActiveHumanPlayers < 1) {
 			status = GameStatus.OVER;
 		}
 		//TODO prevent inactive players from making actions

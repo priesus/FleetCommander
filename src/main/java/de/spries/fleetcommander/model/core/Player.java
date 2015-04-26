@@ -42,6 +42,10 @@ public class Player {
 		return active;
 	}
 
+	public boolean isHumanPlayer() {
+		return true;
+	}
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}

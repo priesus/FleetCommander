@@ -24,7 +24,8 @@ public class GameTest {
 	private Universe universe;
 	private Player jack;
 	private Player john;
-	private Player jim;
+	private Player computerPlayer;
+	private Player computerPlayer2;
 	private Player otherPlayer;
 	private Planet someHomePlanet;
 
@@ -32,8 +33,14 @@ public class GameTest {
 	public void setUp() throws Exception {
 		john = mock(Player.class);
 		jack = mock(Player.class);
-		jim = mock(Player.class);
+		computerPlayer = mock(Player.class);
+		computerPlayer2 = mock(Player.class);
 		otherPlayer = mock(Player.class);
+
+		doReturn(true).when(john).isHumanPlayer();
+		doReturn(true).when(jack).isHumanPlayer();
+		doReturn(false).when(computerPlayer).isHumanPlayer();
+		doReturn(false).when(computerPlayer2).isHumanPlayer();
 
 		game = new Game();
 		game.addPlayer(john);
@@ -42,7 +49,8 @@ public class GameTest {
 		startedGame = new Game();
 		startedGame.addPlayer(john);
 		startedGame.addPlayer(jack);
-		startedGame.addPlayer(jim);
+		startedGame.addPlayer(computerPlayer);
+		startedGame.addPlayer(computerPlayer2);
 		startedGame.setUniverse(universe);
 		startedGame.start();
 
@@ -173,24 +181,28 @@ public class GameTest {
 	public void activePlayersAreNotifiedOfTurnEnd() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
-		doReturn(true).when(jim).isActive();
+		doReturn(true).when(computerPlayer).isActive();
+		doReturn(true).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
 		verify(john).notifyNewTurn(startedGame);
 		verify(jack).notifyNewTurn(startedGame);
-		verify(jim).notifyNewTurn(startedGame);
+		verify(computerPlayer).notifyNewTurn(startedGame);
+		verify(computerPlayer2).notifyNewTurn(startedGame);
 	}
 
 	@Test
 	public void defeatedPlayersAreNotNotifiedOfTurnEnd() throws Exception {
 		doReturn(true).when(john).isActive();
-		doReturn(true).when(jack).isActive();
-		doReturn(false).when(jim).isActive();
+		doReturn(false).when(jack).isActive();
+		doReturn(false).when(computerPlayer).isActive();
+		doReturn(true).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
 		verify(john).notifyNewTurn(startedGame);
-		verify(jack).notifyNewTurn(startedGame);
-		verify(jim, never()).notifyNewTurn(startedGame);
+		verify(jack, never()).notifyNewTurn(startedGame);
+		verify(computerPlayer, never()).notifyNewTurn(startedGame);
+		verify(computerPlayer2).notifyNewTurn(startedGame);
 	}
 
 	@Test
@@ -204,20 +216,22 @@ public class GameTest {
 	}
 
 	@Test
-	public void gameOverWhenOnly1PlayerLeft() throws Exception {
+	public void gameOverWhenLastPlayerIsHuman() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(false).when(jack).isActive();
-		doReturn(false).when(jim).isActive();
+		doReturn(false).when(computerPlayer).isActive();
+		doReturn(false).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
 		assertThat(startedGame.getStatus(), is(GameStatus.OVER));
 	}
 
 	@Test
-	public void gameOverWhen0PlayerLeft() throws Exception {
+	public void gameOverWhen0HumanPlayersLeft() throws Exception {
 		doReturn(false).when(john).isActive();
 		doReturn(false).when(jack).isActive();
-		doReturn(false).when(jim).isActive();
+		doReturn(true).when(computerPlayer).isActive();
+		doReturn(true).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
 		assertThat(startedGame.getStatus(), is(GameStatus.OVER));
@@ -227,12 +241,13 @@ public class GameTest {
 	public void noPlayersNotifiedAfterGameEnd() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(false).when(jack).isActive();
-		doReturn(false).when(jim).isActive();
+		doReturn(false).when(computerPlayer).isActive();
+		doReturn(false).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
 		verify(john, never()).notifyNewTurn(startedGame);
 		verify(jack, never()).notifyNewTurn(startedGame);
-		verify(jim, never()).notifyNewTurn(startedGame);
+		verify(computerPlayer, never()).notifyNewTurn(startedGame);
 	}
 
 	@Test
