@@ -102,8 +102,8 @@ public class Planet implements HasCoordinates {
 	}
 
 	public void runProductionCycle() {
-		shipCount += factorySite.getProducedShipsPerTurn();
 		if (inhabitant != null) {
+			shipCount += factorySite.getProducedShipsPerTurn();
 			inhabitant.addCredits(factorySite.getProducedCreditsPerTurn());
 		}
 	}
@@ -226,5 +226,14 @@ public class Planet implements HasCoordinates {
 
 	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
 		return allPlanets.stream().filter(p -> p.isHomePlanet()).collect(Collectors.toList());
+	}
+
+	public void handleDefeatedPlayer(Player defeatedPlayer) {
+		knownAsEnemyPlanetBy.remove(defeatedPlayer);
+		incomingShipsPerPlayer.remove(defeatedPlayer);
+		if (defeatedPlayer.equals(inhabitant)) {
+			shipCount = 0;
+			inhabitant = null;
+		}
 	}
 }

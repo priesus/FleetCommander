@@ -16,8 +16,6 @@ import org.mockito.Mockito;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.Player.InsufficientCreditsException;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
-import de.spries.fleetcommander.model.core.universe.FactorySite;
-import de.spries.fleetcommander.model.core.universe.Planet;
 
 public class PlanetFactoryBuildingTest {
 
@@ -48,6 +46,15 @@ public class PlanetFactoryBuildingTest {
 		johnsHomePlanet.runProductionCycle();
 
 		assertThat(johnsHomePlanet.getShipCount(), is(shipsBefore + 5));
+	}
+
+	@Test
+	public void factoryCycleDoesNotInreaseNumberOfShipsAfterPlayerWasDefeated() throws Exception {
+		doReturn(5f).when(johnsFactorySite).getProducedShipsPerTurn();
+		johnsHomePlanet.handleDefeatedPlayer(john);
+		johnsHomePlanet.runProductionCycle();
+
+		assertThat(johnsHomePlanet.getShipCount(), is(0));
 	}
 
 	@Test

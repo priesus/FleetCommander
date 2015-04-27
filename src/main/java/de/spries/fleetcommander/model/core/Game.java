@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Universe;
@@ -82,22 +83,27 @@ public class Game {
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 
-		deactivateDefeatedPlayers();
+		handleNewDefeatedPlayers(players.stream().filter(p -> p.isActive())
+				.filter(p -> null == universe.getHomePlanetOf(p)));
 
 		long numActivePlayers = players.stream().filter(p -> p.isActive()).count();
 		long numActiveHumanPlayers = players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
 		if (numActivePlayers <= 1 || numActiveHumanPlayers < 1) {
 			status = GameStatus.OVER;
 		}
-		//TODO prevent inactive players from making actions
 
 		if (!GameStatus.OVER.equals(status)) {
 			notifyActivePlayersForNewTurn();
 		}
 	}
 
-	private void deactivateDefeatedPlayers() {
-		players.forEach(p -> p.setActive(null != universe.getHomePlanetOf(p)));
+	private void handleNewDefeatedPlayers(Stream<Player> newDefeatedPlayers) {
+		newDefeatedPlayers.forEach(p -> handleNewDefeatedPlayer(p));
+	}
+
+	private void handleNewDefeatedPlayer(Player newDefeatedPlayer) {
+		newDefeatedPlayer.setActive(false);
+		universe.handleDefeatedPlayer(newDefeatedPlayer);
 	}
 
 	private void notifyActivePlayersForNewTurn() {

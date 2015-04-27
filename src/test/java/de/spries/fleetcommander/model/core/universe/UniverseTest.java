@@ -24,6 +24,7 @@ public class UniverseTest {
 
 	private static final int INEXISTENT_PLANET = 123456789;
 	private Player john;
+	private Player jack;
 	private Planet johnsHomePlanet;
 	private Planet jacksHomePlanet;
 	private Planet uninhabitedPlanet;
@@ -33,6 +34,7 @@ public class UniverseTest {
 	@Before
 	public void setUp() {
 		john = mock(Player.class);
+		jack = mock(Player.class);
 		johnsHomePlanet = mock(Planet.class);
 		jacksHomePlanet = mock(Planet.class);
 		uninhabitedPlanet = mock(Planet.class);
@@ -172,5 +174,26 @@ public class UniverseTest {
 		verify(jacksHomePlanet).setEventBus(eventBus);
 		verify(uninhabitedPlanet).setEventBus(eventBus);
 		verify(distantPlanet).setEventBus(eventBus);
+	}
+
+	@Test
+	public void forwardsHandleDefeatedPlayerToAllPlanets() throws Exception {
+		universe.handleDefeatedPlayer(john);
+
+		verify(johnsHomePlanet).handleDefeatedPlayer(john);
+		verify(jacksHomePlanet).handleDefeatedPlayer(john);
+		verify(uninhabitedPlanet).handleDefeatedPlayer(john);
+		verify(distantPlanet).handleDefeatedPlayer(john);
+	}
+
+	@Test
+	public void removesDefeatedPlayersTravellingShips() throws Exception {
+		universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john);
+		universe.sendShips(1, jacksHomePlanet, uninhabitedPlanet, jack);
+		universe.handleDefeatedPlayer(john);
+
+		Collection<ShipFormation> shipFormations = universe.getTravellingShipFormations();
+		assertThat(shipFormations, hasSize(1));
+		assertThat(shipFormations, hasItem(new ShipFormation(1, jacksHomePlanet, uninhabitedPlanet, jack)));
 	}
 }

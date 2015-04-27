@@ -2,6 +2,7 @@ package de.spries.fleetcommander.model.core.universe;
 
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -9,13 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.FactorySite;
-import de.spries.fleetcommander.model.core.universe.Planet;
 
 public class PlanetTest {
 
 	private Player jack;
 	private Player john;
+	private Player jim;
 	private Planet johnsHomePlanet;
 	private Planet uninhabitedPlanet;
 	private FactorySite johnsFactorySite;
@@ -24,12 +24,14 @@ public class PlanetTest {
 	public void setUp() {
 		john = mock(Player.class);
 		jack = mock(Player.class);
+		jim = mock(Player.class);
 
 		johnsHomePlanet = new Planet(0, 0, john);
 		uninhabitedPlanet = new Planet(0, 0);
 
 		johnsFactorySite = mock(FactorySite.class);
 		johnsHomePlanet.setFactorySite(johnsFactorySite);
+		johnsHomePlanet.setEventBus(mock(TurnEventBus.class));
 	}
 
 	@Test
@@ -71,4 +73,57 @@ public class PlanetTest {
 		assertThat(johnsHomePlanet.isInhabitedBy(john), is(true));
 		assertThat(johnsHomePlanet.isInhabitedBy(jack), is(false));
 	}
+
+	@Test
+	public void inhabitantIsRemovedWhenPlayerIsDefeated() throws Exception {
+		johnsHomePlanet.handleDefeatedPlayer(john);
+		assertThat(johnsHomePlanet.getInhabitant(), is(nullValue()));
+	}
+
+	@Test
+	public void defeatedPlayerHasNoEffectOnOtherPlayersPlanetInhabitant() throws Exception {
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.getInhabitant(), is(john));
+	}
+
+	@Test
+	public void shipsAreRemovedForDefeatedPlayer() throws Exception {
+		johnsHomePlanet.handleDefeatedPlayer(john);
+		assertThat(johnsHomePlanet.getShipCount(), is(0));
+	}
+
+	@Test
+	public void shipsAreNotAffectedForOtherDefeatedPlayers() throws Exception {
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.getShipCount(), is(6));
+	}
+
+	@Test
+	public void enemyMarkerIsRemovedForDefeatedPlayers() throws Exception {
+		johnsHomePlanet.landShips(1, jack);
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.isKnownAsEnemyPlanet(jack), is(false));
+	}
+
+	@Test
+	public void enemyMarkerIsNotAffectedForOtherDefeatedPlayers() throws Exception {
+		johnsHomePlanet.landShips(1, jim);
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.isKnownAsEnemyPlanet(jim), is(true));
+	}
+
+	@Test
+	public void incomingShipsAreRemovedForDefeatedPlayers() throws Exception {
+		johnsHomePlanet.addIncomingShips(1, jack);
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.getIncomingShipCount(jack), is(0));
+	}
+
+	@Test
+	public void incomingShipsAreNotAffectedForOtherDefeatedPlayers() throws Exception {
+		johnsHomePlanet.addIncomingShips(1, jim);
+		johnsHomePlanet.handleDefeatedPlayer(jack);
+		assertThat(johnsHomePlanet.getIncomingShipCount(jim), is(1));
+	}
+
 }

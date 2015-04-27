@@ -101,4 +101,10 @@ public class Universe {
 		planets.stream().forEach(p -> p.setEventBus(turnEventBus));
 	}
 
+	public void handleDefeatedPlayer(Player newDefeatedPlayer) {
+		planets.stream().forEach(p -> p.handleDefeatedPlayer(newDefeatedPlayer));
+		travellingShipFormations = travellingShipFormations.stream()
+				.filter(s -> !newDefeatedPlayer.equals(s.getCommander()))
+				.collect(Collectors.toSet());
+	}
 }

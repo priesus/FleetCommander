@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.model.core.universe.Planet;
@@ -206,13 +207,27 @@ public class GameTest {
 	}
 
 	@Test
-	public void setsDefeatedPlayersInactive() throws Exception {
+	public void setsNewDefeatedPlayersInactive() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(false).when(jack).isActive();
+		doReturn(null).when(universe).getHomePlanetOf(john);
+		doReturn(null).when(universe).getHomePlanetOf(jack);
+		startedGame.endTurn();
+
+		verify(john).setActive(false);
+		verify(jack, never()).setActive(Mockito.anyBoolean());
+	}
+
+	@Test
+	public void notifiesUniverseForDefeatedPlayers() throws Exception {
+		doReturn(true).when(john).isActive();
+		doReturn(true).when(jack).isActive();
 		doReturn(someHomePlanet).when(universe).getHomePlanetOf(john);
 		doReturn(null).when(universe).getHomePlanetOf(jack);
 		startedGame.endTurn();
 
-		verify(john).setActive(true);
-		verify(jack).setActive(false);
+		verify(universe).handleDefeatedPlayer(jack);
+		verify(universe, never()).handleDefeatedPlayer(john);
 	}
 
 	@Test
