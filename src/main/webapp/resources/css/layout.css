@@ -19,6 +19,13 @@ html, body {
 	user-select: none;
 }
 
+@media ( min-width : 992px) {
+	/* Show keyboard shortcuts on desktop only */
+	.shortcut {
+		text-decoration: underline;
+	}
+}
+
 .paragraph {
 	font-family: Munro, Arial, sans-serif;
 }

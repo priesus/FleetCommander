@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="resources/css/layout.css">
 </head>
-<body ng-controller="GamesCtrl">
+<body ng-controller="GamesCtrl" ng-keydown="onKeyDown($event)">
 	<div class="outer">
 		<div class="middle">
 			<div id="game-box" class="inner">
@@ -29,13 +29,13 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()">{{'Resume game'}}</button>
-					<button class="btn btn-default" ng-click="createNewGame()">Start new game!</button>
+					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()"><span class="shortcut">R</span>esume game</button>
+					<button class="btn btn-default" ng-click="createNewGame()"><span class="shortcut">S</span>tart new game!</button>
 				</div>
 				
 				<div ng-show="gameScreen == 'players'">
 					<div class="game-menu">
-						<button class="btn btn-default" ng-click="startGame()">Play!</button>
+						<button class="btn btn-default" ng-click="startGame()"><span class="shortcut">P</span>lay!</button>
 					</div>
 					
 					<div class="game-status-bar">
@@ -51,7 +51,7 @@
 								</div>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == game.otherPlayers.length">Add Computer Player</button>
+									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
 								</div>
 								
 								<div class="form-group">
@@ -75,7 +75,7 @@
 				
 				<div ng-show="gameScreen == 'ingame'">
 					<div class="game-menu">
-						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status == 'OVER'">End turn</button>
+						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status == 'OVER'"><span class="shortcut">E</span>nd turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
@@ -172,7 +172,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<button ng-click="buildFactory(selectedPlanet)" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !game.me.canAffordFactory" class="btn btn-default">Build Factory</button>
+									<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
 								</div>
 								<form name="sendShipsForm">
 									<div class="form-group">
@@ -183,11 +183,11 @@
 										<button ng-click="setShipCount(shipCount-1)" ng-disabled="shipCount==0" class="btn btn-default">-</button>
 										<input type="number" name="ships" ng-model="shipCount" min="1" max="{{selectedPlanet.shipCount}}">
 										<button ng-click="setShipCount(shipCount+1)" ng-disabled="shipCount==selectedPlanet.shipCount" class="btn btn-default">+</button>
-										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount==selectedPlanet.shipCount" class="btn btn-default">all</button>
+										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount==selectedPlanet.shipCount" class="btn btn-default"><span class="shortcut">a</span>ll</button>
 									</div>
 									<div class="form-group">
-										<button class="btn btn-default" ng-click="shipDestinationSelection()" ng-disabled="shipCount==0 || !sendShipsForm.ships.$valid">
-											Send {{shipCount}} ships to...
+										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount==0 || !sendShipsForm.ships.$valid">
+											<span class="shortcut">S</span>end {{shipCount}} ships to...
 										</button>
 									</div>
 								</form>
