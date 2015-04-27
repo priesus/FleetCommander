@@ -143,6 +143,12 @@ public class GameTest {
 		startedGame.endTurn(john);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void defeatedPlayersCannotEndTurn() throws Exception {
+		doReturn(false).when(john).isActive();
+		startedGame.endTurn(john);
+	}
+
 	@Test
 	public void turnEndsAfterAllPlayersHaveEndedTheirTurn() throws Exception {
 		doReturn(true).when(john).isActive();

@@ -62,6 +62,9 @@ public class Game {
 		if (!players.contains(player)) {
 			throw new IllegalArgumentException(player + " doesn't participate in this game");
 		}
+		if (!player.isActive()) {
+			throw new IllegalArgumentException(player + " has been defeated");
+		}
 
 		if (turnFinishedPlayers.contains(player)) {
 			throw new IllegalArgumentException(player + " already has finished the turn");
