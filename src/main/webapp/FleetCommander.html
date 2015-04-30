@@ -19,7 +19,7 @@
 			<div id="game-box" class="inner">
 				<h1>Fleet Commander</h1>
 				
-				<div ng-show="gameScreen == 'home'">
+				<div ng-show="gameScreen === 'home'">
 					<p class="paragraph">
 						Conquer the universe by growing your own fleet of space fighters
 						to invade other player's planets in this turn-based strategy game!
@@ -33,7 +33,7 @@
 					<button class="btn btn-default" ng-click="createNewGame()"><span class="shortcut">S</span>tart new game!</button>
 				</div>
 				
-				<div ng-show="gameScreen == 'players'">
+				<div ng-show="gameScreen === 'players'">
 					<div class="game-menu">
 						<button class="btn btn-default" ng-click="startGame()"><span class="shortcut">P</span>lay!</button>
 					</div>
@@ -51,7 +51,7 @@
 								</div>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 == game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
+									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
 								</div>
 								
 								<div class="form-group">
@@ -73,9 +73,9 @@
 					
 				</div>
 				
-				<div ng-show="gameScreen == 'ingame'">
+				<div ng-show="gameScreen === 'ingame'">
 					<div class="game-menu">
-						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status == 'OVER'"><span class="shortcut">E</span>nd turn</button>
+						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
@@ -108,7 +108,7 @@
 						</div>
 						<div class="travellingShip friendly-foreground"
 								ng-repeat="ships in game.universe.travellingShipFormations"
-								ng-hide="ships.distanceTravelled==0"
+								ng-hide="ships.distanceTravelled===0"
 								style="top: {{ships.positionY / 100 * 334 - 7}}px; left: {{ships.positionX / 100 * 524 - 8}}px;">
 							
 							<div class="object-icon">
@@ -128,7 +128,7 @@
 							<div class="ingame-menu inner form-horizontal">
 								<button ng-click="showTurnEvents=false" type="button" class="close"><span>&times;</span></button>
 								
-								<div ng-show="game.status == 'OVER' && game.me.active">
+								<div ng-show="game.status === 'OVER' && game.me.active">
 									<h3>You win the game!</h3>
 									<ul class="paragraph list-unstyled friendly-foreground">
 										<li>All of your enemies home planets have been conquered!</li>
@@ -142,7 +142,7 @@
 									</ul>
 								</div>
 								
-								<div ng-show="game.status != 'OVER'">
+								<div ng-show="game.status !== 'OVER'">
 									<h3>Recent events</h3>
 									<ul class="paragraph list-unstyled">
 										<li ng-show="!game.previousTurnEvents.hasEvents">Nothing exciting happened...</li>
@@ -172,7 +172,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots==0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
+									<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
 								</div>
 								<form name="sendShipsForm">
 									<div class="form-group">
@@ -180,13 +180,13 @@
 									</div>
 									<div class="form-group">
 										<button ng-click="setShipCount(1)" ng-disabled="shipCount<=1" class="btn btn-default">one</button>
-										<button ng-click="setShipCount(shipCount-1)" ng-disabled="shipCount==0" class="btn btn-default">-</button>
+										<button ng-click="setShipCount(shipCount-1)" ng-disabled="shipCount===0" class="btn btn-default">-</button>
 										<input type="number" name="ships" ng-model="shipCount" min="1" max="{{selectedPlanet.shipCount}}">
-										<button ng-click="setShipCount(shipCount+1)" ng-disabled="shipCount==selectedPlanet.shipCount" class="btn btn-default">+</button>
-										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount==selectedPlanet.shipCount" class="btn btn-default"><span class="shortcut">a</span>ll</button>
+										<button ng-click="setShipCount(shipCount+1)" ng-disabled="shipCount===selectedPlanet.shipCount" class="btn btn-default">+</button>
+										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount===selectedPlanet.shipCount" class="btn btn-default"><span class="shortcut">a</span>ll</button>
 									</div>
 									<div class="form-group">
-										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount==0 || !sendShipsForm.ships.$valid">
+										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.ships.$valid">
 											<span class="shortcut">S</span>end {{shipCount}} ships to...
 										</button>
 									</div>

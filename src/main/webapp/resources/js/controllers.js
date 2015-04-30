@@ -25,10 +25,10 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.onKeyDown = function($event) {
 				switch ($event.keyCode) {
 				case 83:
-					if ($scope.gameScreen == 'home')
+					if ($scope.gameScreen === 'home')
 						// [S]tart new game
 						$scope.createNewGame();
-					else if ($scope.gameScreen == 'ingame')
+					else if ($scope.gameScreen === 'ingame')
 						// [s]end ships
 						$scope.prepareSendShips();
 					break;
@@ -39,10 +39,10 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.startGame();
 					break;
 				case 65:
-					if ($scope.gameScreen == 'players')
+					if ($scope.gameScreen === 'players')
 						// [A]dd computer player
 						$scope.addComputerPlayer();
-					else if ($scope.gameScreen == 'ingame')
+					else if ($scope.gameScreen === 'ingame')
 						// [a]ll ships
 						$scope.setShipCount($scope.selectedPlanet.shipCount);
 					break;
@@ -60,18 +60,18 @@ fleetCommanderApp.controller('GamesCtrl', [
 					break;
 				case 13: // [Enter]
 				case 32: // [Space]
-					if ($scope.gameScreen == 'players')
+					if ($scope.gameScreen === 'players')
 						// Start game
 						$scope.startGame();
-					else if ($scope.gameScreen == 'ingame')
+					else if ($scope.gameScreen === 'ingame')
 						// Close new turn menu
 						$scope.showTurnEvents = false;
 					break;
 				case 27: // [Esc]
-					if ($scope.gameScreen == 'players')
+					if ($scope.gameScreen === 'players')
 						// Cancel game creation
 						$scope.quitGame();
-					else if ($scope.gameScreen == 'ingame') {
+					else if ($scope.gameScreen === 'ingame') {
 						// Close planet menu/new turn menu
 						$scope.showTurnEvents = false;
 						$scope.showPlanetMenu = false;
@@ -100,7 +100,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$cookies.gameId = $scope.gameId;
 					$cookies.gameToken = $scope.gameToken;
 
-					// TODO shouls we extract some methods for setting the variables?
+					// TODO should we extract some methods for setting the variables?
 					$scope.showPlanetMenu = false;
 					$scope.showTurnEvents = false;
 					$scope.destinationSelectionActive = false;
@@ -125,7 +125,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.endTurn = function() {
-				if ($scope.blockingActionInProgress || $scope.game.status == 'OVER')
+				if ($scope.blockingActionInProgress || $scope.game.status === 'OVER')
 					return;
 
 				$scope.blockingActionInProgress = true;
@@ -149,7 +149,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.clickPlanetHandler = function(planet) {
-				if ($scope.game.status == 'OVER')
+				if ($scope.game.status === 'OVER')
 					return;
 				if (!$scope.destinationSelectionActive && planet.inhabitedByMe) {
 					// Open planet menu
