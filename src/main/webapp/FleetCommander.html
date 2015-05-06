@@ -31,6 +31,7 @@
 					
 					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()"><span class="shortcut">R</span>esume game</button>
 					<button class="btn btn-default" ng-click="createNewGame()"><span class="shortcut">S</span>tart new game!</button>
+					<button class="btn btn-default" ng-click="gameScreen='join'">Join game</button>
 				</div>
 				
 				<div ng-show="gameScreen === 'players'">
@@ -38,9 +39,8 @@
 						<div class="outer"><div class="middle">
 							<div class="ingame-menu inner form-horizontal">
 								<button ng-click="quitGame()" type="button" class="close"><span>&times;</span></button>
-								<div class="form-group">
-									<h4>Players</h4>
-								</div>
+								
+								<h3>Players</h3>
 								
 								<div class="form-group">
 									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
@@ -60,10 +60,43 @@
 										</div>
 									</div>
 								</div>
+								
+								<div class="paragraph">
+									Other players can join this game by using the code
+									<div id="join-code" class="text-uppercase">{{'yx45ab'}}</div>
+								</div>
 							</div>
 						</div></div>
 					</div>
-					
+				</div>
+				
+				<div ng-show="gameScreen === 'join'">
+					<div class="ingame-screen">
+						<div class="outer"><div class="middle">
+							<div class="ingame-menu inner form-horizontal">
+								<button ng-click="gameScreen='home'" type="button" class="close"><span>&times;</span></button>
+								
+								<h3>Join existing game</h3>
+								
+								<form name="joinCodeForm">
+									<div class="form-group paragraph">
+										Enter the code to join your friend's game
+									</div>
+									
+									<div class="form-group">
+										<div class="col-xs-4 col-xs-offset-4" ng-class="{'has-error': !joinCodeForm.code.$valid}">
+											<input name="code" type="text" ng-model="joinCode" autofocus="autofocus" placeholder="e.g. yx45ab" pattern="[A-Za-z0-9]{6}" maxlength="6" required="required" class="form-control"/>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<button class="btn btn-default" ng-click="createNewGame()" type="submit" ng-disabled="!joinCodeForm.code.$valid">Join game</button>
+										<button class="btn btn-default" ng-click="createNewGame()">Start own game</button>
+									</div>
+								</form>
+							</div>
+						</div></div>
+					</div>
 				</div>
 				
 				<div ng-show="gameScreen === 'ingame'">

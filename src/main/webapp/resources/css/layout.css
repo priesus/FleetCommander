@@ -46,6 +46,10 @@ html, body {
 	}
 }
 
+input {
+	text-align: center;
+}
+
 .outer {
 	display: table;
 	position: absolute;
@@ -90,6 +94,10 @@ h1 {
 
 .player-slot {
 	display: inline-block;
+}
+
+#join-code {
+	font-size: 150%;
 }
 
 /* In-Game screen */
