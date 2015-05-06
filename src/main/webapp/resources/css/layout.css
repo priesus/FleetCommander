@@ -19,13 +19,6 @@ html, body {
 	user-select: none;
 }
 
-@media ( min-width : 992px) {
-	/* Show keyboard shortcuts on desktop only */
-	.shortcut {
-		text-decoration: underline;
-	}
-}
-
 .paragraph {
 	font-family: Munro, Arial, sans-serif;
 }
@@ -38,6 +31,19 @@ html, body {
 @font-face {
 	font-family: 'Munro';
 	src: url(../fonts/Munro.ttf) format('truetype');
+}
+
+@media ( min-width : 992px) {
+	/* Show keyboard shortcuts on desktop only */
+	.shortcut {
+		text-decoration: underline;
+	}
+}
+
+@media ( max-height : 558px) {
+	.hide-on-small {
+		display: none;
+	}
 }
 
 .outer {
@@ -59,7 +65,7 @@ html, body {
 
 #game-box {
 	width: 98%;
-	max-width: 600px;
+	width: 600px;
 	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
 	padding: 30px 30px 0;
 	float: none;
@@ -69,12 +75,6 @@ html, body {
 
 h1 {
 	margin: 0 0 25px;
-}
-
-@media ( max-width :578px) {
-	h1 {
-		font-size: 30px;
-	}
 }
 
 #copyright {

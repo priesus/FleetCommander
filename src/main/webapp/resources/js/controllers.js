@@ -100,7 +100,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$cookies.gameId = $scope.gameId;
 					$cookies.gameToken = $scope.gameToken;
 
-					// TODO should we extract some methods for setting the variables?
 					$scope.showPlanetMenu = false;
 					$scope.showTurnEvents = false;
 					$scope.destinationSelectionActive = false;
