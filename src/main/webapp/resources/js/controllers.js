@@ -23,60 +23,54 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			// TODO refactor to make this more readable
 			$scope.onKeyDown = function($event) {
-				switch ($event.keyCode) {
-				case 83:
-					if ($scope.gameScreen === 'home')
-						// [S]tart new game
+				if ($scope.gameScreen === 'home') {
+					switch ($event.keyCode) {
+					case 83: // [S]tart new game
 						$scope.createNewGame();
-					else if ($scope.gameScreen === 'ingame')
-						// [s]end ships
-						$scope.prepareSendShips();
-					break;
-				case 82: // [R]esume game
-					$scope.resumeGame();
-					break;
-				case 80: // [P]lay
-					$scope.startGame();
-					break;
-				case 65:
-					if ($scope.gameScreen === 'players')
-						// [A]dd computer player
-						$scope.addComputerPlayer();
-					else if ($scope.gameScreen === 'ingame')
-						// [a]ll ships
-						$scope.setShipCount($scope.selectedPlanet.shipCount);
-					break;
-				case 69: // [E]nd turn
-					$scope.endTurn();
-					break;
-				case 70: // Build [f]actory
-					$scope.buildFactoryOnSelectedPlanet();
-					break;
-				case 189: // [-] ships
-					$scope.setShipCount(shipCount - 1);
-					break;
-				case 187: // [+] ships
-					$scope.setShipCount(shipCount + 1);
-					break;
-				case 13: // [Enter]
-				case 32: // [Space]
-					if ($scope.gameScreen === 'players')
-						// Start game
+						break;
+					case 82: // [R]esume game
+						$scope.resumeGame();
+						break;
+					}
+				} else if ($scope.gameScreen === 'players') {
+					switch ($event.keyCode) {
+					case 80: // [P]lay
 						$scope.startGame();
-					else if ($scope.gameScreen === 'ingame')
-						// Close new turn menu
-						$scope.showTurnEvents = false;
-					break;
-				case 27: // [Esc]
-					if ($scope.gameScreen === 'players')
-						// Cancel game creation
+						break;
+					case 65: // [A]dd computer player
+						$scope.addComputerPlayer();
+						break;
+					case 13: // [Enter]
+					case 32: // [Space]
+						$scope.startGame();
+						break;
+					case 27: // [Esc]
 						$scope.quitGame();
-					else if ($scope.gameScreen === 'ingame') {
-						// Close planet menu/new turn menu
+						break;
+					}
+				} else if ($scope.gameScreen === 'ingame') {
+					switch ($event.keyCode) {
+					case 83: // [s]end ships
+						$scope.prepareSendShips();
+						break;
+					case 65: // [a]ll ships
+						$scope.setShipCount($scope.selectedPlanet.shipCount);
+						break;
+					case 69: // [E]nd turn
+						$scope.endTurn();
+						break;
+					case 70: // Build [f]actory
+						$scope.buildFactoryOnSelectedPlanet();
+						break;
+					case 13: // [Enter]
+					case 32: // [Space]
+						$scope.showTurnEvents = false;
+						break;
+					case 27: // [Esc]
 						$scope.showTurnEvents = false;
 						$scope.showPlanetMenu = false;
+						break;
 					}
-					break;
 				}
 			};
 
