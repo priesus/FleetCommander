@@ -8,6 +8,15 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 				url : 'rest/games'
 			});
 		},
+		join : function(joinCode) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games',
+				data : {
+					'joinCode' : joinCode
+				}
+			});
+		},
 		get : function(gameId, token) {
 			return $http({
 				method : 'GET',

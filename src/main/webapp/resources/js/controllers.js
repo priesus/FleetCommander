@@ -31,6 +31,9 @@ fleetCommanderApp.controller('GamesCtrl', [
 					case 82: // [R]esume game
 						$scope.resumeGame();
 						break;
+					case 74: // [J]oin game
+						$scope.gameScreen = 'join';
+						break;
 					}
 				} else if ($scope.gameScreen === 'players') {
 					switch ($event.keyCode) {
@@ -46,6 +49,15 @@ fleetCommanderApp.controller('GamesCtrl', [
 						break;
 					case 27: // [Esc]
 						$scope.quitGame();
+						break;
+					}
+				} else if ($scope.gameScreen === 'join') {
+					switch ($event.keyCode) {
+					case 13: // [Enter]
+						$scope.tryToJoinGame();
+						break;
+					case 27: // [Esc]
+						$scope.gameScreen = 'home';
 						break;
 					}
 				} else if ($scope.gameScreen === 'ingame') {
@@ -80,6 +92,19 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameToken = data.authToken;
 					$scope.gameScreen = 'players';
 					$scope.addComputerPlayer();
+				});
+			};
+
+			$scope.tryToJoinGame = function() {
+				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
+					return;
+
+				GamesService.join($scope.joiningPlayerCode).success(function(data) {
+					$scope.gameId = data.gameId;
+					$scope.gameToken = data.authToken;
+					$scope.gameScreen = 'players';
+				}).error(function(data, status, statusText) {
+					$scope.joinGameError = data;
 				});
 			};
 

@@ -21,17 +21,28 @@ import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
 @Path("")
 public class GamesRestService {
 
+	public class NewGameParams {
+		public String joinCode;
+	}
+
 	private static final GamesService SERVICE = new GamesService();
 
 	@POST
 	@Path("games")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createGame() {
-		GameAccessParams accessParams = SERVICE.createNewGame("Player 1");
+	public Response createGame(NewGameParams params) {
+		if (params == null) {
+			GameAccessParams accessParams = SERVICE.createNewGame("Player 1");
 
-		return noCacheResponse(Response.Status.CREATED)
-				.header("Location", "/rest/games/" + accessParams.getGameId())
-				.entity(accessParams).build();
+			return noCacheResponse(Response.Status.CREATED)
+					.header("Location", "/rest/games/" + accessParams.getGameId())
+					.entity(accessParams).build();
+		}
+
+		//TODO implement joining games
+		return noCacheResponse(Response.Status.BAD_REQUEST).entity("Invalid join code")
+				.build();
 	}
 
 	@GET
