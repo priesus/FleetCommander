@@ -21,8 +21,16 @@ import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
 @Path("")
 public class GamesRestService {
 
-	public class NewGameParams {
+	public static class NewGameParams {
 		public String joinCode;
+	}
+
+	public static class ErrorMsg {
+		public ErrorMsg(String msg) {
+			error = msg;
+		}
+
+		public String error;
 	}
 
 	private static final GamesService SERVICE = new GamesService();
@@ -41,7 +49,7 @@ public class GamesRestService {
 		}
 
 		//TODO implement joining games
-		return noCacheResponse(Response.Status.BAD_REQUEST).entity("Invalid join code")
+		return noCacheResponse(Response.Status.NOT_FOUND).entity(new ErrorMsg("Invalid join code"))
 				.build();
 	}
 

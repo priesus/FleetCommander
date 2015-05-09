@@ -31,7 +31,7 @@
 					
 					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()"><span class="shortcut">R</span>esume game</button>
 					<button class="btn btn-default" ng-click="createNewGame()"><span class="shortcut">S</span>tart new game!</button>
-					<button class="btn btn-default" ng-click="gameScreen='join'"><span class="shortcut">J</span>oin game</button>
+					<button class="btn btn-default" ng-click="openJoinGameMenu()"><span class="shortcut">J</span>oin game</button>
 				</div>
 				
 				<div ng-show="gameScreen === 'players'">
@@ -80,10 +80,10 @@
 								
 								<form name="joinCodeForm">
 									<div class="form-group">
-										<div class="col-xs-6 col-xs-offset-3" ng-class="{'has-error': !joinCodeForm.code.$valid}">
+										<div class="col-xs-6 col-xs-offset-3" ng-class="{'has-error': !joinCodeForm.code.$valid || joinGameError}">
 											<label for="nameInput">Enter the join code:</label>
 											<input id="codeInput" name="code" ng-model="joiningPlayerCode" autofocus="autofocus" placeholder="e.g. yx45ab" pattern="[A-Za-z0-9]{6}" maxlength="6" required="required" class="form-control"/>
-											<label for="nameInput" ng-if="joinGameError">{{joinGameError}}</label>
+											<label for="nameInput" ng-if="joinGameError" class="control-label">{{joinGameError}}</label>
 										</div>
 									</div>
 									

@@ -32,7 +32,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 						$scope.resumeGame();
 						break;
 					case 74: // [J]oin game
-						$scope.gameScreen = 'join';
+						$scope.openJoinGameMenu();
 						break;
 					}
 				} else if ($scope.gameScreen === 'players') {
@@ -95,6 +95,12 @@ fleetCommanderApp.controller('GamesCtrl', [
 				});
 			};
 
+			$scope.openJoinGameMenu = function() {
+				$scope.joinGameError = undefined;
+				$scope.joiningPlayerCode = '';
+				$scope.gameScreen = 'join';
+			}
+
 			$scope.tryToJoinGame = function() {
 				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
 					return;
@@ -104,7 +110,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameToken = data.authToken;
 					$scope.gameScreen = 'players';
 				}).error(function(data, status, statusText) {
-					$scope.joinGameError = data;
+					if (data !== null)
+						$scope.joinGameError = data.error;
 				});
 			};
 

@@ -151,8 +151,6 @@
 						<defaultsDescriptor>src/main/resources/jetty-maven-plugin-webdefault.xml</defaultsDescriptor>
 					</webAppConfig>
 					<scanIntervalSeconds>2</scanIntervalSeconds>
-					<stopPort>8005</stopPort>
-					<stopKey>STOP</stopKey>
 					<httpConnector>
 						<port>80</port>
 					</httpConnector>
