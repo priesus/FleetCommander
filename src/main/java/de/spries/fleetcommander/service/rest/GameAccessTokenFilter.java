@@ -15,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.spries.fleetcommander.service.core.GameAuthenticator;
+import de.spries.fleetcommander.service.core.dto.GamePlayer;
+import de.spries.fleetcommander.service.rest.model.RestError;
 
 /**
  * This request filter is supposed to block unauthorized access to game data.
@@ -39,21 +41,52 @@ public class GameAccessTokenFilter implements ContainerRequestFilter {
 
 			int gameId = Integer.parseInt(protectedPathMatcher.group("gameId"));
 
-			String token = extractAuthTokenFromContext(requestCtx);
-			if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gameId, token)) {
-				LOGGER.warn("Game {}: Unauthorized access with token {}", gameId, token);
-				requestCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+			int playerId = 0;
+			String token = null;
+			try {
+				playerId = extractPlayerIdFromContext(requestCtx);
+				token = extractAuthTokenFromContext(requestCtx);
+			} catch (Exception e) {
+				LOGGER.warn("Invalid request headers (playerId/token couldn't be extracted)", e);
+				requestCtx.abortWith(Response.status(Response.Status.BAD_REQUEST)
+						.entity(new RestError("Required header 'Authorization' was missing or malformed."
+								+ " Expexted value: 'Bearer <playerId>:<authToken>'")).build());
+			}
+
+			GamePlayer gamePlayer = GamePlayer.forIds(gameId, playerId);
+			if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gamePlayer, token)) {
+				LOGGER.warn("{}: Unauthorized access with token {}", gamePlayer, token);
+				requestCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED)
+						.entity(new RestError("'Authorization' header was invalid for game " + gameId)).build());
 			}
 		}
 	}
 
-	protected static String extractAuthTokenFromContext(ContainerRequestContext requestCtx) {
+	private static int extractPlayerIdFromContext(ContainerRequestContext requestCtx) {
+		String playerToken = extractAuthFromContext(requestCtx);
+		String[] playerAndToken = playerToken.split(":");
+		return Integer.parseInt(playerAndToken[0]);
+	}
+
+	protected static int extractPlayerIdFromHeaders(HttpHeaders headers) {
+		String playerToken = extractAuthFromHeaders(headers);
+		String[] playerAndToken = playerToken.split(":");
+		return Integer.parseInt(playerAndToken[0]);
+	}
+
+	private static String extractAuthTokenFromContext(ContainerRequestContext requestCtx) {
+		String playerToken = extractAuthFromContext(requestCtx);
+		String[] playerAndToken = playerToken.split(":");
+		return playerAndToken[1];
+	}
+
+	private static String extractAuthFromContext(ContainerRequestContext requestCtx) {
 		String token = requestCtx.getHeaderString(AUTH_HEADER);
 		return extractTokenFromHeaderValue(token);
 	}
 
-	protected static String extractAuthTokenFromHeaders(HttpHeaders httpHeaders) {
-		String token = httpHeaders.getHeaderString(AUTH_HEADER);
+	private static String extractAuthFromHeaders(HttpHeaders headers) {
+		String token = headers.getHeaderString(AUTH_HEADER);
 		return extractTokenFromHeaderValue(token);
 	}
 

@@ -89,7 +89,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.createNewGame = function() {
 				GamesService.create().success(function(data) {
 					$scope.gameId = data.gameId;
-					$scope.gameToken = data.authToken;
+					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
 					$scope.addComputerPlayer();
 				});
@@ -109,7 +109,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.authToken;
 					$scope.gameScreen = 'players';
-				}).error(function(data, status, statusText) {
+				}).error(function(data) {
 					if (data !== null)
 						$scope.joinGameError = data.error;
 				});

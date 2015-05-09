@@ -9,6 +9,7 @@ import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.GameStore;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
+import de.spries.fleetcommander.service.core.dto.GamePlayer;
 import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
 
 public class GamesService {
@@ -22,61 +23,60 @@ public class GamesService {
 
 		int gameId = GameStore.INSTANCE.create(game);
 		game.setId(gameId);
-		String authToken = GameAuthenticator.INSTANCE.createAuthToken(gameId);
+		GamePlayer gamePlayer = GamePlayer.forIds(gameId, p.getId());
+		String authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer);
 
-		LOGGER.debug("Game {}: Created", gameId);
+		LOGGER.debug("{}: Created", gamePlayer);
 
-		return new GameAccessParams(gameId, authToken);
+		return new GameAccessParams(gamePlayer, authToken);
 	}
 
-	public PlayerSpecificGame getGame(int gameId) {
-		Game game = GameStore.INSTANCE.get(gameId);
-		LOGGER.debug("Game {}: Get", gameId);
+	public PlayerSpecificGame getGame(GamePlayer gamePlayer) {
+		Game game = GameStore.INSTANCE.get(gamePlayer.getGameId());
+		LOGGER.debug("{}: Get", gamePlayer);
 		if (game != null) {
-			//TODO introduce player (id) as parameter
-			Player player = game.getPlayers().get(0);
+			Player player = game.getPlayerWithId(gamePlayer.getPlayerId());
 			return new PlayerSpecificGame(game, player);
 		}
-		LOGGER.warn("Game {}: Get, but doesn't exist", gameId);
+		LOGGER.warn("{}: Get, but doesn't exist", gamePlayer);
 		throw new IllegalArgumentException("The game doesn't exist on the server");
 	}
 
-	public void deleteGame(int gameId) {
-		LOGGER.debug("Game {}: Delete", gameId);
-		GameAuthenticator.INSTANCE.deleteAuthToken(gameId);
-		GameStore.INSTANCE.delete(gameId);
+	public void quitGame(GamePlayer gamePlayer) {
+		LOGGER.debug("{}: Delete", gamePlayer);
+		GameAuthenticator.INSTANCE.deleteAuthToken(gamePlayer);
 	}
 
-	public void addComputerPlayer(int gameId) {
-		LOGGER.debug("Game {}: Add computer player", gameId);
-		PlayerSpecificGame game = getGame(gameId);
+	public void addComputerPlayer(GamePlayer gamePlayer) {
+		LOGGER.debug("{}: Add computer player", gamePlayer);
+		PlayerSpecificGame game = getGame(gamePlayer);
 		game.addComputerPlayer();
 	}
 
-	public void modifyGame(int gameId, GameParams params) {
-		LOGGER.debug("Game {}: Modify with params {}", gameId, params);
+	public void modifyGame(GamePlayer gamePlayer, GameParams params) {
+		LOGGER.debug("{}: Modify with params {}", gamePlayer, params);
 		if (Boolean.TRUE.equals(params.getIsStarted())) {
-			PlayerSpecificGame game = getGame(gameId);
+			PlayerSpecificGame game = getGame(gamePlayer);
 			game.start();
 		}
 	}
 
-	public void endTurn(int gameId) {
-		LOGGER.debug("Game {}: End turn", gameId);
-		PlayerSpecificGame game = getGame(gameId);
+	public void endTurn(GamePlayer gamePlayer) {
+		LOGGER.debug("{}: End turn", gamePlayer);
+		PlayerSpecificGame game = getGame(gamePlayer);
 		game.endTurn();
 	}
 
-	public void sendShips(int gameId, ShipFormationParams ships) {
-		LOGGER.debug("Game {}: Send ships with params {}", gameId, ships);
-		PlayerSpecificGame game = getGame(gameId);
+	public void sendShips(GamePlayer gamePlayer, ShipFormationParams ships) {
+		LOGGER.debug("{}: Send ships with params {}", gamePlayer, ships);
+		PlayerSpecificGame game = getGame(gamePlayer);
 		game.getUniverse().sendShips(ships.getShipCount(), ships.getOriginPlanetId(),
 				ships.getDestinationPlanetId());
 	}
 
-	public void buildFactory(int gameId, int planetId) {
-		LOGGER.debug("Game {}: Build factory on planet {}", gameId, planetId);
-		PlayerSpecificGame game = getGame(gameId);
+	public void buildFactory(GamePlayer gamePlayer, int planetId) {
+		LOGGER.debug("{}: Build factory on planet {}", gamePlayer, planetId);
+		PlayerSpecificGame game = getGame(gamePlayer);
 		game.getUniverse().getPlanet(planetId).buildFactory();
 	}
 }

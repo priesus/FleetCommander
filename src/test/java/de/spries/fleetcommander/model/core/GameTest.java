@@ -3,6 +3,7 @@ package de.spries.fleetcommander.model.core;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
@@ -106,6 +107,36 @@ public class GameTest {
 	@Test(expected = IllegalStateException.class)
 	public void cannotEndTurnBeforeGameHasStarted() throws Exception {
 		game.endTurn();
+	}
+
+	@Test
+	public void returnsPlayerWithSameId() throws Exception {
+		game.addPlayer(otherPlayer);
+		doReturn(12).when(john).getId();
+		doReturn(123).when(otherPlayer).getId();
+		assertThat(game.getPlayerWithId(123), is(otherPlayer));
+	}
+
+	@Test
+	public void returnsNullForNonexistentPlayerId() throws Exception {
+		assertThat(game.getPlayerWithId(123), is(nullValue()));
+	}
+
+	@Test
+	public void assignsIdToNewPlayers() throws Exception {
+		Game g = new Game();
+
+		Player p1 = mock(Player.class);
+		Player p2 = mock(Player.class);
+		Player p3 = mock(Player.class);
+
+		g.addPlayer(p1);
+		g.addPlayer(p2);
+		g.addPlayer(p3);
+
+		verify(p1).setId(1);
+		verify(p2).setId(2);
+		verify(p3).setId(3);
 	}
 
 	@Test

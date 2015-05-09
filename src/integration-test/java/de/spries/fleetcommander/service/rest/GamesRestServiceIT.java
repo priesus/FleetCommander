@@ -2,6 +2,7 @@ package de.spries.fleetcommander.service.rest;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_ACCEPTED;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -29,7 +30,8 @@ public class GamesRestServiceIT {
 		Response response = when().post("/rest/games");
 
 		gameUrl = response.getHeader("Location");
-		gameAuthToken = response.getBody().jsonPath().getString("authToken");
+		System.err.println(response.getBody().asString());
+		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
 
 		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
@@ -42,6 +44,12 @@ public class GamesRestServiceIT {
 	@Test
 	public void cannotGetGameWithoutAuthorization() throws Exception {
 		when().get(gameUrl)
+				.then().statusCode(SC_BAD_REQUEST);
+	}
+
+	@Test
+	public void cannotGetGameWithWrongAuthorization() throws Exception {
+		whenAuthorizedWrong().get(gameUrl)
 				.then().statusCode(SC_UNAUTHORIZED);
 	}
 
@@ -55,7 +63,7 @@ public class GamesRestServiceIT {
 	@Test
 	public void cannotEndTurnWithoutAuthorization() throws Exception {
 		when().post(gameUrl + "/turns")
-				.then().statusCode(SC_UNAUTHORIZED);
+				.then().statusCode(SC_BAD_REQUEST);
 	}
 
 	@Test
@@ -68,7 +76,7 @@ public class GamesRestServiceIT {
 	public void cannotSendShipsWithoutAuthorization() throws Exception {
 		String body = String.format(SEND_SHIPS_REQUEST_BODY, 1, 1, 2);
 		when(body).post(gameUrl + "/universe/travellingShipFormations")
-				.then().statusCode(SC_UNAUTHORIZED);
+				.then().statusCode(SC_BAD_REQUEST);
 	}
 
 	@Test
@@ -96,7 +104,7 @@ public class GamesRestServiceIT {
 	@Test
 	public void cannotBuildFactoryWithoutAuthorization() throws Exception {
 		when().post(gameUrl + "/universe/planets/1/factories")
-				.then().statusCode(SC_UNAUTHORIZED);
+				.then().statusCode(SC_BAD_REQUEST);
 	}
 
 	@Test
@@ -121,7 +129,7 @@ public class GamesRestServiceIT {
 	@Test
 	public void cannotQuitGameWithoutAuthorization() throws Exception {
 		when().delete(gameUrl)
-				.then().statusCode(SC_UNAUTHORIZED);
+				.then().statusCode(SC_BAD_REQUEST);
 	}
 
 	@Test
@@ -150,15 +158,19 @@ public class GamesRestServiceIT {
 	}
 
 	private RequestSpecification when(String jsonBody) {
-		RequestSpecification spec = given().port(80);
+		RequestSpecification spec = given().port(80).contentType(ContentType.JSON);
 		if (jsonBody != null) {
-			spec = spec.contentType(ContentType.JSON).body(jsonBody);
+			spec = spec.body(jsonBody);
 		}
 		return spec.when();
 	}
 
 	private RequestSpecification whenAuthorized() {
 		return whenAuthorized(null);
+	}
+
+	private RequestSpecification whenAuthorizedWrong() {
+		return when().header("Authorization", "Bearer " + gameAuthToken + "1");
 	}
 
 	private RequestSpecification whenAuthorized(String jsonBody) {

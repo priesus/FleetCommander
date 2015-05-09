@@ -79,12 +79,12 @@
 								<h3>Join existing game</h3>
 								
 								<form name="joinCodeForm">
-									<div class="form-group">
-										<div class="col-xs-6 col-xs-offset-3" ng-class="{'has-error': !joinCodeForm.code.$valid || joinGameError}">
+									<div class="form-group" ng-class="{'has-error': !joinCodeForm.code.$valid || joinGameError}">
+										<div class="col-xs-6 col-xs-offset-3">
 											<label for="nameInput">Enter the join code:</label>
 											<input id="codeInput" name="code" ng-model="joiningPlayerCode" autofocus="autofocus" placeholder="e.g. yx45ab" pattern="[A-Za-z0-9]{6}" maxlength="6" required="required" class="form-control"/>
-											<label for="nameInput" ng-if="joinGameError" class="control-label">{{joinGameError}}</label>
 										</div>
+										<label for="nameInput" ng-if="joinGameError" class="control-label">{{joinGameError}}</label>
 									</div>
 									
 									<div class="form-group">

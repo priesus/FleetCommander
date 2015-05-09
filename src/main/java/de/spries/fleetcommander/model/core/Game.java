@@ -23,11 +23,13 @@ public class Game {
 	private Universe universe;
 	private GameStatus status;
 	private TurnEvents previousTurnEvents;
+	private int nextPlayerId;
 
 	public Game() {
 		players = new ArrayList<>(MAX_PLAYERS);
 		turnFinishedPlayers = new HashSet<>(MAX_PLAYERS);
 		status = GameStatus.PENDING;
+		nextPlayerId = 1;
 	}
 
 	public void addPlayer(Player player) {
@@ -38,6 +40,12 @@ public class Game {
 			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
 		}
 		players.add(player);
+
+		assignPlayerId(player);
+	}
+
+	private synchronized void assignPlayerId(Player player) {
+		player.setId(nextPlayerId++);
 	}
 
 	public void start() {
@@ -131,6 +139,10 @@ public class Game {
 
 	public List<Player> getPlayers() {
 		return new ArrayList<>(players);
+	}
+
+	public Player getPlayerWithId(int playerId) {
+		return players.stream().filter(p -> p.getId() == playerId).findFirst().orElse(null);
 	}
 
 	public TurnEvents getPreviousTurnEvents() {

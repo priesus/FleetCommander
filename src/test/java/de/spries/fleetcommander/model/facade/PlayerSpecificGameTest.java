@@ -65,6 +65,15 @@ public class PlayerSpecificGameTest {
 	}
 
 	@Test
+	public void addsHumanPlayerWithName() throws Exception {
+		ownGame.addHumanPlayer("Player 2");
+
+		ArgumentCaptor<Player> argument = ArgumentCaptor.forClass(Player.class);
+		verify(originalGame).addPlayer(argument.capture());
+		assertThat(argument.getValue().getName(), is("Player 2"));
+	}
+
+	@Test
 	public void forwardsCallToStartAndSetUniverse() {
 		ownGame.start();
 		verify(originalGame).setUniverse(Mockito.any(Universe.class));

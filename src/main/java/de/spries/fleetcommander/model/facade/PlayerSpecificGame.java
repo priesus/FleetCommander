@@ -32,6 +32,10 @@ public class PlayerSpecificGame {
 		originalGame.addPlayer(player);
 	}
 
+	public void addHumanPlayer(String playerName) {
+		originalGame.addPlayer(new Player(playerName));
+	}
+
 	public GameStatus getStatus() {
 		return originalGame.getStatus();
 	}

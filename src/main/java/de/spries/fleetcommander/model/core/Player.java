@@ -20,14 +20,24 @@ public class Player {
 	protected static final int STARTING_CREDITS = 500;
 	protected static final int MAX_CREDITS = 99_999;
 
+	private int id;
 	private String name;
 	private int credits;
 	private boolean active;
 
 	public Player(String name) {
+		id = -1;
 		this.name = name;
 		credits = STARTING_CREDITS;
 		active = true;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -82,6 +92,7 @@ public class Player {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + id;
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		return result;
 	}
@@ -98,6 +109,9 @@ public class Player {
 			return false;
 		}
 		Player other = (Player) obj;
+		if (id != other.id) {
+			return false;
+		}
 		if (!StringUtils.equals(name, other.name)) {
 			return false;
 		}

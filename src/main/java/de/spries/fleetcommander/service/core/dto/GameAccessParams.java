@@ -1,21 +1,33 @@
 package de.spries.fleetcommander.service.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class GameAccessParams {
 
-	private int gameId;
+	private GamePlayer gamePlayer;
 	private String authToken;
 
-	public GameAccessParams(int gameId, String authToken) {
-		this.gameId = gameId;
+	public GameAccessParams(GamePlayer gamePlayer, String authToken) {
+		this.gamePlayer = gamePlayer;
 		this.authToken = authToken;
 	}
 
 	public int getGameId() {
-		return gameId;
+		return gamePlayer.getGameId();
 	}
 
+	@JsonIgnore
+	public int getPlayerId() {
+		return gamePlayer.getPlayerId();
+	}
+
+	@JsonIgnore
 	public String getAuthToken() {
 		return authToken;
+	}
+
+	public String getFullAuthToken() {
+		return getPlayerId() + ":" + authToken;
 	}
 
 }
