@@ -1,5 +1,7 @@
 package de.spries.fleetcommander.service.core;
 
+import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -7,6 +9,9 @@ import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.GameStore;
+import de.spries.fleetcommander.persistence.InvalidCodeException;
+import de.spries.fleetcommander.persistence.JoinCodeLimitReachedException;
+import de.spries.fleetcommander.persistence.JoinCodes;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
 import de.spries.fleetcommander.service.core.dto.GamePlayer;
@@ -31,6 +36,28 @@ public class GamesService {
 		return new GameAccessParams(gamePlayer, authToken);
 	}
 
+	public String createJoinCode(int gameId) throws JoinCodeLimitReachedException {
+		//TODO check game status
+		return JoinCodes.INSTANCE.create(gameId);
+	}
+
+	public Collection<String> getActiveJoinCodes(int gameId) {
+		return JoinCodes.INSTANCE.get(gameId);
+	}
+
+	public GameAccessParams joinGame(String playerName, String joinCode) throws InvalidCodeException {
+		int gameId = JoinCodes.INSTANCE.invalidate(joinCode);
+		Game game = GameStore.INSTANCE.get(gameId);
+		Player player = new Player(playerName);
+		game.addPlayer(player);
+		GamePlayer gamePlayer = new GamePlayer(gameId, player.getId());
+		String authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer);
+
+		LOGGER.debug("{}: Joined", gamePlayer);
+
+		return new GameAccessParams(gamePlayer, authToken);
+	}
+
 	public PlayerSpecificGame getGame(GamePlayer gamePlayer) {
 		Game game = GameStore.INSTANCE.get(gamePlayer.getGameId());
 		LOGGER.debug("{}: Get", gamePlayer);
@@ -45,6 +72,7 @@ public class GamesService {
 	public void quitGame(GamePlayer gamePlayer) {
 		LOGGER.debug("{}: Delete", gamePlayer);
 		GameAuthenticator.INSTANCE.deleteAuthToken(gamePlayer);
+		//TODO remove player from game
 	}
 
 	public void addComputerPlayer(GamePlayer gamePlayer) {
@@ -56,6 +84,7 @@ public class GamesService {
 	public void modifyGame(GamePlayer gamePlayer, GameParams params) {
 		LOGGER.debug("{}: Modify with params {}", gamePlayer, params);
 		if (Boolean.TRUE.equals(params.getIsStarted())) {
+			JoinCodes.INSTANCE.invalidateAll(gamePlayer.getGameId());
 			PlayerSpecificGame game = getGame(gamePlayer);
 			game.start();
 		}

@@ -5,12 +5,16 @@ import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_CONFLICT;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +34,6 @@ public class GamesRestServiceIT {
 		Response response = when().post("/rest/games");
 
 		gameUrl = response.getHeader("Location");
-		System.err.println(response.getBody().asString());
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
 
 		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
@@ -51,6 +54,63 @@ public class GamesRestServiceIT {
 	public void cannotGetGameWithWrongAuthorization() throws Exception {
 		whenAuthorizedWrong().get(gameUrl)
 				.then().statusCode(SC_UNAUTHORIZED);
+	}
+
+	@Test
+	public void cannotGetJoinCodesWithoutAuthorization() throws Exception {
+		when().get(gameUrl + "/joinCodes")
+				.then().statusCode(SC_BAD_REQUEST);
+	}
+
+	@Test
+	public void cannotGetJoinCodesWithWrongAuthorization() throws Exception {
+		whenAuthorizedWrong().get(gameUrl + "/joinCodes")
+				.then().statusCode(SC_UNAUTHORIZED);
+	}
+
+	@Test
+	public void cannotCreateJoinCodesWithoutAuthorization() throws Exception {
+		when().post(gameUrl + "/joinCodes")
+				.then().statusCode(SC_BAD_REQUEST);
+	}
+
+	@Test
+	public void cannotCreateJoinCodesWithWrongAuthorization() throws Exception {
+		whenAuthorizedWrong().post(gameUrl + "/joinCodes")
+				.then().statusCode(SC_UNAUTHORIZED);
+	}
+
+	@Test
+	public void canJoinGameViaValidCode() throws Exception {
+		Response response = when().post("/rest/games");
+
+		gameUrl = response.getHeader("Location");
+		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
+
+		whenAuthorized().post(gameUrl + "/joinCodes")
+				.then().statusCode(SC_CREATED);
+
+		Response codesResponse = whenAuthorized().get(gameUrl + "/joinCodes");
+		assertThat(codesResponse.getStatusCode(), is(SC_OK));
+
+		List<String> joinCodes = codesResponse.getBody().jsonPath().getList("joinCodes");
+		assertThat(joinCodes, hasSize(1));
+
+		Response joinResponse = when("{\"joinCode\": \"" + joinCodes.get(0) + "\"}").post("/rest/games");
+
+		gameUrl = joinResponse.getHeader("Location");
+		gameAuthToken = joinResponse.getBody().jsonPath().getString("fullAuthToken");
+
+		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
+		assertThat(gameAuthToken, is(notNullValue()));
+		assertThat(joinResponse.getStatusCode(), is(SC_CREATED));
+	}
+
+	@Test
+	public void cannotJoinGameViaInvalidCode() throws Exception {
+		when("{\"joinCode\": \"invalidJoinCode\"}").post("/rest/games")
+				.then().statusCode(SC_NOT_FOUND)
+				.and().body("error", is("Invalid join code"));
 	}
 
 	@Test

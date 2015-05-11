@@ -5,11 +5,13 @@ fleetCommanderApp.controller('GamesCtrl', [
 		'$scope',
 		'$cookies',
 		'GamesService',
+		'JoinCodesService',
 		'PlayersService',
 		'TurnsService',
 		'PlanetsService',
 		'ShipsService',
-		function($scope, $cookies, GamesService, PlayersService, TurnsService, PlanetsService, ShipsService) {
+		function($scope, $cookies, GamesService, JoinCodesService, PlayersService, TurnsService, PlanetsService,
+				ShipsService) {
 
 			$scope.gameScreen = 'home';
 			$scope.showPlanetMenu = false;
@@ -91,7 +93,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
-					$scope.addComputerPlayer();
+					$scope.requestJoinCode();
 				});
 			};
 
@@ -101,14 +103,28 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.gameScreen = 'join';
 			}
 
+			$scope.requestJoinCode = function() {
+				JoinCodesService.create($scope.gameId, $scope.gameToken).success(function() {
+					$scope.refreshActiveJoinCodes();
+				});
+			}
+
+			$scope.refreshActiveJoinCodes = function() {
+				JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
+					$scope.activeJoinCodes = data.joinCodes;
+				});
+				$scope.reloadGame();
+			}
+
 			$scope.tryToJoinGame = function() {
 				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
 					return;
 
 				GamesService.join($scope.joiningPlayerCode).success(function(data) {
 					$scope.gameId = data.gameId;
-					$scope.gameToken = data.authToken;
+					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
+					$scope.reloadGame();
 				}).error(function(data) {
 					if (data !== null)
 						$scope.joinGameError = data.error;

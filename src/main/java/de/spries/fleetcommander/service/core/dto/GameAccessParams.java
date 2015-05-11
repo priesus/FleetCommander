@@ -26,6 +26,11 @@ public class GameAccessParams {
 		return authToken;
 	}
 
+	@JsonIgnore
+	public GamePlayer getGamePlayer() {
+		return gamePlayer;
+	}
+
 	public String getFullAuthToken() {
 		return getPlayerId() + ":" + authToken;
 	}

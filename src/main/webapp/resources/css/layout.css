@@ -94,6 +94,11 @@ h1 {
 
 .player-slot {
 	display: inline-block;
+	border-radius: 4px;
+	position: relative;
+  padding: 6px;
+  background-color: #fff;
+  border: 1px solid #ddd;
 }
 
 #join-code {

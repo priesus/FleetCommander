@@ -43,27 +43,35 @@
 								<h3>Players</h3>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
 									<button class="btn btn-default" ng-click="startGame()"><span class="shortcut">P</span>lay!</button>
 								</div>
 								
 								<div class="form-group">
-									<div class="col-xs-10 col-xs-offset-1">
-										<div class="player-slot col-xs-6 list-group-item friendly-foreground">
-											{{game.me.name}}
-										</div>
-										<div class="player-slot col-xs-6 list-group-item enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers">
-											{{otherPlayer.name}}
-										</div>
-										<div class="player-slot col-xs-6 list-group-item" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
-											&nbsp;
-										</div>
+									<div class="paragraph">
+										Other players can join this game by using a code
+									</div>
+									<div id="join-code" class="text-uppercase paragraph">
+										<span ng-repeat="code in activeJoinCodes">{{code}}{{$last ? '' : ', '}}</span>
+									</div>
+									<div>
+										<button class="btn btn-default btn-sm" ng-click="requestJoinCode()" ng-disabled="">Request code</button>
+										<button class="btn btn-default btn-sm" ng-click="refreshActiveJoinCodes()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+										<button class="btn btn-default btn-sm" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
 									</div>
 								</div>
 								
-								<div class="paragraph">
-									Other players can join this game by using the code
-									<div id="join-code" class="text-uppercase">{{'yx45ab'}}</div>
+								<div class="form-group">
+									<div class="col-xs-10 col-xs-offset-1">
+										<div class="player-slot col-xs-6 friendly-foreground">
+											{{game.me.name}}
+										</div>
+										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers">
+											{{otherPlayer.name}}
+										</div>
+										<div class="player-slot col-xs-6" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
+											&nbsp;
+										</div>
+									</div>
 								</div>
 							</div>
 						</div></div>

@@ -50,6 +50,29 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 	};
 } ]);
 
+fleetCommanderServices.factory('JoinCodesService', [ '$http', function($http) {
+	return {
+		create : function(gameId, token) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games/' + gameId + '/joinCodes',
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				}
+			});
+		},
+		getAllActive : function(gameId, token) {
+			return $http({
+				method : 'GET',
+				url : 'rest/games/' + gameId + '/joinCodes',
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				}
+			});
+		}
+	};
+} ]);
+
 fleetCommanderServices.factory('PlayersService', [ '$http', function($http) {
 	return {
 		addComputerPlayer : function(gameId, token) {

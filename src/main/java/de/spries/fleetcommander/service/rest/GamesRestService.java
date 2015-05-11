@@ -1,5 +1,7 @@
 package de.spries.fleetcommander.service.rest;
 
+import java.util.Collection;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,6 +17,8 @@ import javax.ws.rs.core.Response;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
+import de.spries.fleetcommander.persistence.InvalidCodeException;
+import de.spries.fleetcommander.persistence.JoinCodeLimitReachedException;
 import de.spries.fleetcommander.service.core.GamesService;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
@@ -29,17 +33,26 @@ public class GamesRestService {
 		public String joinCode;
 	}
 
+	public static class JoinCodes {
+		public Collection<String> joinCodes;
+
+		public JoinCodes(Collection<String> joinCodes) {
+			this.joinCodes = joinCodes;
+		}
+	}
+
 	private static final GamesService SERVICE = new GamesService();
 
 	@POST
 	@Path("games")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createGame(NewGameParams params) {
+	public Response createOrJoinGame(NewGameParams params) {
+		//TODO introduce playerName parameter
 		if (params == null || params.joinCode == null) {
 			return createGame("Player 1");
 		}
-		return joinGame(params.joinCode, "Another Player");
+		return joinGame("Another Player", params.joinCode);
 	}
 
 	private Response createGame(String playerName) {
@@ -49,9 +62,17 @@ public class GamesRestService {
 				.entity(accessParams).build();
 	}
 
-	private Response joinGame(String joinCode, String playerName) {
-		return noCacheResponse(Response.Status.NOT_FOUND).entity(new RestError("Invalid join code"))
-				.build();
+	private Response joinGame(String playerName, String joinCode) {
+		try {
+			GameAccessParams accessParams = SERVICE.joinGame(playerName, joinCode);
+
+			return noCacheResponse(Response.Status.CREATED)
+					.header("Location", "/rest/games/" + accessParams.getGameId())
+					.entity(accessParams).build();
+		} catch (InvalidCodeException e) {
+			return noCacheResponse(Response.Status.NOT_FOUND).entity(new RestError("Invalid join code"))
+					.build();
+		}
 	}
 
 	@GET
@@ -61,6 +82,29 @@ public class GamesRestService {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		PlayerSpecificGame gameView = SERVICE.getGame(GamePlayer.forIds(gameId, playerId));
 		return noCacheResponse(Response.Status.OK).entity(gameView).build();
+	}
+
+	@POST
+	@Path("games/{id:\\d+}/joinCodes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createJoinCode(@PathParam("id") int gameId) {
+		try {
+			SERVICE.createJoinCode(gameId);
+			return noCacheResponse(Response.Status.CREATED)
+					.header("Location", "/rest/games/" + gameId + "/joinCodes")
+					.build();
+		} catch (JoinCodeLimitReachedException e) {
+			return noCacheResponse(Response.Status.CONFLICT).entity(new RestError(e.getMessage()))
+					.build();
+		}
+	}
+
+	@GET
+	@Path("games/{id:\\d+}/joinCodes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getActiveJoinCodes(@PathParam("id") int gameId) {
+		Collection<String> codes = SERVICE.getActiveJoinCodes(gameId);
+		return noCacheResponse(Response.Status.OK).entity(new JoinCodes(codes)).build();
 	}
 
 	@DELETE
