@@ -105,6 +105,12 @@ public class PlayerSpecificGameTest {
 	}
 
 	@Test
+	public void forwardsCallToQuit() {
+		ownGame.quit();
+		verify(originalGame).quit(self);
+	}
+
+	@Test
 	public void returnsOwnPlayer() throws Exception {
 		assertThat(ownGame.getMe().getName(), is("Myself"));
 	}

@@ -42,6 +42,23 @@ public class PlayerTest {
 	}
 
 	@Test
+	public void newPlayerHasntQuitYet() {
+		assertThat(john.hasQuit(), is(false));
+	}
+
+	@Test
+	public void defeatedPlayerIsNotActiveAnymore() throws Exception {
+		john.handleDefeat();
+		assertThat(john.isActive(), is(false));
+	}
+
+	@Test
+	public void quittingPlayerHasQuit() throws Exception {
+		john.handleQuit();
+		assertThat(john.hasQuit(), is(true));
+	}
+
+	@Test
 	public void playerCanAffordAFactoryIfEnougnMoney() throws Exception {
 		assertThat(john.canAffordFactory(), is(true));
 

@@ -153,7 +153,7 @@ public class Planet implements HasCoordinates {
 
 	public void landShips(int shipsToLand, Player invader) {
 		if (shipsToLand <= 0) {
-			throw new IllegalArgumentException("Cannot land " + shipsToLand + " ships");
+			throw new IllegalActionException("Cannot land " + shipsToLand + " ships");
 		}
 		if (!isInhabited()) {
 			turnEventBus.fireConqueredUninhabitedPlanet(invader);
@@ -234,6 +234,7 @@ public class Planet implements HasCoordinates {
 		if (defeatedPlayer.equals(inhabitant)) {
 			shipCount = 0;
 			inhabitant = null;
+			isHomePlanet = false;
 		}
 	}
 }

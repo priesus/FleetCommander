@@ -94,7 +94,7 @@ public class PlanetShipsTest {
 		assertThat(uninhabitedPlanet.getShipCount(), is(1));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void landingZeroShipsDoesNotInhabitPlanet() throws Exception {
 		uninhabitedPlanet.landShips(0, john);
 	}

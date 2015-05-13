@@ -24,12 +24,14 @@ public class Player {
 	private String name;
 	private int credits;
 	private boolean active;
+	private boolean hasQuit;
 
 	public Player(String name) {
 		id = -1;
 		this.name = name;
 		credits = STARTING_CREDITS;
 		active = true;
+		hasQuit = false;
 	}
 
 	public int getId() {
@@ -52,12 +54,20 @@ public class Player {
 		return active;
 	}
 
+	public boolean hasQuit() {
+		return hasQuit;
+	}
+
 	public boolean isHumanPlayer() {
 		return true;
 	}
 
-	public void setActive(boolean active) {
-		this.active = active;
+	public void handleDefeat() {
+		active = false;
+	}
+
+	public void handleQuit() {
+		hasQuit = true;
 	}
 
 	public boolean canAffordFactory() {

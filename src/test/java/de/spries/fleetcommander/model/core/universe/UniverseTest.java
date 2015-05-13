@@ -19,6 +19,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class UniverseTest {
 
@@ -115,12 +116,12 @@ public class UniverseTest {
 		assertThat(universe.getTravellingShipFormations(), is(empty()));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void originMustBeInsideUniverse() throws Exception {
 		universe.sendShips(1, mock(Planet.class), uninhabitedPlanet, john);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void destinationMustBeInsideUniverse() throws Exception {
 		universe.sendShips(1, johnsHomePlanet, mock(Planet.class), john);
 	}

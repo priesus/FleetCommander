@@ -126,4 +126,10 @@ public class PlanetTest {
 		assertThat(johnsHomePlanet.getIncomingShipCount(jim), is(1));
 	}
 
+	@Test
+	public void homePlanetIsNeutralizedForDefeatedPlayers() throws Exception {
+		johnsHomePlanet.handleDefeatedPlayer(john);
+		assertThat(johnsHomePlanet.isHomePlanet(), is(false));
+	}
+
 }

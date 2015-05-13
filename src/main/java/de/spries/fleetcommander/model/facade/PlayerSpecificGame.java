@@ -57,6 +57,10 @@ public class PlayerSpecificGame {
 		originalGame.endTurn(viewingPlayer);
 	}
 
+	public void quit() {
+		originalGame.quit(viewingPlayer);
+	}
+
 	public PlayerSpecificUniverse getUniverse() {
 		if (originalGame.getUniverse() != null) {
 			return PlayerSpecificUniverse.convert(originalGame.getUniverse(), viewingPlayer);

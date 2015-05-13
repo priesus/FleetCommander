@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
@@ -34,7 +35,7 @@ public class Game {
 
 	public void addPlayer(Player player) {
 		if (!GameStatus.PENDING.equals(status)) {
-			throw new IllegalStateException("It's too late to add players");
+			throw new IllegalActionException("It's too late to add players");
 		}
 		if (players.size() >= MAX_PLAYERS) {
 			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
@@ -50,7 +51,7 @@ public class Game {
 
 	public void start() {
 		if (players.size() < 2) {
-			throw new IllegalStateException("At least 2 players required!");
+			throw new IllegalActionException("At least 2 players required in order to start the game!");
 		}
 		if (universe == null) {
 			throw new IllegalStateException("No universe!");
@@ -68,25 +69,31 @@ public class Game {
 
 	public void endTurn(Player player) {
 		if (!players.contains(player)) {
-			throw new IllegalArgumentException(player + " doesn't participate in this game");
+			throw new IllegalActionException(player
+					+ " doesn't participate in this game and therefore cannot end the turn");
 		}
 		if (!player.isActive()) {
-			throw new IllegalArgumentException(player + " has been defeated");
+			throw new IllegalActionException(player + " has been defeated and therefore cannot end the turn");
 		}
 
 		if (turnFinishedPlayers.contains(player)) {
-			throw new IllegalArgumentException(player + " already has finished the turn");
+			throw new IllegalActionException(player + " has already finished the turn");
 		}
 
 		turnFinishedPlayers.add(player);
-		if (turnFinishedPlayers.size() == players.stream().filter(Player::isActive).count()) {
+		tryEndTurn();
+	}
+
+	private void tryEndTurn() {
+		List<Player> activePlayers = players.stream().filter(Player::isActive).collect(Collectors.toList());
+		if (turnFinishedPlayers.containsAll(activePlayers)) {
 			endTurn();
 		}
 	}
 
 	protected void endTurn() {
 		if (GameStatus.PENDING.equals(status)) {
-			throw new IllegalStateException("Game is not in progress");
+			throw new IllegalActionException("Game is not in progress, yet");
 		}
 
 		previousTurnEvents.clear();
@@ -98,7 +105,7 @@ public class Game {
 				.filter(p -> null == universe.getHomePlanetOf(p)));
 
 		long numActivePlayers = players.stream().filter(p -> p.isActive()).count();
-		long numActiveHumanPlayers = players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
+		long numActiveHumanPlayers = countActiveHumanPlayers();
 		if (numActivePlayers <= 1 || numActiveHumanPlayers < 1) {
 			status = GameStatus.OVER;
 		}
@@ -108,17 +115,42 @@ public class Game {
 		}
 	}
 
+	public void quit(Player player) {
+		if (!players.contains(player)) {
+			throw new IllegalActionException(player + " doesn't participate in this game");
+		}
+		if (player.hasQuit()) {
+			throw new IllegalActionException(player + " has already quit");
+		}
+
+		if (GameStatus.PENDING.equals(status)) {
+			players.remove(player);
+		} else if (GameStatus.RUNNING.equals(status)) {
+			player.handleQuit();
+			handleNewDefeatedPlayer(player);
+			tryEndTurn();
+		}
+
+		if (countActiveHumanPlayers() < 1) {
+			status = GameStatus.OVER;
+		}
+	}
+
 	private void handleNewDefeatedPlayers(Stream<Player> newDefeatedPlayers) {
 		newDefeatedPlayers.forEach(p -> handleNewDefeatedPlayer(p));
 	}
 
 	private void handleNewDefeatedPlayer(Player newDefeatedPlayer) {
-		newDefeatedPlayer.setActive(false);
+		newDefeatedPlayer.handleDefeat();
 		universe.handleDefeatedPlayer(newDefeatedPlayer);
 	}
 
 	private void notifyActivePlayersForNewTurn() {
 		players.stream().filter(Player::isActive).forEach(p -> p.notifyNewTurn(this));
+	}
+
+	private long countActiveHumanPlayers() {
+		return players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
 	}
 
 	public int getId() {

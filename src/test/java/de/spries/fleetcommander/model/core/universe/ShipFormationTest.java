@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class ShipFormationTest {
 
@@ -39,31 +40,31 @@ public class ShipFormationTest {
 	}
 
 	@SuppressWarnings("unused")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void shipCountMustBeNonNegative() {
 		new ShipFormation(-1, originPlanet, originPlanet, JOHN);
 	}
 
 	@SuppressWarnings("unused")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void shipCountMustBeNonZero() {
 		new ShipFormation(0, originPlanet, originPlanet, JOHN);
 	}
 
 	@SuppressWarnings("unused")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void originMustBeNonNull() {
 		new ShipFormation(1, null, originPlanet, JOHN);
 	}
 
 	@SuppressWarnings("unused")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void destinationMustBeNonNull() {
 		new ShipFormation(1, originPlanet, null, JOHN);
 	}
 
 	@SuppressWarnings("unused")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalActionException.class)
 	public void commanderMustBeNonNull() {
 		new ShipFormation(1, originPlanet, originPlanet, null);
 	}

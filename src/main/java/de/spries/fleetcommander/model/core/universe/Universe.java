@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class Universe {
 
@@ -60,7 +61,7 @@ public class Universe {
 
 	public void sendShips(int shipCount, Planet origin, Planet destination, Player player) {
 		if (!planets.contains(origin) || !planets.contains(destination)) {
-			throw new IllegalArgumentException("origin & destination must be contained in universe");
+			throw new IllegalActionException("origin & destination planets must be contained in universe");
 		}
 
 		if (destination.equals(origin)) {

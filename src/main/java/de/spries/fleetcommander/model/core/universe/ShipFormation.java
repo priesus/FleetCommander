@@ -8,17 +8,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class ShipFormation {
 
 	public static final int DISTANCE_PER_TURN = 8;
-	public static final Comparator<ShipFormation> CLOSE_TO_TARGET_FIRST = new Comparator<ShipFormation>() {
-
-		@Override
-		public int compare(ShipFormation o1, ShipFormation o2) {
-			return Double.compare(o1.getDistanceRemaining(), o2.getDistanceRemaining());
-		}
-	};
+	public static final Comparator<ShipFormation> CLOSE_TO_TARGET_FIRST = (o1, o2) -> Double.compare(
+			o1.getDistanceRemaining(), o2.getDistanceRemaining());
 
 	private int shipCount;
 	private Planet origin;
@@ -29,10 +25,11 @@ public class ShipFormation {
 
 	public ShipFormation(int shipCount, Planet origin, Planet destination, Player commander) {
 		if (shipCount <= 0) {
-			throw new IllegalArgumentException("Must send positive number of ships");
+			throw new IllegalActionException("Must send positive number of ships");
 		}
 		if (origin == null || destination == null || commander == null) {
-			throw new IllegalArgumentException("all parameters must be non-null");
+			throw new IllegalActionException(
+					"Must define non-null origin, destination & commander in order to send ships");
 		}
 		this.shipCount = shipCount;
 		this.origin = origin;

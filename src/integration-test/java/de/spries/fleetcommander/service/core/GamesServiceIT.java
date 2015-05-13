@@ -6,11 +6,13 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Game.GameStatus;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
 import de.spries.fleetcommander.service.core.dto.GamePlayer;
@@ -74,6 +76,22 @@ public class GamesServiceIT {
 		assertThat(player2AccessParams.getGameId(), is(gameId));
 		assertThat(service.getGame(gamePlayer).getOtherPlayers(), hasSize(1));
 		assertThat(service.getGame(player2AccessParams.getGamePlayer()).getOtherPlayers(), hasSize(1));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void playerCannotAccessPendingGameAfterQuitting() throws Exception {
+		service.quitGame(gamePlayer);
+		service.getGame(gamePlayer);
+	}
+
+	@Test
+	public void playerCannotMakeActionsWhenDefeated() throws Exception {
+		fail("not implemenetd yet");
+	}
+
+	@Test
+	public void playerCannotMakeActionsAfterQuit() throws Exception {
+		fail("not implemenetd yet");
 	}
 
 	@Test

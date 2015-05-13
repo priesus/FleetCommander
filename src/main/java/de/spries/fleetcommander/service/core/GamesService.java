@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.GameStore;
 import de.spries.fleetcommander.persistence.InvalidCodeException;
@@ -37,7 +38,6 @@ public class GamesService {
 	}
 
 	public String createJoinCode(int gameId) throws JoinCodeLimitReachedException {
-		//TODO check game status
 		return JoinCodes.INSTANCE.create(gameId);
 	}
 
@@ -63,16 +63,21 @@ public class GamesService {
 		LOGGER.debug("{}: Get", gamePlayer);
 		if (game != null) {
 			Player player = game.getPlayerWithId(gamePlayer.getPlayerId());
-			return new PlayerSpecificGame(game, player);
+			if (player != null) {
+				LOGGER.warn("{}: Get, but doesn't participate", gamePlayer);
+				return new PlayerSpecificGame(game, player);
+			}
+			throw new IllegalActionException("You're not participating in this game");
 		}
 		LOGGER.warn("{}: Get, but doesn't exist", gamePlayer);
-		throw new IllegalArgumentException("The game doesn't exist on the server");
+		throw new IllegalActionException("The game doesn't exist on the server");
 	}
 
 	public void quitGame(GamePlayer gamePlayer) {
 		LOGGER.debug("{}: Delete", gamePlayer);
 		GameAuthenticator.INSTANCE.deleteAuthToken(gamePlayer);
-		//TODO remove player from game
+		PlayerSpecificGame game = getGame(gamePlayer);
+		game.quit();
 	}
 
 	public void addComputerPlayer(GamePlayer gamePlayer) {
