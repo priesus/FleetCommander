@@ -157,16 +157,11 @@ public class GamesRestService {
 	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId,
 			@Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
-		try {
-			SERVICE.buildFactory(GamePlayer.forIds(gameId, playerId), planetId);
-		} catch (IllegalActionException e) {
-			return noCacheResponse(Response.Status.CONFLICT).build();
-		}
-
+		SERVICE.buildFactory(GamePlayer.forIds(gameId, playerId), planetId);
 		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
-	private Response.ResponseBuilder noCacheResponse(Response.Status status) {
+	protected static Response.ResponseBuilder noCacheResponse(Response.Status status) {
 		CacheControl cc = new CacheControl();
 		cc.setNoCache(true);
 		cc.setMaxAge(-1);
