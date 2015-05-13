@@ -64,9 +64,9 @@ public class GamesService {
 		if (game != null) {
 			Player player = game.getPlayerWithId(gamePlayer.getPlayerId());
 			if (player != null) {
-				LOGGER.warn("{}: Get, but doesn't participate", gamePlayer);
 				return new PlayerSpecificGame(game, player);
 			}
+			LOGGER.warn("{}: Get, but doesn't participate", gamePlayer);
 			throw new IllegalActionException("You're not participating in this game");
 		}
 		LOGGER.warn("{}: Get, but doesn't exist", gamePlayer);

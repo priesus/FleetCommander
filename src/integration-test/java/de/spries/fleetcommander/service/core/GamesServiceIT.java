@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,16 +81,6 @@ public class GamesServiceIT {
 	public void playerCannotAccessPendingGameAfterQuitting() throws Exception {
 		service.quitGame(gamePlayer);
 		service.getGame(gamePlayer);
-	}
-
-	@Test
-	public void playerCannotMakeActionsWhenDefeated() throws Exception {
-		fail("not implemenetd yet");
-	}
-
-	@Test
-	public void playerCannotMakeActionsAfterQuit() throws Exception {
-		fail("not implemenetd yet");
 	}
 
 	@Test

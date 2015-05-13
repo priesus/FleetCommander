@@ -82,21 +82,22 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.destinationSelectionActive = false;
 					$scope.blockingActionInProgress = false;
 
-					$scope.resumeGame();
+					$scope.reloadGame();
 				});
 			};
 
 			$scope.resumeGame = function() {
 				$scope.gameId = $cookies.gameId;
 				$scope.gameToken = $cookies.gameToken;
-				$scope.reloadGame().success(function() {
-					$scope.gameScreen = 'ingame';
-				});
+				$scope.reloadGame();
 			};
 
 			$scope.reloadGame = function() {
 				return GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.game = data;
+
+					if ($scope.game.status === 'RUNNING')
+						$scope.gameScreen = 'ingame';
 				});
 			};
 

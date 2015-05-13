@@ -9,7 +9,6 @@ import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.TurnEvents;
-import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class PlayerSpecificGame {
 
@@ -49,7 +48,6 @@ public class PlayerSpecificGame {
 	}
 
 	public void start() {
-		originalGame.setUniverse(UniverseFactory.generate(originalGame.getPlayers()));
 		originalGame.start();
 	}
 

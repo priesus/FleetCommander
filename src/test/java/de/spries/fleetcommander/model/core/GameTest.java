@@ -14,12 +14,22 @@ import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.Universe;
+import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore("javax.management.*")
+@PrepareForTest({ UniverseFactory.class })
 public class GameTest {
 
 	private Game game;
@@ -49,12 +59,14 @@ public class GameTest {
 		game.addPlayer(john);
 
 		universe = mock(Universe.class);
+		PowerMockito.mockStatic(UniverseFactory.class);
+		PowerMockito.when(UniverseFactory.generate(Mockito.anyListOf(Player.class))).thenReturn(universe);
+
 		startedGame = new Game();
 		startedGame.addPlayer(john);
 		startedGame.addPlayer(jack);
 		startedGame.addPlayer(computerPlayer);
 		startedGame.addPlayer(computerPlayer2);
-		startedGame.setUniverse(universe);
 		startedGame.start();
 
 		someHomePlanet = mock(Planet.class);
@@ -75,10 +87,17 @@ public class GameTest {
 		game.start();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void gameRequiresAUniverseToStart() throws Exception {
+	@Test(expected = IllegalActionException.class)
+	public void cannotStartGameTwice() throws Exception {
+		startedGame.start();
+	}
+
+	@Test
+	public void gameHasAUniverseAfterStarting() throws Exception {
 		game.addPlayer(jack);
+		assertThat(game.getUniverse(), is(nullValue()));
 		game.start();
+		assertThat(game.getUniverse(), is(universe));
 	}
 
 	@Test
@@ -308,7 +327,6 @@ public class GameTest {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
 		game.addPlayer(jack);
-		game.setUniverse(universe);
 		game.start();
 
 		verify(john).notifyNewTurn(game);

@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Universe;
+import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class Game {
 	public enum GameStatus {
@@ -50,13 +51,15 @@ public class Game {
 	}
 
 	public void start() {
+		if (GameStatus.PENDING != status) {
+			throw new IllegalActionException("The game has started already");
+		}
 		if (players.size() < 2) {
 			throw new IllegalActionException("At least 2 players required in order to start the game!");
 		}
-		if (universe == null) {
-			throw new IllegalStateException("No universe!");
-		}
 		previousTurnEvents = new TurnEvents(players);
+
+		universe = UniverseFactory.generate(players);
 		universe.setEventBus(previousTurnEvents);
 		status = GameStatus.RUNNING;
 
@@ -163,10 +166,6 @@ public class Game {
 
 	public Universe getUniverse() {
 		return universe;
-	}
-
-	public void setUniverse(Universe universe) {
-		this.universe = universe;
 	}
 
 	public List<Player> getPlayers() {

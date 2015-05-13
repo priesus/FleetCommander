@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -22,7 +21,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.Universe;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.management.*")
@@ -74,9 +72,8 @@ public class PlayerSpecificGameTest {
 	}
 
 	@Test
-	public void forwardsCallToStartAndSetUniverse() {
+	public void forwardsCallToStart() {
 		ownGame.start();
-		verify(originalGame).setUniverse(Mockito.any(Universe.class));
 		verify(originalGame).start();
 	}
 
