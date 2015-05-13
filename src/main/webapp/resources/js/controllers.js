@@ -23,71 +23,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 				return $cookies.gameId !== undefined;
 			};
 
-			// TODO refactor to make this more readable
-			$scope.onKeyDown = function($event) {
-				if ($scope.gameScreen === 'home') {
-					switch ($event.keyCode) {
-					case 83: // [S]tart new game
-						$scope.createNewGame();
-						break;
-					case 82: // [R]esume game
-						$scope.resumeGame();
-						break;
-					case 74: // [J]oin game
-						$scope.openJoinGameMenu();
-						break;
-					}
-				} else if ($scope.gameScreen === 'players') {
-					switch ($event.keyCode) {
-					case 80: // [P]lay
-						$scope.startGame();
-						break;
-					case 65: // [A]dd computer player
-						$scope.addComputerPlayer();
-						break;
-					case 13: // [Enter]
-					case 32: // [Space]
-						$scope.startGame();
-						break;
-					case 27: // [Esc]
-						$scope.quitGame();
-						break;
-					}
-				} else if ($scope.gameScreen === 'join') {
-					switch ($event.keyCode) {
-					case 13: // [Enter]
-						$scope.tryToJoinGame();
-						break;
-					case 27: // [Esc]
-						$scope.gameScreen = 'home';
-						break;
-					}
-				} else if ($scope.gameScreen === 'ingame') {
-					switch ($event.keyCode) {
-					case 83: // [s]end ships
-						$scope.prepareSendShips();
-						break;
-					case 65: // [a]ll ships
-						$scope.setShipCount($scope.selectedPlanet.shipCount);
-						break;
-					case 69: // [E]nd turn
-						$scope.endTurn();
-						break;
-					case 70: // Build [f]actory
-						$scope.buildFactoryOnSelectedPlanet();
-						break;
-					case 13: // [Enter]
-					case 32: // [Space]
-						$scope.showTurnEvents = false;
-						break;
-					case 27: // [Esc]
-						$scope.showTurnEvents = false;
-						$scope.showPlanetMenu = false;
-						break;
-					}
-				}
-			};
-
 			$scope.createNewGame = function() {
 				GamesService.create().success(function(data) {
 					$scope.gameId = data.gameId;
@@ -235,4 +170,68 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.getNumber = function(num) {
 				return new Array(num);
 			}
+
+			$scope.onKeyDown = function($event) {
+				if ($scope.gameScreen === 'home') {
+					switch ($event.keyCode) {
+					case 83: // [S]tart new game
+						$scope.createNewGame();
+						break;
+					case 82: // [R]esume game
+						$scope.resumeGame();
+						break;
+					case 74: // [J]oin game
+						$scope.openJoinGameMenu();
+						break;
+					}
+				} else if ($scope.gameScreen === 'players') {
+					switch ($event.keyCode) {
+					case 80: // [P]lay
+						$scope.startGame();
+						break;
+					case 65: // [A]dd computer player
+						$scope.addComputerPlayer();
+						break;
+					case 13: // [Enter]
+					case 32: // [Space]
+						$scope.startGame();
+						break;
+					case 27: // [Esc]
+						$scope.quitGame();
+						break;
+					}
+				} else if ($scope.gameScreen === 'join') {
+					switch ($event.keyCode) {
+					case 13: // [Enter]
+						$scope.tryToJoinGame();
+						break;
+					case 27: // [Esc]
+						$scope.gameScreen = 'home';
+						break;
+					}
+				} else if ($scope.gameScreen === 'ingame') {
+					switch ($event.keyCode) {
+					case 83: // [s]end ships
+						$scope.prepareSendShips();
+						break;
+					case 65: // [a]ll ships
+						$scope.setShipCount($scope.selectedPlanet.shipCount);
+						break;
+					case 69: // [E]nd turn
+						$scope.endTurn();
+						break;
+					case 70: // Build [f]actory
+						$scope.buildFactoryOnSelectedPlanet();
+						break;
+					case 13: // [Enter]
+					case 32: // [Space]
+						$scope.showTurnEvents = false;
+						break;
+					case 27: // [Esc]
+						$scope.showTurnEvents = false;
+						$scope.showPlanetMenu = false;
+						break;
+					}
+				}
+			};
 		} ]);
