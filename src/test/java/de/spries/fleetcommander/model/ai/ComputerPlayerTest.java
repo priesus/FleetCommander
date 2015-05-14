@@ -1,5 +1,7 @@
 package de.spries.fleetcommander.model.ai;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -31,6 +33,11 @@ public class ComputerPlayerTest {
 		universe = mock(Universe.class);
 
 		doReturn(universe).when(game).getUniverse();
+	}
+
+	@Test
+	public void isntAHumanPlayer() throws Exception {
+		assertThat(player.isHumanPlayer(), is(false));
 	}
 
 	@Test

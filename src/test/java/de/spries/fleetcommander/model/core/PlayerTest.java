@@ -27,6 +27,11 @@ public class PlayerTest {
 	}
 
 	@Test
+	public void isHumanPlayer() throws Exception {
+		assertThat(john.isHumanPlayer(), is(true));
+	}
+
+	@Test
 	public void newPlayerHasNegativeId() throws Exception {
 		assertThat(john.getId(), is(lessThan(0)));
 	}

@@ -71,6 +71,11 @@ public class StartedGameTest {
 		assertThat(startedGame.getStatus(), is(GameStatus.RUNNING));
 	}
 
+	@Test(expected = IllegalActionException.class)
+	public void cannotStartGameTwice() throws Exception {
+		startedGame.start(john);
+	}
+
 	@Test
 	public void gameHasAUniverse() throws Exception {
 		assertThat(startedGame.getUniverse(), is(universe));
