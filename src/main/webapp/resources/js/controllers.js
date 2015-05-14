@@ -20,6 +20,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.destinationSelectionActive = false;
 			$scope.blockingActionInProgress = false;
 			var gameStartPoller;
+			var newTurnPoller;
+			var currentTurnNumber;
 
 			$scope.hasActiveGame = function() {
 				return $cookies.gameId !== undefined;
@@ -83,19 +85,21 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.showTurnEvents = false;
 					$scope.destinationSelectionActive = false;
 					$scope.blockingActionInProgress = false;
+					currentTurnNumber = 1;
 
 					$scope.refreshGame().success(function() {
-						if ($scope.game.status === 'PENDING') {
-							$scope.pollGameForStart();
-							$scope.waitingForGameToStart = true;
-						}
+						if ($scope.game.status === 'PENDING')
+							$scope.pollForGameStart();
 					});
 				});
 			};
 
-			$scope.pollGameForStart = function() {
+			$scope.pollForGameStart = function() {
 				if (angular.isDefined(gameStartPoller))
 					return;
+
+				$scope.waitingForOtherPlayers = true;
+
 				gameStartPoller = $interval(function() {
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'RUNNING') {
@@ -109,7 +113,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				if (angular.isDefined(gameStartPoller)) {
 					$interval.cancel(gameStartPoller);
 					gameStartPoller = undefined;
-					$scope.waitingForGameToStart = undefined;
+					$scope.waitingForOtherPlayers = undefined;
 				}
 			};
 
@@ -132,17 +136,51 @@ fleetCommanderApp.controller('GamesCtrl', [
 				if ($scope.blockingActionInProgress || $scope.game.status === 'OVER')
 					return;
 
+				$scope.showPlanetMenu = false;
 				$scope.blockingActionInProgress = true;
 				TurnsService.endTurn($scope.gameId, $scope.gameToken).success(function() {
-					$scope.refreshGame();
-					$scope.blockingActionInProgress = false;
-					$scope.showPlanetMenu = false;
-					$scope.showTurnEvents = true;
-					$scope.destinationSelectionActive = false;
+					$scope.refreshGame().success(function() {
+						if ($scope.game.turnNumber > currentTurnNumber)
+							$scope.handleNewTurn();
+						else
+							$scope.pollForNewTurn();
+					});
 				}).error(function() {
 					$scope.blockingActionInProgress = false;
 				});
 			};
+
+			$scope.pollForNewTurn = function() {
+				if (angular.isDefined(newTurnPoller))
+					return;
+
+				$scope.waitingForOtherPlayers = true;
+
+				newTurnPoller = $interval(function() {
+					$scope.refreshGame().success(function() {
+						if ($scope.game.turnNumber > currentTurnNumber) {
+							$scope.stopPollingForNewTurn();
+							$scope.handleNewTurn();
+						}
+					});
+				}, 2500);
+			};
+
+			$scope.stopPollingForNewTurn = function() {
+				if (angular.isDefined(newTurnPoller)) {
+					$interval.cancel(newTurnPoller);
+					newTurnPoller = undefined;
+					$scope.waitingForOtherPlayers = undefined;
+				}
+			};
+
+			$scope.handleNewTurn = function() {
+				$scope.blockingActionInProgress = false;
+				$scope.showPlanetMenu = false;
+				$scope.showTurnEvents = true;
+				$scope.destinationSelectionActive = false;
+				currentTurnNumber = $scope.game.turnNumber;
+			}
 
 			$scope.quitGame = function() {
 				GamesService.quit($scope.gameId, $scope.gameToken);

@@ -71,6 +71,19 @@ public class StartedGameTest {
 		assertThat(startedGame.getStatus(), is(GameStatus.RUNNING));
 	}
 
+	@Test
+	public void turnNumberIsOneInitially() throws Exception {
+		assertThat(startedGame.getTurnNumber(), is(1));
+	}
+
+	@Test
+	public void turnNumberIncreasesWithEndedTurns() throws Exception {
+		startedGame.endTurn();
+		assertThat(startedGame.getTurnNumber(), is(2));
+		startedGame.endTurn();
+		assertThat(startedGame.getTurnNumber(), is(3));
+	}
+
 	@Test(expected = IllegalActionException.class)
 	public void cannotStartGameTwice() throws Exception {
 		startedGame.start(john);

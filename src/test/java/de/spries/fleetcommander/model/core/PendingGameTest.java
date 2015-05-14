@@ -43,6 +43,11 @@ public class PendingGameTest {
 		assertThat(game.getStatus(), is(GameStatus.PENDING));
 	}
 
+	@Test
+	public void initialTurnNumberIsZero() throws Exception {
+		assertThat(game.getTurnNumber(), is(0));
+	}
+
 	@Test(expected = IllegalActionException.class)
 	public void gameRequiresAtLeastTwoPlayersToStart() throws Exception {
 		game.start(john);

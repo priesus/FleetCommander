@@ -43,8 +43,8 @@
 								<h3>Players</h3>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="startGame()" ng-hide="waitingForGameToStart"><span class="shortcut">P</span>lay!</button>
-									<div ng-show="waitingForGameToStart">Waiting for other players to be ready...</div>
+									<button class="btn btn-default" ng-click="startGame()" ng-hide="waitingForOtherPlayers"><span class="shortcut">P</span>lay!</button>
+									<div ng-show="waitingForOtherPlayers">Waiting for other players...</div>
 								</div>
 								
 								<div class="form-group">
@@ -108,9 +108,9 @@
 				
 				<div ng-show="gameScreen === 'ingame'">
 					<div class="game-menu">
-						<button class="btn btn-default" ng-click="refreshGame()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
-						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
-						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
+						<button class="btn btn-default" ng-click="endTurn()" ng-hide="waitingForOtherPlayers" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
+						<button class="btn btn-default" ng-click="quitGame()" ng-hide="waitingForOtherPlayers">Quit game</button>
+						<div ng-show="waitingForOtherPlayers">Waiting for other players...</div>
 					</div>
 					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
 						<span>{{game.me.name}}</span>

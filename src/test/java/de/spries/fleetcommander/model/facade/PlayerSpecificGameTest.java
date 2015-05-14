@@ -84,6 +84,12 @@ public class PlayerSpecificGameTest {
 	}
 
 	@Test
+	public void forwardsCallToGetTurnNumber() {
+		ownGame.getTurnNumber();
+		verify(originalGame).getTurnNumber();
+	}
+
+	@Test
 	public void forwardsCallToGetPreviousTurnEvents() throws Exception {
 		ownGame.getPreviousTurnEvents();
 		verify(originalGame).getPreviousTurnEvents();

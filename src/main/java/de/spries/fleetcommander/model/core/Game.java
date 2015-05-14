@@ -26,12 +26,14 @@ public class Game {
 	private GameStatus status;
 	private TurnEvents previousTurnEvents;
 	private int nextPlayerId;
+	private int turnNumber;
 
 	public Game() {
 		players = new ArrayList<>(MAX_PLAYERS);
 		readyPlayers = new HashSet<>(MAX_PLAYERS);
 		status = GameStatus.PENDING;
 		nextPlayerId = 1;
+		turnNumber = 0;
 	}
 
 	public void addPlayer(Player player) {
@@ -76,6 +78,7 @@ public class Game {
 	}
 
 	private void start() {
+		turnNumber++;
 		previousTurnEvents = new TurnEvents(players);
 		universe = UniverseFactory.generate(players);
 		universe.setEventBus(previousTurnEvents);
@@ -119,6 +122,7 @@ public class Game {
 			throw new IllegalActionException("Game is not in progress, yet");
 		}
 
+		turnNumber++;
 		previousTurnEvents.clear();
 		readyPlayers.clear();
 		universe.runFactoryProductionCycle();
@@ -198,6 +202,10 @@ public class Game {
 
 	public TurnEvents getPreviousTurnEvents() {
 		return previousTurnEvents;
+	}
+
+	public int getTurnNumber() {
+		return turnNumber;
 	}
 
 }

@@ -39,6 +39,10 @@ public class PlayerSpecificGame {
 		return originalGame.getStatus();
 	}
 
+	public int getTurnNumber() {
+		return originalGame.getTurnNumber();
+	}
+
 	public PlayerSpecificTurnEvents getPreviousTurnEvents() {
 		TurnEvents events = originalGame.getPreviousTurnEvents();
 		if (events != null) {
