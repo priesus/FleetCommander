@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import de.spries.fleetcommander.service.core.GameAuthenticator;
 import de.spries.fleetcommander.service.core.dto.GamePlayer;
-import de.spries.fleetcommander.service.rest.model.RestError;
+import de.spries.fleetcommander.service.rest.errorhandling.RestError;
 
 /**
  * This request filter is supposed to block unauthorized access to game data.

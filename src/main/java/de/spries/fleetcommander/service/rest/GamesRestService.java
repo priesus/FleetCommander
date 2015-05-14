@@ -24,7 +24,7 @@ import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
 import de.spries.fleetcommander.service.core.dto.GamePlayer;
 import de.spries.fleetcommander.service.core.dto.ShipFormationParams;
-import de.spries.fleetcommander.service.rest.model.RestError;
+import de.spries.fleetcommander.service.rest.errorhandling.RestError;
 
 @Path("")
 public class GamesRestService {
@@ -161,7 +161,7 @@ public class GamesRestService {
 		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
-	protected static Response.ResponseBuilder noCacheResponse(Response.Status status) {
+	public static Response.ResponseBuilder noCacheResponse(Response.Status status) {
 		CacheControl cc = new CacheControl();
 		cc.setNoCache(true);
 		cc.setMaxAge(-1);
