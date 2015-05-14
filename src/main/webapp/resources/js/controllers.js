@@ -4,13 +4,14 @@ var fleetCommanderApp = angular.module('fleetCommanderApp', [ 'fleetCommanderSer
 fleetCommanderApp.controller('GamesCtrl', [
 		'$scope',
 		'$cookies',
+		'$interval',
 		'GamesService',
 		'JoinCodesService',
 		'PlayersService',
 		'TurnsService',
 		'PlanetsService',
 		'ShipsService',
-		function($scope, $cookies, GamesService, JoinCodesService, PlayersService, TurnsService, PlanetsService,
+		function($scope, $cookies, $interval, GamesService, JoinCodesService, PlayersService, TurnsService, PlanetsService,
 				ShipsService) {
 
 			$scope.gameScreen = 'home';
@@ -18,6 +19,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.showTurnEvents = false;
 			$scope.destinationSelectionActive = false;
 			$scope.blockingActionInProgress = false;
+			var gameStartPoller;
 
 			$scope.hasActiveGame = function() {
 				return $cookies.gameId !== undefined;
@@ -82,8 +84,33 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.destinationSelectionActive = false;
 					$scope.blockingActionInProgress = false;
 
-					$scope.refreshGame();
+					$scope.refreshGame().success(function() {
+						if ($scope.game.status === 'PENDING') {
+							$scope.pollGameForStart();
+							$scope.waitingForGameToStart = true;
+						}
+					});
 				});
+			};
+
+			$scope.pollGameForStart = function() {
+				if (angular.isDefined(gameStartPoller))
+					return;
+				gameStartPoller = $interval(function() {
+					$scope.refreshGame().success(function() {
+						if ($scope.game.status === 'RUNNING') {
+							$scope.stopPollingForGameStart();
+						}
+					});
+				}, 2500);
+			};
+
+			$scope.stopPollingForGameStart = function() {
+				if (angular.isDefined(gameStartPoller)) {
+					$interval.cancel(gameStartPoller);
+					gameStartPoller = undefined;
+					$scope.waitingForGameToStart = undefined;
+				}
 			};
 
 			$scope.resumeGame = function() {

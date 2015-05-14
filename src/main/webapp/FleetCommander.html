@@ -43,7 +43,8 @@
 								<h3>Players</h3>
 								
 								<div class="form-group">
-									<button class="btn btn-default" ng-click="startGame()"><span class="shortcut">P</span>lay!</button>
+									<button class="btn btn-default" ng-click="startGame()" ng-hide="waitingForGameToStart"><span class="shortcut">P</span>lay!</button>
+									<div ng-show="waitingForGameToStart">Waiting for other players to be ready...</div>
 								</div>
 								
 								<div class="form-group">
