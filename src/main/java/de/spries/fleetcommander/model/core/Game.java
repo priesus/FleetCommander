@@ -21,7 +21,7 @@ public class Game {
 	public static final int MAX_PLAYERS = 6;
 	private int id;
 	private List<Player> players;
-	private Set<Player> turnFinishedPlayers;
+	private Set<Player> readyPlayers;
 	private Universe universe;
 	private GameStatus status;
 	private TurnEvents previousTurnEvents;
@@ -29,7 +29,7 @@ public class Game {
 
 	public Game() {
 		players = new ArrayList<>(MAX_PLAYERS);
-		turnFinishedPlayers = new HashSet<>(MAX_PLAYERS);
+		readyPlayers = new HashSet<>(MAX_PLAYERS);
 		status = GameStatus.PENDING;
 		nextPlayerId = 1;
 	}
@@ -50,19 +50,38 @@ public class Game {
 		player.setId(nextPlayerId++);
 	}
 
-	public void start() {
+	public void start(Player player) {
+		if (!players.contains(player)) {
+			throw new IllegalActionException("You are not participating in this game");
+		}
 		if (GameStatus.PENDING != status) {
 			throw new IllegalActionException("The game has started already");
 		}
 		if (players.size() < 2) {
 			throw new IllegalActionException("At least 2 players required in order to start the game!");
 		}
-		previousTurnEvents = new TurnEvents(players);
+		if (readyPlayers.contains(player)) {
+			throw new IllegalActionException("You have to wait for the other players to start the game");
+		}
 
+		readyPlayers.add(player);
+
+		tryStart();
+	}
+
+	private void tryStart() {
+		if (players.size() == readyPlayers.size()) {
+			start();
+		}
+	}
+
+	private void start() {
+		previousTurnEvents = new TurnEvents(players);
 		universe = UniverseFactory.generate(players);
 		universe.setEventBus(previousTurnEvents);
 		status = GameStatus.RUNNING;
 
+		readyPlayers.clear();
 		notifyActivePlayersForNewTurn();
 	}
 
@@ -70,6 +89,7 @@ public class Game {
 		return status;
 	}
 
+	//TODO players should not be able to make any actions between ending their turn and the actual end of the turn
 	public void endTurn(Player player) {
 		if (!players.contains(player)) {
 			throw new IllegalActionException(player
@@ -79,17 +99,17 @@ public class Game {
 			throw new IllegalActionException(player + " has been defeated and therefore cannot end the turn");
 		}
 
-		if (turnFinishedPlayers.contains(player)) {
+		if (readyPlayers.contains(player)) {
 			throw new IllegalActionException(player + " has already finished the turn");
 		}
 
-		turnFinishedPlayers.add(player);
+		readyPlayers.add(player);
 		tryEndTurn();
 	}
 
 	private void tryEndTurn() {
 		List<Player> activePlayers = players.stream().filter(Player::isActive).collect(Collectors.toList());
-		if (turnFinishedPlayers.containsAll(activePlayers)) {
+		if (readyPlayers.containsAll(activePlayers)) {
 			endTurn();
 		}
 	}
@@ -100,7 +120,7 @@ public class Game {
 		}
 
 		previousTurnEvents.clear();
-		turnFinishedPlayers.clear();
+		readyPlayers.clear();
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 

@@ -27,7 +27,6 @@ import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 @PrepareForTest({ UniverseFactory.class })
 public class StartedGameTest {
 
-	private Game game;
 	private Game startedGame;
 	private Universe universe;
 	private Player jack;
@@ -59,7 +58,10 @@ public class StartedGameTest {
 		startedGame.addPlayer(jack);
 		startedGame.addPlayer(computerPlayer);
 		startedGame.addPlayer(computerPlayer2);
-		startedGame.start();
+		startedGame.start(john);
+		startedGame.start(jack);
+		startedGame.start(computerPlayer);
+		startedGame.start(computerPlayer2);
 
 		someHomePlanet = mock(Planet.class);
 	}
@@ -67,11 +69,6 @@ public class StartedGameTest {
 	@Test
 	public void statusIsRunningAfterGameStarted() throws Exception {
 		assertThat(startedGame.getStatus(), is(GameStatus.RUNNING));
-	}
-
-	@Test(expected = IllegalActionException.class)
-	public void cannotStartGameTwice() throws Exception {
-		startedGame.start();
 	}
 
 	@Test

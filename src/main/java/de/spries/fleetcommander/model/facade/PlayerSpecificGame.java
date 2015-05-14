@@ -48,7 +48,7 @@ public class PlayerSpecificGame {
 	}
 
 	public void start() {
-		originalGame.start();
+		originalGame.start(viewingPlayer);
 	}
 
 	public void endTurn() {

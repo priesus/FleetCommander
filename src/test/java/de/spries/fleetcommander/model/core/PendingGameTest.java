@@ -1,9 +1,9 @@
 package de.spries.fleetcommander.model.core;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -20,6 +20,7 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 public class PendingGameTest {
 
 	private Game game;
+	private Game gameWithPlayers;
 	private Player jack;
 	private Player john;
 	private Player otherPlayer;
@@ -32,6 +33,9 @@ public class PendingGameTest {
 
 		game = new Game();
 		game.addPlayer(john);
+		gameWithPlayers = new Game();
+		gameWithPlayers.addPlayer(jack);
+		gameWithPlayers.addPlayer(john);
 	}
 
 	@Test
@@ -41,7 +45,7 @@ public class PendingGameTest {
 
 	@Test(expected = IllegalActionException.class)
 	public void gameRequiresAtLeastTwoPlayersToStart() throws Exception {
-		game.start();
+		game.start(john);
 	}
 
 	@Test
@@ -70,15 +74,16 @@ public class PendingGameTest {
 
 	@Test
 	public void returnsPlayerWithSameId() throws Exception {
-		game.addPlayer(otherPlayer);
+		doReturn(1).when(jack).getId();
 		doReturn(12).when(john).getId();
-		doReturn(123).when(otherPlayer).getId();
-		assertThat(game.getPlayerWithId(123), is(otherPlayer));
+		assertThat(gameWithPlayers.getPlayerWithId(12), is(john));
 	}
 
 	@Test
 	public void returnsNullForNonexistentPlayerId() throws Exception {
-		assertThat(game.getPlayerWithId(123), is(nullValue()));
+		doReturn(1).when(jack).getId();
+		doReturn(12).when(john).getId();
+		assertThat(gameWithPlayers.getPlayerWithId(123), is(nullValue()));
 	}
 
 	@Test
@@ -102,27 +107,52 @@ public class PendingGameTest {
 	public void playersAreNotifiedOfGameStart() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
-		game.addPlayer(jack);
-		game.start();
+		gameWithPlayers.start(john);
+		gameWithPlayers.start(jack);
 
-		verify(john).notifyNewTurn(game);
-		verify(jack).notifyNewTurn(game);
+		verify(john).notifyNewTurn(gameWithPlayers);
+		verify(jack).notifyNewTurn(gameWithPlayers);
 	}
 
 	@Test
 	public void quittingPlayerIsRemovedFromPendingGame() throws Exception {
-		game.quit(john);
-		assertThat(game.getPlayers(), is(empty()));
+		gameWithPlayers.quit(john);
+		assertThat(gameWithPlayers.getPlayers(), not(hasItem(john)));
 	}
 
 	@Test(expected = IllegalActionException.class)
 	public void nonParticipatingPlayerCannotQuitGame() throws Exception {
-		game.quit(otherPlayer);
+		gameWithPlayers.quit(otherPlayer);
 	}
 
 	@Test
 	public void gameHasNoUniverse() throws Exception {
 		assertThat(game.getUniverse(), is(nullValue()));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void playerThatDoesntParticipateCannotStartGame() throws Exception {
+		gameWithPlayers.start(otherPlayer);
+	}
+
+	@Test
+	public void gameDoesntStartBeforeAllPlayersAreReady() throws Exception {
+		gameWithPlayers.start(john);
+		assertThat(gameWithPlayers.getStatus(), is(GameStatus.PENDING));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotStartTwicePerPlayer() throws Exception {
+		gameWithPlayers.start(john);
+		gameWithPlayers.start(john);
+	}
+
+	@Test
+	public void gameStartsAfterAllPlayersAreReady() throws Exception {
+		gameWithPlayers.start(john);
+		gameWithPlayers.start(jack);
+
+		assertThat(gameWithPlayers.getStatus(), is(GameStatus.RUNNING));
 	}
 
 }

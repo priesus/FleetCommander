@@ -74,7 +74,7 @@ public class PlayerSpecificGameTest {
 	@Test
 	public void forwardsCallToStart() {
 		ownGame.start();
-		verify(originalGame).start();
+		verify(originalGame).start(self);
 	}
 
 	@Test
