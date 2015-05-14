@@ -48,7 +48,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.activeJoinCodes = data.joinCodes;
 				});
-				$scope.reloadGame();
+				$scope.refreshGame();
 			}
 
 			$scope.tryToJoinGame = function() {
@@ -59,7 +59,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
-					$scope.reloadGame();
+					$scope.refreshGame();
 				}).error(function(data) {
 					if (data !== null)
 						$scope.joinGameError = data.error;
@@ -68,7 +68,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.addComputerPlayer = function() {
 				PlayersService.addComputerPlayer($scope.gameId, $scope.gameToken).success(function() {
-					$scope.reloadGame();
+					$scope.refreshGame();
 				});
 			};
 
@@ -82,17 +82,17 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.destinationSelectionActive = false;
 					$scope.blockingActionInProgress = false;
 
-					$scope.reloadGame();
+					$scope.refreshGame();
 				});
 			};
 
 			$scope.resumeGame = function() {
 				$scope.gameId = $cookies.gameId;
 				$scope.gameToken = $cookies.gameToken;
-				$scope.reloadGame();
+				$scope.refreshGame();
 			};
 
-			$scope.reloadGame = function() {
+			$scope.refreshGame = function() {
 				return GamesService.get($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.game = data;
 
@@ -107,7 +107,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 				$scope.blockingActionInProgress = true;
 				TurnsService.endTurn($scope.gameId, $scope.gameToken).success(function() {
-					$scope.reloadGame();
+					$scope.refreshGame();
 					$scope.blockingActionInProgress = false;
 					$scope.showPlanetMenu = false;
 					$scope.showTurnEvents = true;
@@ -139,7 +139,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					ShipsService
 							.sendShips($scope.gameId, $scope.gameToken, $scope.shipCount, $scope.selectedPlanet.id, planet.id)
 							.success(function() {
-								$scope.reloadGame();
+								$scope.refreshGame();
 							});
 					$scope.destinationSelectionActive = false;
 				}
@@ -157,7 +157,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				PlanetsService.buildFactory($scope.gameId, $scope.gameToken, $scope.selectedPlanet.id).success(function() {
 					$scope.selectedPlanet.factorySite.factoryCount++;
 					$scope.selectedPlanet.factorySite.availableSlots--;
-					$scope.reloadGame();
+					$scope.refreshGame();
 				});
 			};
 

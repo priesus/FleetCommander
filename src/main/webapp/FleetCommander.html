@@ -107,6 +107,7 @@
 				
 				<div ng-show="gameScreen === 'ingame'">
 					<div class="game-menu">
+						<button class="btn btn-default" ng-click="refreshGame()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
 						<button class="btn btn-default" ng-click="endTurn()" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
