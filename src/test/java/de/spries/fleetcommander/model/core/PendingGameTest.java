@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.spries.fleetcommander.model.ai.ComputerPlayer;
 import de.spries.fleetcommander.model.core.Game.GameStatus;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
@@ -23,19 +24,26 @@ public class PendingGameTest {
 	private Game gameWithPlayers;
 	private Player jack;
 	private Player john;
+	private Player computer;
 	private Player otherPlayer;
 
 	@Before
 	public void setUp() throws Exception {
 		john = mock(Player.class);
 		jack = mock(Player.class);
+		computer = mock(ComputerPlayer.class);
 		otherPlayer = mock(Player.class);
+
+		doReturn(true).when(john).isHumanPlayer();
+		doReturn(true).when(jack).isHumanPlayer();
+		doReturn(false).when(computer).isHumanPlayer();
 
 		game = new Game();
 		game.addPlayer(john);
 		gameWithPlayers = new Game();
 		gameWithPlayers.addPlayer(jack);
 		gameWithPlayers.addPlayer(john);
+		gameWithPlayers.addPlayer(computer);
 	}
 
 	@Test
@@ -153,7 +161,7 @@ public class PendingGameTest {
 	}
 
 	@Test
-	public void gameStartsAfterAllPlayersAreReady() throws Exception {
+	public void gameStartsAfterAllHumanPlayersAreReady() throws Exception {
 		gameWithPlayers.start(john);
 		gameWithPlayers.start(jack);
 

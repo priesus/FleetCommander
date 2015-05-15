@@ -60,8 +60,6 @@ public class StartedGameTest {
 		startedGame.addPlayer(computerPlayer2);
 		startedGame.start(john);
 		startedGame.start(jack);
-		startedGame.start(computerPlayer);
-		startedGame.start(computerPlayer2);
 
 		someHomePlanet = mock(Planet.class);
 	}

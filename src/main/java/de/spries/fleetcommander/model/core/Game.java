@@ -72,7 +72,7 @@ public class Game {
 	}
 
 	private void tryStart() {
-		if (players.size() == readyPlayers.size()) {
+		if (readyPlayers.size() == countHumanPlayers()) {
 			start();
 		}
 	}
@@ -178,6 +178,10 @@ public class Game {
 
 	private long countActiveHumanPlayers() {
 		return players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
+	}
+
+	private long countHumanPlayers() {
+		return players.stream().filter(p -> p.isHumanPlayer()).count();
 	}
 
 	public int getId() {
