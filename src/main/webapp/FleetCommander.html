@@ -44,7 +44,7 @@
 								
 								<div class="form-group">
 									<button class="btn btn-default" ng-click="startGame()" ng-hide="waitingForOtherPlayers"><span class="shortcut">P</span>lay!</button>
-									<div ng-show="waitingForOtherPlayers">Waiting for other players...</div>
+									<div ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
 								</div>
 								
 								<div class="form-group">
@@ -116,7 +116,7 @@
 						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
 					<div class="ingame-screen">
-						<div class="blocking-overlay" ng-show="waitingForOtherPlayers">Waiting for other players...</div>
+						<div class="blocking-overlay" ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
 						<div class="planet"
 								ng-repeat="planet in game.universe.planets track by planet.id"
 								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
