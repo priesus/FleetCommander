@@ -2,7 +2,6 @@ package de.spries.fleetcommander.model.core;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -75,18 +74,18 @@ public class PlayerTest {
 	}
 
 	@Test
-	public void playersAreEqualWithSameId() throws Exception {
+	public void playersAreStillEqualWithDifferentId() throws Exception {
 		Player john2 = new Player("John");
 		john.setId(200);
 		john2.setId(200);
 		assertThat(john, is(john2));
 
 		john2.setId(201);
-		assertThat(john, is(not(john2)));
+		assertThat(john, is(john2));
 	}
 
 	@Test
-	public void playersHaveSameHashCodeEqualWithSameId() throws Exception {
+	public void playersHaveSameHashCodeEqualWithDifferentId() throws Exception {
 		Player john2 = new Player("John");
 		john.setId(200);
 		john2.setId(200);
@@ -94,7 +93,7 @@ public class PlayerTest {
 		assertThat(john.hashCode(), is(john2.hashCode()));
 
 		john2.setId(201);
-		assertThat(john.hashCode(), is(not(john2.hashCode())));
+		assertThat(john.hashCode(), is(john2.hashCode()));
 	}
 
 	@Test

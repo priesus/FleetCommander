@@ -63,8 +63,8 @@ public class PendingGameTest {
 
 	@Test
 	public void playerIsAddedToPlayersList() throws Exception {
-		game.addPlayer(john);
-		assertThat(game.getPlayers(), hasItem(john));
+		game.addPlayer(jack);
+		assertThat(game.getPlayers(), hasItem(jack));
 	}
 
 	@Test
@@ -77,6 +77,18 @@ public class PendingGameTest {
 			fail("Expected exception");
 		} catch (Exception e) {
 			assertThat(e.getMessage(), containsString("Limit of 6 players reached"));
+		}
+	}
+
+	@Test
+	public void cannotAddPlayerTwice() throws Exception {
+		Game g = new Game();
+		g.addPlayer(new Player("John"));
+		try {
+			g.addPlayer(new Player("John"));
+			fail("Excpected exception");
+		} catch (IllegalActionException e) {
+			//Expected behavior
 		}
 	}
 

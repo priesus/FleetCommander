@@ -43,6 +43,9 @@ public class Game {
 		if (players.size() >= MAX_PLAYERS) {
 			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
 		}
+		if (players.contains(player)) {
+			throw new IllegalActionException("There is already a player named " + player.getName());
+		}
 
 		assignPlayerId(player);
 		players.add(player);

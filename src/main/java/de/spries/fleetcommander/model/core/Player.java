@@ -102,7 +102,6 @@ public class Player {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
 		result = prime * result + (name == null ? 0 : name.hashCode());
 		return result;
 	}
@@ -119,9 +118,6 @@ public class Player {
 			return false;
 		}
 		Player other = (Player) obj;
-		if (id != other.id) {
-			return false;
-		}
 		if (!StringUtils.equals(name, other.name)) {
 			return false;
 		}
