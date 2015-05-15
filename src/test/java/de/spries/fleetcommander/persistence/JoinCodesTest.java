@@ -56,6 +56,14 @@ public class JoinCodesTest {
 	}
 
 	@Test
+	public void createsAnotherCodeIfContainsLetterOOrNumber0() throws Exception {
+		PowerMockito.mockStatic(RandomStringUtils.class);
+		PowerMockito.when(RandomStringUtils.randomAlphanumeric(6)).thenReturn("023456", "123O56", "123456");
+
+		assertThat(JoinCodes.INSTANCE.create(1), is("123456"));
+	}
+
+	@Test
 	public void invalidatingReturnsGameId() throws Exception {
 		String code1 = JoinCodes.INSTANCE.create(1);
 		String code2 = JoinCodes.INSTANCE.create(2);

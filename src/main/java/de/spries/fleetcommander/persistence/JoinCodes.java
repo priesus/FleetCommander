@@ -30,7 +30,7 @@ public enum JoinCodes {
 		String code = null;
 		do {
 			code = RandomStringUtils.randomAlphanumeric(6).toLowerCase(Locale.ROOT);
-		} while (gameCodes.contains(code));
+		} while (gameCodes.contains(code) || code.contains("0") || code.contains("o"));
 
 		gameIdPerCode.put(code, gameId);
 		gameCodes.add(code);
