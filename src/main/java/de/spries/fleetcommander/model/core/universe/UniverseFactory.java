@@ -1,6 +1,7 @@
 package de.spries.fleetcommander.model.core.universe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ public class UniverseFactory {
 	/**
 	 * Prototype implementation for testing purposes
 	 */
-	public static Universe generate(List<Player> players) {
+	public static Universe generate(Collection<Player> players) {
 		List<Planet> planets = new ArrayList<>(PLANET_COUNT);
 
 		for (int row = 0; row < 10; row++) {
@@ -39,11 +40,13 @@ public class UniverseFactory {
 			planet.setId(planetId++);
 		}
 
-		for (int i = 0; i < players.size(); i++) {
+		int i = 0;
+		for (Player player : players) {
 			Planet oldUninhabitedPlanet = planets.get(i);
-			Planet newHomePlanet = new Planet(oldUninhabitedPlanet.getX(), oldUninhabitedPlanet.getY(), players.get(i));
+			Planet newHomePlanet = new Planet(oldUninhabitedPlanet.getX(), oldUninhabitedPlanet.getY(), player);
 			newHomePlanet.setId(oldUninhabitedPlanet.getId());
 			planets.set(i, newHomePlanet);
+			i++;
 		}
 
 		return new Universe(planets);

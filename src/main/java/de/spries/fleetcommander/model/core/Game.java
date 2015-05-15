@@ -1,9 +1,9 @@
 package de.spries.fleetcommander.model.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,8 +20,8 @@ public class Game {
 
 	public static final int MAX_PLAYERS = 6;
 	private int id;
-	private List<Player> players;
-	private Set<Player> readyPlayers;
+	private Collection<Player> players;
+	private Collection<Player> readyPlayers;
 	private Universe universe;
 	private GameStatus status;
 	private TurnEvents previousTurnEvents;
@@ -29,7 +29,7 @@ public class Game {
 	private int turnNumber;
 
 	public Game() {
-		players = new ArrayList<>(MAX_PLAYERS);
+		players = new HashSet<>(MAX_PLAYERS);
 		readyPlayers = new HashSet<>(MAX_PLAYERS);
 		status = GameStatus.PENDING;
 		nextPlayerId = 1;
@@ -43,9 +43,9 @@ public class Game {
 		if (players.size() >= MAX_PLAYERS) {
 			throw new IllegalActionException("Limit of " + MAX_PLAYERS + " players reached");
 		}
-		players.add(player);
 
 		assignPlayerId(player);
+		players.add(player);
 	}
 
 	private synchronized void assignPlayerId(Player player) {
