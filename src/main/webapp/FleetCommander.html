@@ -109,14 +109,14 @@
 				<div ng-show="gameScreen === 'ingame'">
 					<div class="game-menu">
 						<button class="btn btn-default" ng-click="endTurn()" ng-hide="waitingForOtherPlayers" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
-						<button class="btn btn-default" ng-click="quitGame()" ng-hide="waitingForOtherPlayers">Quit game</button>
-						<div ng-show="waitingForOtherPlayers">Waiting for other players...</div>
+						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
 					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
 						<span>{{game.me.name}}</span>
 						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
 					<div class="ingame-screen">
+						<div class="blocking-overlay" ng-show="waitingForOtherPlayers">Waiting for other players...</div>
 						<div class="planet"
 								ng-repeat="planet in game.universe.planets track by planet.id"
 								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
