@@ -25,8 +25,8 @@ public class PlayerSpecificGame {
 	}
 
 	public void addComputerPlayer() {
-		int numOtherPlayers = getOtherPlayers().size();
-		String name = "Computer " + (numOtherPlayers + 1);
+		long numComputerPlayers = getOtherPlayers().stream().filter(p -> !p.isHumanPlayer()).count();
+		String name = "Computer " + (numComputerPlayers + 1);
 		ComputerPlayer player = new ComputerPlayer(name, new DefaultBuildingStrategy(), new AggressiveFleetStrategy());
 		originalGame.addPlayer(player);
 	}

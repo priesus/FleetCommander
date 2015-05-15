@@ -21,6 +21,10 @@ public class OtherPlayer {
 		return originalPlayer.isActive();
 	}
 
+	public boolean isHumanPlayer() {
+		return originalPlayer.isHumanPlayer();
+	}
+
 	protected static List<OtherPlayer> convert(List<Player> otherPlayers) {
 		return otherPlayers.stream()
 				.map(p -> new OtherPlayer(p))

@@ -30,4 +30,10 @@ public class OtherPlayerTest {
 		viewingPlayer.isActive();
 		verify(originalPlayer).isActive();
 	}
+
+	@Test
+	public void forwardsCallToIsHumanPlayer() {
+		viewingPlayer.isHumanPlayer();
+		verify(originalPlayer).isHumanPlayer();
+	}
 }

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public class PlayerSpecificGameTest {
 	private Game originalGame;
 	private Player self;
 	private Player otherPlayer;
+	private Player computerPlayer;
 	private PlayerSpecificGame ownGame;
 
 	@Before
@@ -37,6 +39,11 @@ public class PlayerSpecificGameTest {
 		originalGame = mock(Game.class);
 		self = mock(Player.class);
 		otherPlayer = mock(Player.class);
+		computerPlayer = mock(Player.class);
+
+		doReturn(true).when(self).isHumanPlayer();
+		doReturn(true).when(otherPlayer).isHumanPlayer();
+		doReturn(false).when(computerPlayer).isHumanPlayer();
 
 		doReturn("Myself").when(self).getName();
 
@@ -57,9 +64,13 @@ public class PlayerSpecificGameTest {
 	public void addsComputerPlayerWithName() throws Exception {
 		ownGame.addComputerPlayer();
 
+		doReturn(Arrays.asList(self, otherPlayer, computerPlayer)).when(originalGame).getPlayers();
+		ownGame.addComputerPlayer();
+
 		ArgumentCaptor<Player> argument = ArgumentCaptor.forClass(Player.class);
-		verify(originalGame).addPlayer(argument.capture());
-		assertThat(argument.getValue().getName(), is("Computer 2"));
+		verify(originalGame, times(2)).addPlayer(argument.capture());
+		assertThat(argument.getAllValues().get(0).getName(), is("Computer 1"));
+		assertThat(argument.getAllValues().get(1).getName(), is("Computer 2"));
 	}
 
 	@Test
