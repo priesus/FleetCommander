@@ -23,6 +23,10 @@ html, body {
 	font-family: Munro, Arial, sans-serif;
 }
 
+.error-msg {
+	color: #a94442
+}
+
 @font-face {
 	font-family: 'Silkscreen';
 	src: url(../fonts/slkscr.ttf) format('truetype');

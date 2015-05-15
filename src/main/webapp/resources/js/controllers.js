@@ -32,6 +32,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
+					$scope.startGameError = undefined;
+					$scope.requestJoinCodeError = undefined;
 					$scope.requestJoinCode();
 				});
 			};
@@ -40,20 +42,23 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.joinGameError = undefined;
 				$scope.joiningPlayerCode = '';
 				$scope.gameScreen = 'join';
-			}
+			};
 
 			$scope.requestJoinCode = function() {
 				JoinCodesService.create($scope.gameId, $scope.gameToken).success(function() {
 					$scope.refreshActiveJoinCodes();
+				}).error(function(data) {
+					if (data !== null)
+						$scope.requestJoinCodeError = data.error;
 				});
-			}
+			};
 
 			$scope.refreshActiveJoinCodes = function() {
 				JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
 					$scope.activeJoinCodes = data.joinCodes;
 				});
 				$scope.refreshGame();
-			}
+			};
 
 			$scope.tryToJoinGame = function() {
 				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
@@ -91,6 +96,9 @@ fleetCommanderApp.controller('GamesCtrl', [
 						if ($scope.game.status === 'PENDING')
 							$scope.pollForGameStart();
 					});
+				}).error(function(data) {
+					if (data !== null)
+						$scope.startGameError = data.error;
 				});
 			};
 
@@ -105,6 +113,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 						if ($scope.game.status === 'RUNNING') {
 							$scope.stopPollingForGameStart();
 						}
+					}).error(function() {
+						$scope.stopPollingForGameStart();
 					});
 				}, 2500);
 			};
@@ -162,6 +172,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 							$scope.stopPollingForNewTurn();
 							$scope.handleNewTurn();
 						}
+					}).error(function() {
+						$scope.stopPollingForNewTurn();
 					});
 				}, 2500);
 			};
@@ -180,7 +192,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.showTurnEvents = true;
 				$scope.destinationSelectionActive = false;
 				currentTurnNumber = $scope.game.turnNumber;
-			}
+			};
 
 			$scope.quitGame = function() {
 				GamesService.quit($scope.gameId, $scope.gameToken);
@@ -235,7 +247,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.getNumber = function(num) {
 				return new Array(num);
-			}
+			};
 
 			$scope.onKeyDown = function($event) {
 				if ($scope.gameScreen === 'home') {
@@ -256,7 +268,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 						$scope.startGame();
 						break;
 					case 65: // [A]dd computer player
-						$scope.addComputerPlayer();
+						if ($scope.game.otherPlayers.length < 5)
+							$scope.addComputerPlayer();
 						break;
 					case 13: // [Enter]
 					case 32: // [Space]

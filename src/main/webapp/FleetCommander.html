@@ -44,6 +44,7 @@
 								
 								<div class="form-group">
 									<button class="btn btn-default" ng-click="startGame()" ng-hide="waitingForOtherPlayers"><span class="shortcut">P</span>lay!</button>
+									<div ng-if="startGameError" class="error-msg">{{startGameError}}</div>
 									<div ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
 								</div>
 								
@@ -58,6 +59,7 @@
 										<button class="btn btn-default btn-sm" ng-click="requestJoinCode()" ng-disabled="">Request code</button>
 										<button class="btn btn-default btn-sm" ng-click="refreshActiveJoinCodes()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
 										<button class="btn btn-default btn-sm" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
+										<div ng-if="requestJoinCodeError" class="error-msg">{{requestJoinCodeError}}</div>
 									</div>
 								</div>
 								
@@ -93,7 +95,7 @@
 											<label for="nameInput">Enter the join code:</label>
 											<input id="codeInput" name="code" ng-model="joiningPlayerCode" autofocus="autofocus" placeholder="e.g. yx45ab" pattern="[A-Za-z0-9]{6}" maxlength="6" required="required" class="form-control"/>
 										</div>
-										<label for="nameInput" ng-if="joinGameError" class="control-label">{{joinGameError}}</label>
+										<label for="nameInput" ng-if="joinGameError" class="error-msg">{{joinGameError}}</label>
 									</div>
 									
 									<div class="form-group">

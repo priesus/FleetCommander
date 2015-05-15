@@ -89,9 +89,9 @@ public class GamesService {
 	public void modifyGame(GamePlayer gamePlayer, GameParams params) {
 		LOGGER.debug("{}: Modify with params {}", gamePlayer, params);
 		if (Boolean.TRUE.equals(params.getIsStarted())) {
-			JoinCodes.INSTANCE.invalidateAll(gamePlayer.getGameId());
 			PlayerSpecificGame game = getGame(gamePlayer);
 			game.start();
+			JoinCodes.INSTANCE.invalidateAll(gamePlayer.getGameId());
 		}
 	}
 
