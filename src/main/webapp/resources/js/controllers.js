@@ -35,6 +35,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.startGameError = undefined;
 					$scope.requestJoinCodeError = undefined;
 					$scope.requestJoinCode();
+					$scope.refreshGame();
+					$scope.pollForGameStart();
 				});
 			};
 
@@ -53,13 +55,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 				});
 			};
 
-			$scope.refreshActiveJoinCodes = function() {
-				JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
-					$scope.activeJoinCodes = data.joinCodes;
-				});
-				$scope.refreshGame();
-			};
-
 			$scope.tryToJoinGame = function() {
 				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
 					return;
@@ -69,6 +64,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
 					$scope.refreshGame();
+					$scope.pollForGameStart();
 				}).error(function(data) {
 					if (data !== null)
 						$scope.joinGameError = data.error;
@@ -94,7 +90,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'PENDING')
-							$scope.pollForGameStart();
+							$scope.waitingForOtherPlayers = true;
 					});
 				}).error(function(data) {
 					if (data !== null)
@@ -106,9 +102,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 				if (angular.isDefined(gameStartPoller))
 					return;
 
-				$scope.waitingForOtherPlayers = true;
-
 				gameStartPoller = $interval(function() {
+					$scope.refreshActiveJoinCodes();
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'RUNNING') {
 							$scope.stopPollingForGameStart();
@@ -116,7 +111,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					}).error(function() {
 						$scope.stopPollingForGameStart();
 					});
-				}, 2500);
+				}, 1000);
 			};
 
 			$scope.stopPollingForGameStart = function() {
@@ -125,6 +120,12 @@ fleetCommanderApp.controller('GamesCtrl', [
 					gameStartPoller = undefined;
 					$scope.waitingForOtherPlayers = undefined;
 				}
+			};
+
+			$scope.refreshActiveJoinCodes = function() {
+				JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
+					$scope.activeJoinCodes = data.joinCodes;
+				});
 			};
 
 			$scope.resumeGame = function() {
@@ -195,6 +196,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.quitGame = function() {
+				$scope.stopPollingForGameStart();
 				GamesService.quit($scope.gameId, $scope.gameToken);
 				$scope.showTurnEvents = false;
 				$scope.gameScreen = 'home';

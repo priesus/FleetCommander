@@ -56,8 +56,7 @@
 										<span ng-repeat="code in activeJoinCodes">{{code}}{{$last ? '' : ', '}}</span>
 									</div>
 									<div>
-										<button class="btn btn-default btn-sm" ng-click="requestJoinCode()" ng-disabled="">Request code</button>
-										<button class="btn btn-default btn-sm" ng-click="refreshActiveJoinCodes()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+										<button class="btn btn-default btn-sm" ng-click="requestJoinCode()" ng-disabled="5 === activeJoinCodes.length">Request code</button>
 										<button class="btn btn-default btn-sm" ng-click="addComputerPlayer()" ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
 										<div ng-if="requestJoinCodeError" class="error-msg">{{requestJoinCodeError}}</div>
 									</div>
