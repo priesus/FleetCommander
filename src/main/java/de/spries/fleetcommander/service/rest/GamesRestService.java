@@ -70,7 +70,7 @@ public class GamesRestService {
 					.header("Location", "/rest/games/" + accessParams.getGameId())
 					.entity(accessParams).build();
 		} catch (InvalidCodeException e) {
-			return noCacheResponse(Response.Status.NOT_FOUND).entity(new RestError("Invalid join code"))
+			return noCacheResponse(Response.Status.NOT_FOUND).entity(new RestError(e.getMessage()))
 					.build();
 		}
 	}

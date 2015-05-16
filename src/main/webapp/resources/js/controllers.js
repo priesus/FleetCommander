@@ -251,6 +251,11 @@ fleetCommanderApp.controller('GamesCtrl', [
 				return new Array(num);
 			};
 
+			$scope.$on('$destroy', function() {
+				$scope.stopPollingForGameStart();
+				$scope.stopPollingForNewTurn();
+			});
+
 			$scope.onKeyDown = function($event) {
 				if ($scope.gameScreen === 'home') {
 					switch ($event.keyCode) {
@@ -283,9 +288,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 					}
 				} else if ($scope.gameScreen === 'join') {
 					switch ($event.keyCode) {
-					case 13: // [Enter]
-						$scope.tryToJoinGame();
-						break;
 					case 27: // [Esc]
 						$scope.gameScreen = 'home';
 						break;
