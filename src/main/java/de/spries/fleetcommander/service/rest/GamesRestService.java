@@ -30,6 +30,7 @@ import de.spries.fleetcommander.service.rest.errorhandling.RestError;
 public class GamesRestService {
 
 	public static class NewGameParams {
+		public String playerName;
 		public String joinCode;
 	}
 
@@ -48,11 +49,16 @@ public class GamesRestService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createOrJoinGame(NewGameParams params) {
-		//TODO introduce playerName parameter
-		if (params == null || params.joinCode == null) {
-			return createGame("Player 1");
+		if (params == null || params.playerName == null) {
+			return noCacheResponse(Response.Status.BAD_REQUEST).entity(
+					new RestError("Parameter 'playerName' is required"))
+					.build();
 		}
-		return joinGame("Another Player", params.joinCode);
+
+		if (params.joinCode == null) {
+			return createGame(params.playerName);
+		}
+		return joinGame(params.playerName, params.joinCode);
 	}
 
 	private Response createGame(String playerName) {

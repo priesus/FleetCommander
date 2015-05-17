@@ -2,17 +2,21 @@ var fleetCommanderServices = angular.module('fleetCommanderServices', [ 'ngResou
 
 fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 	return {
-		create : function() {
-			return $http({
-				method : 'POST',
-				url : 'rest/games'
-			});
-		},
-		join : function(joinCode) {
+		create : function(playerName) {
 			return $http({
 				method : 'POST',
 				url : 'rest/games',
 				data : {
+					'playerName' : playerName
+				}
+			});
+		},
+		join : function(playerName, joinCode) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games',
+				data : {
+					'playerName' : playerName,
 					'joinCode' : joinCode
 				}
 			});

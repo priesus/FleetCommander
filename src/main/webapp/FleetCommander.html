@@ -29,9 +29,27 @@
 						by taking over their home planets!
 					</p>
 					
-					<button class="btn btn-default" ng-click="resumeGame()" ng-if="hasActiveGame()"><span class="shortcut">R</span>esume game</button>
-					<button class="btn btn-default" ng-click="createNewGame()"><span class="shortcut">S</span>tart new game!</button>
-					<button class="btn btn-default" ng-click="openJoinGameMenu()"><span class="shortcut">J</span>oin game</button>
+					<form name="gameStartForm">
+						<div class="form-group row" ng-class="{'has-error': !gameStartForm.$valid}">
+							<div class="col-xs-6 col-xs-offset-3">
+								<label for="playerNameInput">Enter your name:</label>
+								<input id="playerNameInput" name="playerName" ng-model="playerName" autofocus="autofocus"
+									placeholder="e.g. Cpt. Awesome" maxlength="15" required="required" class="form-control" />
+							</div>
+						</div>
+						
+						<div>
+							<button class="btn btn-default" ng-disabled="!gameStartForm.$valid" ng-click="resumeGame()" ng-if="hasActiveGame()">
+								Resume game
+							</button>
+							<button class="btn btn-default" ng-disabled="!gameStartForm.$valid" ng-click="createNewGame()">
+								Start new game!
+							</button>
+							<button class="btn btn-default" ng-disabled="!gameStartForm.$valid" ng-click="openJoinGameMenu()">
+								Join game
+						</button>
+						</div>
+					</form>
 				</div>
 				
 				<div ng-show="gameScreen === 'players'">
@@ -67,7 +85,7 @@
 										<div class="player-slot col-xs-6 friendly-foreground">
 											{{game.me.name}}
 										</div>
-										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers">
+										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
 											{{otherPlayer.name}}
 										</div>
 										<div class="player-slot col-xs-6" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
@@ -89,16 +107,16 @@
 								<h3>Join existing game</h3>
 								
 								<form name="joinCodeForm">
-									<div class="form-group" ng-class="{'has-error': !joinCodeForm.code.$valid || joinGameError}">
+									<div class="form-group" ng-class="{'has-error': !joinCodeForm.$valid || joinGameError}">
 										<div class="col-xs-6 col-xs-offset-3">
-											<label for="nameInput">Enter the join code:</label>
+											<label for="codeInput">Enter the join code:</label>
 											<input id="codeInput" name="code" ng-model="joiningPlayerCode" autofocus="autofocus" placeholder="e.g. yx45ab" pattern="[A-Za-z0-9]{6}" maxlength="6" required="required" class="form-control"/>
 										</div>
-										<label for="nameInput" ng-if="joinGameError" class="error-msg">{{joinGameError}}</label>
+										<label for="codeInput" ng-if="joinGameError" class="error-msg">{{joinGameError}}</label>
 									</div>
 									
 									<div class="form-group">
-										<button class="btn btn-default" ng-click="tryToJoinGame()" ng-disabled="!joinCodeForm.code.$valid" type="submit">Join game</button>
+										<button class="btn btn-default" ng-click="tryToJoinGame()" ng-disabled="!joinCodeForm.$valid" type="submit">Join game</button>
 										<button class="btn btn-default" ng-click="createNewGame()">Start own game</button>
 									</div>
 								</form>
@@ -221,7 +239,7 @@
 										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount===selectedPlanet.shipCount" class="btn btn-default"><span class="shortcut">a</span>ll</button>
 									</div>
 									<div class="form-group">
-										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.ships.$valid">
+										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.$valid">
 											<span class="shortcut">S</span>end {{shipCount}} ships to...
 										</button>
 									</div>

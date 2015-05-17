@@ -15,6 +15,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				ShipsService) {
 
 			$scope.gameScreen = 'home';
+			$scope.playerName = $cookies.playerName;
 			$scope.showPlanetMenu = false;
 			$scope.showTurnEvents = false;
 			$scope.destinationSelectionActive = false;
@@ -28,7 +29,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.createNewGame = function() {
-				GamesService.create().success(function(data) {
+				$cookies.playerName = $scope.playerName;
+				GamesService.create($scope.playerName).success(function(data) {
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
@@ -43,6 +45,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.openJoinGameMenu = function() {
 				$scope.joinGameError = undefined;
 				$scope.joiningPlayerCode = '';
+				$cookies.playerName = $scope.playerName;
 				$scope.gameScreen = 'join';
 			};
 
@@ -59,7 +62,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
 					return;
 
-				GamesService.join($scope.joiningPlayerCode).success(function(data) {
+				GamesService.join($scope.playerName, $scope.joiningPlayerCode).success(function(data) {
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
 					$scope.gameScreen = 'players';
@@ -257,19 +260,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			});
 
 			$scope.onKeyDown = function($event) {
-				if ($scope.gameScreen === 'home') {
-					switch ($event.keyCode) {
-					case 83: // [S]tart new game
-						$scope.createNewGame();
-						break;
-					case 82: // [R]esume game
-						$scope.resumeGame();
-						break;
-					case 74: // [J]oin game
-						$scope.openJoinGameMenu();
-						break;
-					}
-				} else if ($scope.gameScreen === 'players') {
+				if ($scope.gameScreen === 'players') {
 					switch ($event.keyCode) {
 					case 80: // [P]lay
 						$scope.startGame();

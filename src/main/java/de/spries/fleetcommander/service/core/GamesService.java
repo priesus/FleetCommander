@@ -32,7 +32,7 @@ public class GamesService {
 		GamePlayer gamePlayer = GamePlayer.forIds(gameId, p.getId());
 		String authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer);
 
-		LOGGER.debug("{}: Created", gamePlayer);
+		LOGGER.debug("{}: Created for {}", gamePlayer, playerName);
 
 		return new GameAccessParams(gamePlayer, authToken);
 	}
@@ -53,7 +53,7 @@ public class GamesService {
 		GamePlayer gamePlayer = new GamePlayer(gameId, player.getId());
 		String authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer);
 
-		LOGGER.debug("{}: Joined", gamePlayer);
+		LOGGER.debug("{}: Joined by {}", gamePlayer, playerName);
 
 		return new GameAccessParams(gamePlayer, authToken);
 	}
