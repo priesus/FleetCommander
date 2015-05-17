@@ -31,7 +31,7 @@ public class GamesRestServiceIT {
 
 	@Before
 	public void setUp() {
-		Response response = when().post("/rest/games");
+		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
 
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
@@ -82,7 +82,7 @@ public class GamesRestServiceIT {
 
 	@Test
 	public void canJoinGameViaValidCode() throws Exception {
-		Response response = when().post("/rest/games");
+		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
 
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
@@ -96,7 +96,8 @@ public class GamesRestServiceIT {
 		List<String> joinCodes = codesResponse.getBody().jsonPath().getList("joinCodes");
 		assertThat(joinCodes, hasSize(1));
 
-		Response joinResponse = when("{\"joinCode\": \"" + joinCodes.get(0) + "\"}").post("/rest/games");
+		Response joinResponse = when("{\"playerName\":\"new-test-player\", \"joinCode\": \"" + joinCodes.get(0) + "\"}")
+				.post("/rest/games");
 
 		gameUrl = joinResponse.getHeader("Location");
 		gameAuthToken = joinResponse.getBody().jsonPath().getString("fullAuthToken");
@@ -107,10 +108,31 @@ public class GamesRestServiceIT {
 	}
 
 	@Test
+	public void cannotJoinGameWithDuplicatePlayerName() throws Exception {
+		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
+
+		gameUrl = response.getHeader("Location");
+		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
+
+		whenAuthorized().post(gameUrl + "/joinCodes")
+				.then().statusCode(SC_CREATED);
+
+		Response codesResponse = whenAuthorized().get(gameUrl + "/joinCodes");
+		assertThat(codesResponse.getStatusCode(), is(SC_OK));
+
+		List<String> joinCodes = codesResponse.getBody().jsonPath().getList("joinCodes");
+		assertThat(joinCodes, hasSize(1));
+
+		when("{\"playerName\":\"test-player\", \"joinCode\": \"" + joinCodes.get(0) + "\"}")
+				.post("/rest/games")
+				.then().statusCode(SC_CONFLICT);
+	}
+
+	@Test
 	public void cannotJoinGameViaInvalidCode() throws Exception {
-		when("{\"joinCode\": \"invalidJoinCode\"}").post("/rest/games")
+		when("{\"playerName\": \"test-player-2\", \"joinCode\": \"invalidJoinCode\"}").post("/rest/games")
 				.then().statusCode(SC_NOT_FOUND)
-				.and().body("error", is("Invalid join code"));
+				.and().body("error", is("invalidjoincode is an invalid code"));
 	}
 
 	@Test

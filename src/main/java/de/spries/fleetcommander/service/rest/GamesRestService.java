@@ -115,6 +115,7 @@ public class GamesRestService {
 
 	@DELETE
 	@Path("games/{id:\\d+}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response quitGame(@PathParam("id") int gameId, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		SERVICE.quitGame(GamePlayer.forIds(gameId, playerId));
@@ -123,6 +124,7 @@ public class GamesRestService {
 
 	@POST
 	@Path("games/{id:\\d+}/players")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addComputerPlayer(@PathParam("id") int gameId, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		SERVICE.addComputerPlayer(GamePlayer.forIds(gameId, playerId));
@@ -131,6 +133,7 @@ public class GamesRestService {
 
 	@POST
 	@Path("games/{id:\\d+}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response startGame(@PathParam("id") int gameId, GameParams params, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		SERVICE.modifyGame(GamePlayer.forIds(gameId, playerId), params);
@@ -139,6 +142,7 @@ public class GamesRestService {
 
 	@POST
 	@Path("games/{id:\\d+}/turns")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response endTurn(@PathParam("id") int gameId, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		SERVICE.endTurn(GamePlayer.forIds(gameId, playerId));
@@ -148,6 +152,7 @@ public class GamesRestService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Path("games/{id:\\d+}/universe/travellingShipFormations")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendShips(@PathParam("id") int gameId, ShipFormationParams ships, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
 		try {
@@ -160,6 +165,7 @@ public class GamesRestService {
 
 	@POST
 	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}/factories")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response buildFactory(@PathParam("id") int gameId, @PathParam("planetId") int planetId,
 			@Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
