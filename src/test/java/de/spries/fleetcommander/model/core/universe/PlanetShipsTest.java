@@ -199,6 +199,14 @@ public class PlanetShipsTest {
 	}
 
 	@Test
+	public void invadingLostPlanetIsNotKnownAsEnemyPlanet() throws Exception {
+		jacksPlanet.landShips(1, john);
+		jacksPlanet.handleDefeatedPlayer(jack);
+		jacksPlanet.landShips(1, john);
+		assertThat(jacksPlanet.isKnownAsEnemyPlanet(john), is(false));
+	}
+
+	@Test
 	public void conqueringUninhabitedPlanetFiresEvent() throws Exception {
 		uninhabitedPlanet.landShips(1, john);
 		verify(eventBus).fireConqueredUninhabitedPlanet(john);

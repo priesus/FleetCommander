@@ -159,6 +159,7 @@ public class Planet implements HasCoordinates {
 			turnEventBus.fireConqueredUninhabitedPlanet(invader);
 			inhabitant = invader;
 			shipCount += shipsToLand;
+			knownAsEnemyPlanetBy.remove(invader);
 		}
 		else if (isInhabitedBy(invader)) {
 			shipCount += shipsToLand;
