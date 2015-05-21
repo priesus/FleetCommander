@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
-import de.spries.fleetcommander.model.core.universe.FactorySite;
 
 public class FactorySiteTest {
 
@@ -82,5 +81,60 @@ public class FactorySiteTest {
 	public void factoryIncreasesShipProduction() throws Exception {
 		factorySite.buildFactory();
 		assertThat(factorySite.getProducedShipsPerTurn(), is(greaterThan(0f)));
+	}
+
+	@Test
+	public void initialProductionFocusIsBalanced50Percent() throws Exception {
+		assertThat(factorySite.getShipProductionFocus(), is(10));
+	}
+
+	@Test
+	public void fullProductionFocusOnShipsProducesShipsOnly() throws Exception {
+		factorySite.buildFactory();
+		factorySite.setShipProductionFocus(20);
+		assertThat(factorySite.getProducedShipsPerTurn(), is(FactorySite.SHIPS_PER_FACTORY_PER_TURN));
+		assertThat(factorySite.getProducedCreditsPerTurn(), is(0));
+	}
+
+	@Test
+	public void fullProductionFocusOnCreditsProducesCreditsOnly() throws Exception {
+		factorySite.buildFactory();
+		factorySite.setShipProductionFocus(0);
+		assertThat(factorySite.getProducedCreditsPerTurn(), is(FactorySite.CREDITS_PER_FACTORY_PER_TURN));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(0f));
+	}
+
+	@Test
+	public void balancedProductionFocusProducesBothShipsAndCredits() throws Exception {
+		factorySite.buildFactory();
+		factorySite.setShipProductionFocus(10);
+		assertThat(factorySite.getProducedCreditsPerTurn(), is(FactorySite.CREDITS_PER_FACTORY_PER_TURN / 2));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(FactorySite.SHIPS_PER_FACTORY_PER_TURN / 2));
+	}
+
+	@Test
+	public void shipProductionFocusProducesMoreShipsThanCredits() throws Exception {
+		factorySite.buildFactory();
+		factorySite.setShipProductionFocus(15);
+		assertThat(factorySite.getProducedCreditsPerTurn(), is(FactorySite.CREDITS_PER_FACTORY_PER_TURN / 4 * 1));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(FactorySite.SHIPS_PER_FACTORY_PER_TURN / 4 * 3));
+	}
+
+	@Test
+	public void creditProductionFocusProducesMoreCreditsThanShips() throws Exception {
+		factorySite.buildFactory();
+		factorySite.setShipProductionFocus(5);
+		assertThat(factorySite.getProducedCreditsPerTurn(), is(FactorySite.CREDITS_PER_FACTORY_PER_TURN / 4 * 3));
+		assertThat(factorySite.getProducedShipsPerTurn(), is(FactorySite.SHIPS_PER_FACTORY_PER_TURN / 4 * 1));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetNegativeProductionFocus() throws Exception {
+		factorySite.setShipProductionFocus(-1);
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetProductionFocusGreaterThan20() throws Exception {
+		factorySite.setShipProductionFocus(21);
 	}
 }
