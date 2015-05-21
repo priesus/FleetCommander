@@ -80,6 +80,8 @@
 									</div>
 								</div>
 								
+								<!-- TODO visualize which players are ready -->
+								
 								<div class="form-group">
 									<div class="col-xs-10 col-xs-offset-1">
 										<div class="player-slot col-xs-6 friendly-foreground">
@@ -213,39 +215,47 @@
 						</div></div>
 						
 						<div class="outer" ng-show="showPlanetMenu"><div class="middle">
-							<div class="ingame-menu inner form-horizontal">
+							<div class="ingame-menu inner">
 								<button ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
-								<div class="form-group">
-									<h4>Build factories</h4>
+								
+								<div class="row vert-separated">
+									<div class="col-xs-6">
+										<div class="form-group">
+											<h4>Build factories</h4>
+										</div>
+										<div class="form-group">
+											<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
+												<img src="resources/img/factory.svg" height="19px" width="19px">
+											</div>
+											<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
+												&nbsp;
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'error-msg': !game.me.canAffordFactory}">
+											{{game.me.credits}} / 100 credits
+										</div>
+										<div class="form-group">
+											<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
+										</div>
+									</div>
+									<div class="col-xs-6">
+										<form name="sendShipsForm">
+											<div class="form-group">
+												<h4>Send ships to other planets</h4>
+											</div>
+											<div class="form-group row">
+												<div class="col-xs-1">1</div>
+												<div class="col-xs-8"><input type="range" name="ships" ng-model="shipCount" min="1" max="{{selectedPlanet.shipCount}}"></div>
+												<div class="col-xs-1">{{selectedPlanet.shipCount}}</div>
+											</div>
+											<div class="form-group">
+												<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.$valid">
+													<span class="shortcut">S</span>end {{shipCount}} ships to...
+												</button>
+											</div>
+										</form>
+									</div>
 								</div>
-								<div class="form-group">
-									<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
-										<img src="resources/img/factory.svg" height="19px" width="19px">
-									</div>
-									<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
-										&nbsp;
-									</div>
-								</div>
-								<div class="form-group">
-									<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
-								</div>
-								<form name="sendShipsForm">
-									<div class="form-group">
-										<h4>Send ships to other planets</h4>
-									</div>
-									<div class="form-group">
-										<button ng-click="setShipCount(1)" ng-disabled="shipCount<=1" class="btn btn-default">one</button>
-										<button ng-click="setShipCount(shipCount-1)" ng-disabled="shipCount===0" class="btn btn-default">-</button>
-										<input type="number" name="ships" ng-model="shipCount" min="1" max="{{selectedPlanet.shipCount}}">
-										<button ng-click="setShipCount(shipCount+1)" ng-disabled="shipCount===selectedPlanet.shipCount" class="btn btn-default">+</button>
-										<button ng-click="setShipCount(selectedPlanet.shipCount)" ng-disabled="shipCount===selectedPlanet.shipCount" class="btn btn-default"><span class="shortcut">a</span>ll</button>
-									</div>
-									<div class="form-group">
-										<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.$valid">
-											<span class="shortcut">S</span>end {{shipCount}} ships to...
-										</button>
-									</div>
-								</form>
 							</div>
 						</div></div>
 					</div>

@@ -214,28 +214,25 @@ h1 {
 
 .object-annotation {
 	font-size: 8px;
+	position: absolute;
 }
 
 .object-annotation-top-left {
-	position: absolute;
 	top: 0;
 	left: 0;
 }
 
 .object-annotation-top-right {
-	position: absolute;
 	top: 0;
 	right: 0;
 }
 
 .object-annotation-bottom-left {
-	position: absolute;
 	bottom: 0;
 	left: 0;
 }
 
 .object-annotation-bottom-right {
-	position: absolute;
 	bottom: 0;
 	right: 0;
 }
@@ -260,6 +257,10 @@ h1 {
 	border-radius: 5px;
 	background: #f0f0f0;
 	z-index: 10;
+}
+
+.vert-separated>div:not(:first-child) {
+	border-left: #ddd solid;
 }
 
 .factory-slot {
