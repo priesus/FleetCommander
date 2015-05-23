@@ -16,10 +16,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.gameScreen = 'home';
 			$scope.playerName = $cookies.playerName;
-			$scope.showPlanetMenu = false;
-			$scope.showTurnEvents = false;
-			$scope.destinationSelectionActive = false;
-			$scope.blockingActionInProgress = false;
 			var gameStartPoller;
 			var newTurnPoller;
 			var currentTurnNumber;
@@ -85,15 +81,11 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$cookies.gameId = $scope.gameId;
 					$cookies.gameToken = $scope.gameToken;
 
-					$scope.showPlanetMenu = false;
-					$scope.showTurnEvents = false;
-					$scope.destinationSelectionActive = false;
-					$scope.blockingActionInProgress = false;
-					currentTurnNumber = 1;
-
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'PENDING')
 							$scope.waitingForOtherPlayers = true;
+						else
+							$scope.handleNewTurn();
 					});
 				}).error(function(data) {
 					if (data !== null)
@@ -110,6 +102,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'RUNNING') {
 							$scope.stopPollingForGameStart();
+							$scope.handleNewTurn();
 						}
 					}).error(function() {
 						$scope.stopPollingForGameStart();
