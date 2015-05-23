@@ -242,6 +242,9 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.buildFactoryOnSelectedPlanet = function() {
+				if (!$scope.game.me.canAffordFactory)
+					return;
+
 				var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
 				PlanetsService.buildFactory($scope.gameId, $scope.gameToken, selectedPlanet.id).success(function() {
 					$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.factoryCount++;
