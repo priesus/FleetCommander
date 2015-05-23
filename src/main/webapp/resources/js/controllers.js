@@ -207,19 +207,22 @@ fleetCommanderApp.controller('GamesCtrl', [
 				delete $cookies.gameId;
 			};
 
-			$scope.clickPlanetHandler = function(planet) {
+			$scope.clickPlanetHandler = function(planetIndex) {
 				if ($scope.game.status === 'OVER')
 					return;
+
+				var planet = $scope.game.universe.planets[planetIndex];
+
 				if (!$scope.destinationSelectionActive && planet.inhabitedByMe) {
 					// Open planet menu
-					$scope.selectedPlanet = planet;
+					$scope.selectedPlanetIndex = planetIndex;
 					$scope.showPlanetMenu = true;
 					$scope.setShipCount(1);
 
 				} else if ($scope.destinationSelectionActive) {
 					// Send ships from previously selected planet to this planet
-					ShipsService
-							.sendShips($scope.gameId, $scope.gameToken, $scope.shipCount, $scope.selectedPlanet.id, planet.id)
+					var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
+					ShipsService.sendShips($scope.gameId, $scope.gameToken, $scope.shipCount, selectedPlanet.id, planet.id)
 							.success(function() {
 								$scope.refreshGame();
 							});
@@ -230,15 +233,19 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.setShipCount = function(ships) {
 				if (ships < 1)
 					ships = 1;
-				if (ships > $scope.selectedPlanet.shipCount)
-					ships = $scope.selectedPlanet.shipCount
+
+				var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
+
+				if (ships > selectedPlanet.shipCount)
+					ships = selectedPlanet.shipCount
 				$scope.shipCount = ships;
 			};
 
 			$scope.buildFactoryOnSelectedPlanet = function() {
-				PlanetsService.buildFactory($scope.gameId, $scope.gameToken, $scope.selectedPlanet.id).success(function() {
-					$scope.selectedPlanet.factorySite.factoryCount++;
-					$scope.selectedPlanet.factorySite.availableSlots--;
+				var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
+				PlanetsService.buildFactory($scope.gameId, $scope.gameToken, selectedPlanet.id).success(function() {
+					$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.factoryCount++;
+					$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.availableSlots--;
 					$scope.refreshGame();
 				});
 			};
@@ -287,9 +294,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 					switch ($event.keyCode) {
 					case 83: // [s]end ships
 						$scope.prepareSendShips();
-						break;
-					case 65: // [a]ll ships
-						$scope.setShipCount($scope.selectedPlanet.shipCount);
 						break;
 					case 69: // [E]nd turn
 						$scope.endTurn();

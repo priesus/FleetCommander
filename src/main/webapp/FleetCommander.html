@@ -143,7 +143,7 @@
 						<div class="planet"
 								ng-repeat="planet in game.universe.planets track by planet.id"
 								ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
-								ng-click="clickPlanetHandler(planet)"
+								ng-click="clickPlanetHandler($index)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
 							<div class="object-icon">
@@ -224,18 +224,22 @@
 											<h4>Build factories</h4>
 										</div>
 										<div class="form-group">
-											<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.factoryCount) track by $index">
+											<div class="factory-slot" ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factorySite.factoryCount) track by $index">
 												<img src="resources/img/factory.svg" height="19px" width="19px">
 											</div>
-											<div class="factory-slot" ng-repeat="i in getNumber(selectedPlanet.factorySite.availableSlots) track by $index">
+											<div class="factory-slot" ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factorySite.availableSlots) track by $index">
 												&nbsp;
 											</div>
-										</div>
-										<div class="form-group" ng-class="{'error-msg': !game.me.canAffordFactory}">
-											{{game.me.credits}} / 100 credits
+											<div>	Ships/turn: {{game.universe.planets[selectedPlanetIndex].factorySite.producedShipsPerTurn}}</div>
+											<div>Credits/turn: {{game.universe.planets[selectedPlanetIndex].factorySite.producedCreditsPerTurn}}</div>
 										</div>
 										<div class="form-group">
-											<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="selectedPlanet.factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
+											<div>
+												<button ng-click="buildFactoryOnSelectedPlanet()" ng-disabled="game.universe.planets[selectedPlanetIndex].factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
+											</div>
+											<div ng-class="{'error-msg': !game.me.canAffordFactory}">
+												{{game.me.credits}} / 100 credits
+											</div>
 										</div>
 									</div>
 									<div class="col-xs-6">
@@ -245,8 +249,8 @@
 											</div>
 											<div class="form-group row">
 												<div class="col-xs-1">1</div>
-												<div class="col-xs-8"><input type="range" name="ships" ng-model="shipCount" min="1" max="{{selectedPlanet.shipCount}}"></div>
-												<div class="col-xs-1">{{selectedPlanet.shipCount}}</div>
+												<div class="col-xs-8"><input type="range" name="ships" ng-model="shipCount" min="1" max="{{game.universe.planets[selectedPlanetIndex].shipCount}}"></div>
+												<div class="col-xs-1">{{game.universe.planets[selectedPlanetIndex].shipCount}}</div>
 											</div>
 											<div class="form-group">
 												<button class="btn btn-default" ng-click="prepareSendShips()" ng-disabled="shipCount===0 || !sendShipsForm.$valid">
