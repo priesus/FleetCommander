@@ -4,7 +4,7 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 
 ## Where can I try it out? ##
 
-* [Fleet Commander](http://priesus.de)
+* [Fleet Commander](http://fleetcommander.priesus.de/)
 
 ## Which technologies are used ##
 
