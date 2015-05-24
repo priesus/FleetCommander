@@ -259,8 +259,8 @@ h1 {
 	z-index: 10;
 }
 
-.vert-separated>div:not(:first-child) {
-	border-left: #ddd solid;
+.vert-separated>div:not(:last-child) {
+	border-right: #ddd solid;
 }
 
 .factory-slot {
