@@ -211,6 +211,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.selectedPlanetIndex = planetIndex;
 					$scope.showPlanetMenu = true;
 					$scope.setShipCount(1);
+					$scope.productionFocus = planet.factorySite.shipProductionFocus;
 
 				} else if ($scope.destinationSelectionActive) {
 					// Send ships from previously selected planet to this planet
@@ -244,6 +245,15 @@ fleetCommanderApp.controller('GamesCtrl', [
 					$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.availableSlots--;
 					$scope.refreshGame();
 				});
+			};
+
+			$scope.changeProductionFocusOnSelectedPlanet = function() {
+				var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
+				PlanetsService
+						.changeProductionFocus($scope.gameId, $scope.gameToken, selectedPlanet.id, $scope.productionFocus).success(
+								function() {
+									$scope.refreshGame();
+								});
 			};
 
 			$scope.prepareSendShips = function() {

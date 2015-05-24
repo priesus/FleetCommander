@@ -115,4 +115,10 @@ public class PlayerSpecificPlanetTest {
 		verify(originalPlanet).buildFactory(self);
 	}
 
+	@Test
+	public void forwardsCallToSetProductionFocus() {
+		ownPlanet.changeProductionFocus(1);
+		verify(originalPlanet).setProductionFocus(1, self);
+	}
+
 }

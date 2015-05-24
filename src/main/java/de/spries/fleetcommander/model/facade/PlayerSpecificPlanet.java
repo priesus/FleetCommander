@@ -73,6 +73,10 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 		originalPlanet.buildFactory(viewingPlayer);
 	}
 
+	public void changeProductionFocus(int focus) {
+		originalPlanet.setProductionFocus(focus, viewingPlayer);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		return EqualsBuilder.reflectionEquals(this, obj);

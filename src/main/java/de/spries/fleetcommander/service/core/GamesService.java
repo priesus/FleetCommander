@@ -108,6 +108,12 @@ public class GamesService {
 				ships.getDestinationPlanetId());
 	}
 
+	public void changePlanetProductionFocus(GamePlayer gamePlayer, int planetId, int focus) {
+		LOGGER.debug("{}: Change production focus of planet {} to {}", gamePlayer, planetId, focus);
+		PlayerSpecificGame game = getGame(gamePlayer);
+		game.getUniverse().getPlanet(planetId).changeProductionFocus(focus);
+	}
+
 	public void buildFactory(GamePlayer gamePlayer, int planetId) {
 		LOGGER.debug("{}: Build factory on planet {}", gamePlayer, planetId);
 		PlayerSpecificGame game = getGame(gamePlayer);

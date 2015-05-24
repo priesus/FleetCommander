@@ -157,4 +157,15 @@ public class PlanetFactoryBuildingTest {
 		doReturn(true).when(johnsFactorySite).hasAvailableSlots();
 		assertThat(johnsHomePlanet.canBuildFactory(john), is(true));
 	}
+
+	@Test
+	public void canSetProductionFocusIfInhabitant() throws Exception {
+		johnsHomePlanet.setProductionFocus(1, john);
+		verify(johnsFactorySite).setShipProductionFocus(1);
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetProductionFocusIfNotInhabitant() throws Exception {
+		johnsHomePlanet.setProductionFocus(1, jack);
+	}
 }

@@ -15,7 +15,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;
 import de.spries.fleetcommander.persistence.InvalidCodeException;
 import de.spries.fleetcommander.persistence.JoinCodeLimitReachedException;
@@ -40,6 +39,10 @@ public class GamesRestService {
 		public JoinCodes(Collection<String> joinCodes) {
 			this.joinCodes = joinCodes;
 		}
+	}
+
+	public static class PlanetParams {
+		public int productionFocus;
 	}
 
 	private static final GamesService SERVICE = new GamesService();
@@ -155,12 +158,18 @@ public class GamesRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response sendShips(@PathParam("id") int gameId, ShipFormationParams ships, @Context HttpHeaders headers) {
 		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
-		try {
-			SERVICE.sendShips(GamePlayer.forIds(gameId, playerId), ships);
-			return noCacheResponse(Response.Status.ACCEPTED).build();
-		} catch (IllegalActionException e) {
-			return noCacheResponse(Response.Status.CONFLICT).build();
-		}
+		SERVICE.sendShips(GamePlayer.forIds(gameId, playerId), ships);
+		return noCacheResponse(Response.Status.ACCEPTED).build();
+	}
+
+	@POST
+	@Path("games/{id:\\d+}/universe/planets/{planetId:\\d+}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response modifyPlanet(@PathParam("id") int gameId, @PathParam("planetId") int planetId, PlanetParams params,
+			@Context HttpHeaders headers) {
+		int playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers);
+		SERVICE.changePlanetProductionFocus(GamePlayer.forIds(gameId, playerId), planetId, params.productionFocus);
+		return noCacheResponse(Response.Status.ACCEPTED).build();
 	}
 
 	@POST

@@ -209,6 +209,31 @@ public class GamesRestServiceIT {
 	}
 
 	@Test
+	public void cannotChangeProductionFocusWithoutAuthorization() throws Exception {
+		when("{\"productionFocus\":1}").post(gameUrl + "/universe/planets/1")
+				.then().statusCode(SC_BAD_REQUEST);
+	}
+
+	@Test
+	public void canChangeProductionFocusWithAuthorization() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
+
+		whenAuthorized("{\"productionFocus\":1}").post(gameUrl + "/universe/planets/" + homePlanetId)
+				.then().statusCode(SC_ACCEPTED);
+	}
+
+	@Test
+	public void cannotChangeProductionFocusOnWrongPlanet() throws Exception {
+		Response response = whenAuthorized().get(gameUrl);
+		int homePlanetId = response.getBody().jsonPath().getInt("universe.homePlanet.id");
+		int otherPlanetId = (homePlanetId + 1) % 20;
+
+		whenAuthorized("{\"productionFocus\":1}").post(gameUrl + "/universe/planets/" + otherPlanetId)
+				.then().statusCode(SC_CONFLICT);
+	}
+
+	@Test
 	public void cannotQuitGameWithoutAuthorization() throws Exception {
 		when().delete(gameUrl)
 				.then().statusCode(SC_BAD_REQUEST);

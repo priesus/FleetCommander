@@ -129,6 +129,13 @@ public class Planet implements HasCoordinates {
 		return true;
 	}
 
+	public void setProductionFocus(int focus, Player player) {
+		if (!player.equals(inhabitant)) {
+			throw new IllegalActionException("You can only change your own planets' production focus");
+		}
+		factorySite.setShipProductionFocus(focus);
+	}
+
 	public void sendShipsAway(int shipsToSend, Player player) {
 		if (!player.equals(inhabitant)) {
 			throw new IllegalActionException("You can only send ships from your own planets!");

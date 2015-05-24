@@ -115,6 +115,18 @@ fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 					'Authorization' : 'Bearer ' + token
 				}
 			});
+		},
+		changeProductionFocus : function(gameId, token, planetId, focus) {
+			return $http({
+				method : 'POST',
+				url : 'rest/games/' + gameId + '/universe/planets/' + planetId,
+				headers : {
+					'Authorization' : 'Bearer ' + token
+				},
+				data : {
+					productionFocus : focus
+				}
+			});
 		}
 	};
 } ]);
