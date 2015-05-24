@@ -29,7 +29,7 @@ public class ShipFormation {
 		}
 		if (origin == null || destination == null || commander == null) {
 			throw new IllegalActionException(
-					"Must define non-null origin, destination & commander in order to send ships");
+					"Must define non-null origin, destination & commander to send ships");
 		}
 		this.shipCount = shipCount;
 		this.origin = origin;

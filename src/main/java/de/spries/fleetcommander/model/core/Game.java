@@ -63,7 +63,7 @@ public class Game {
 			throw new IllegalActionException("The game has started already");
 		}
 		if (players.size() < 2) {
-			throw new IllegalActionException("At least 2 players required in order to start the game!");
+			throw new IllegalActionException("At least 2 players required to start the game!");
 		}
 		if (readyPlayers.contains(player)) {
 			throw new IllegalActionException("You have to wait for the other players to start the game");
