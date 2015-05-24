@@ -204,9 +204,9 @@
 								</div>
 								
 								<div ng-show="game.status !== 'OVER' && game.turnNumber > 1">
-									<h3>Recent events</h3>
+									<h3>Recent events (Turn {{game.turnNumber - 1}})</h3>
 									<ul class="paragraph list-unstyled">
-										<li ng-show="!game.previousTurnEvents.hasEvents">Nothing exciting happened...</li>
+										<li ng-show="!game.previousTurnEvents.hasEvents">No enemy contact</li>
 										<li ng-show="game.previousTurnEvents.conqueredEnemyPlanets > 0" class="friendly-foreground">You conquered {{game.previousTurnEvents.conqueredEnemyPlanets}} enemy planets!</li>
 										<li ng-show="game.previousTurnEvents.conqueredUninhabitedPlanets > 0" class="friendly-foreground">You inhabited {{game.previousTurnEvents.conqueredUninhabitedPlanets}} uninhabited planets.</li>
 										<li ng-show="game.previousTurnEvents.lostShipFormations > 0" class="enemy-foreground">You lost contact to {{game.previousTurnEvents.lostShipFormations}} ship formations that invaded foreign planets!</li>
