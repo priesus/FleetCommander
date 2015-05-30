@@ -228,4 +228,70 @@ public class PlanetShipsTest {
 		verify(eventBus).fireDefendedPlanet(jack);
 		verifyNoMoreInteractions(eventBus);
 	}
+
+	@Test
+	public void planetIsNotUnderAttackInitially() throws Exception {
+		assertThat(uninhabitedPlanet.isUnderAttack(), is(false));
+	}
+
+	@Test
+	public void planetWasNotAttackedWhenItWasFirstInhabited() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		assertThat(uninhabitedPlanet.isUnderAttack(), is(false));
+	}
+
+	@Test
+	public void planetWasNotAttackedWhenSuccessfullyInvaded() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		uninhabitedPlanet.landShips(2, jack);
+		assertThat(uninhabitedPlanet.isUnderAttack(), is(false));
+	}
+
+	@Test
+	public void planetWasAttackedWhenUnsuccessfullyInvaded() throws Exception {
+		uninhabitedPlanet.landShips(2, john);
+		uninhabitedPlanet.landShips(1, jack);
+		assertThat(uninhabitedPlanet.isUnderAttack(), is(true));
+	}
+
+	@Test
+	public void planetIsNotUnderAttackAfterResetMarkers() throws Exception {
+		uninhabitedPlanet.landShips(2, john);
+		uninhabitedPlanet.landShips(1, jack);
+		uninhabitedPlanet.resetMarkers();
+		assertThat(uninhabitedPlanet.isUnderAttack(), is(false));
+	}
+
+	@Test
+	public void planetIsNotJustInhabitedInitially() throws Exception {
+		assertThat(uninhabitedPlanet.isJustInhabited(), is(false));
+	}
+
+	@Test
+	public void planetIsJustInhabitedWhenItWasFirstInhabited() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		assertThat(uninhabitedPlanet.isJustInhabited(), is(true));
+	}
+
+	@Test
+	public void planetIsJustInhabitedWhenSuccessfullyInvaded() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		uninhabitedPlanet.landShips(2, jack);
+		assertThat(uninhabitedPlanet.isJustInhabited(), is(true));
+	}
+
+	@Test
+	public void planetIsNotJustInhabitedWhenUnsuccessfullyInvaded() throws Exception {
+		uninhabitedPlanet.landShips(2, john);
+		uninhabitedPlanet.resetMarkers();
+		uninhabitedPlanet.landShips(1, jack);
+		assertThat(uninhabitedPlanet.isJustInhabited(), is(false));
+	}
+
+	@Test
+	public void planetIsNotJustInhabitedAfterResetMarkers() throws Exception {
+		uninhabitedPlanet.landShips(1, john);
+		uninhabitedPlanet.resetMarkers();
+		assertThat(uninhabitedPlanet.isJustInhabited(), is(false));
+	}
 }

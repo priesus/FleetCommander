@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -101,6 +103,22 @@ public class StartedGameTest {
 	public void endingTurnRunsFactoryCycle() throws Exception {
 		startedGame.endTurn();
 		verify(universe).runFactoryProductionCycle();
+	}
+
+	@Test
+	public void endingTurnResetsPreviousTurnMarkersBeforeShipsTravel() throws Exception {
+		startedGame.endTurn();
+		InOrder inOrder = inOrder(universe);
+		inOrder.verify(universe).resetPreviousTurnMarkers();
+		inOrder.verify(universe).runShipTravellingCycle();
+	}
+
+	@Test
+	public void endingTurnRunsProductionCycleBeforeShipsTravel() throws Exception {
+		startedGame.endTurn();
+		InOrder inOrder = inOrder(universe);
+		inOrder.verify(universe).runFactoryProductionCycle();
+		inOrder.verify(universe).runShipTravellingCycle();
 	}
 
 	@Test

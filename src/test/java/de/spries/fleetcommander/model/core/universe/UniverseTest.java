@@ -146,6 +146,24 @@ public class UniverseTest {
 	}
 
 	@Test
+	public void runsFactoryProductionCycleOnEveryPlanet() throws Exception {
+		universe.runFactoryProductionCycle();
+		verify(johnsHomePlanet).runProductionCycle();
+		verify(jacksHomePlanet).runProductionCycle();
+		verify(uninhabitedPlanet).runProductionCycle();
+		verify(distantPlanet).runProductionCycle();
+	}
+
+	@Test
+	public void resetsPreviousTurnMarkersOnEveryPlanet() throws Exception {
+		universe.resetPreviousTurnMarkers();
+		verify(johnsHomePlanet).resetMarkers();
+		verify(jacksHomePlanet).resetMarkers();
+		verify(uninhabitedPlanet).resetMarkers();
+		verify(distantPlanet).resetMarkers();
+	}
+
+	@Test
 	public void planetsAreIdentifiedByIdForTravellingShips() throws Exception {
 		doReturn(1).when(johnsHomePlanet).getId();
 		doReturn(2).when(uninhabitedPlanet).getId();

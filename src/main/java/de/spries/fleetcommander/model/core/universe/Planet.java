@@ -28,6 +28,8 @@ public class Planet implements HasCoordinates {
 	private float shipCount;
 	private Map<Player, Integer> incomingShipsPerPlayer;
 	private Set<Player> knownAsEnemyPlanetBy;
+	private boolean underAttack;
+	private boolean justInhabited;
 
 	private FactorySite factorySite = new FactorySite();
 
@@ -50,6 +52,7 @@ public class Planet implements HasCoordinates {
 			shipCount = 0;
 			isHomePlanet = false;
 		}
+		resetMarkers();
 	}
 
 	public int getId() {
@@ -167,6 +170,7 @@ public class Planet implements HasCoordinates {
 			inhabitant = invader;
 			shipCount += shipsToLand;
 			knownAsEnemyPlanetBy.remove(invader);
+			justInhabited = true;
 		}
 		else if (isInhabitedBy(invader)) {
 			shipCount += shipsToLand;
@@ -183,15 +187,30 @@ public class Planet implements HasCoordinates {
 				shipCount *= -1;
 				isHomePlanet = false;
 				knownAsEnemyPlanetBy.remove(invader);
+				justInhabited = true;
 			}
 			else {
 				// Invaders defeated
 				turnEventBus.fireDefendedPlanet(inhabitant);
 				turnEventBus.fireLostShipFormation(invader);
 				knownAsEnemyPlanetBy.add(invader);
+				underAttack = true;
 			}
 		}
 		addIncomingShips(shipsToLand * -1, invader);
+	}
+
+	public boolean isUnderAttack() {
+		return underAttack;
+	}
+
+	public boolean isJustInhabited() {
+		return justInhabited;
+	}
+
+	public void resetMarkers() {
+		underAttack = false;
+		justInhabited = false;
 	}
 
 	public boolean isKnownAsEnemyPlanet(Player viewingPlayer) {
@@ -200,6 +219,16 @@ public class Planet implements HasCoordinates {
 
 	public void setEventBus(TurnEventBus turnEventBus) {
 		this.turnEventBus = turnEventBus;
+	}
+
+	public void handleDefeatedPlayer(Player defeatedPlayer) {
+		knownAsEnemyPlanetBy.remove(defeatedPlayer);
+		incomingShipsPerPlayer.remove(defeatedPlayer);
+		if (defeatedPlayer.equals(inhabitant)) {
+			shipCount = 0;
+			inhabitant = null;
+			isHomePlanet = false;
+		}
 	}
 
 	@Override
@@ -234,15 +263,5 @@ public class Planet implements HasCoordinates {
 
 	public static List<Planet> filterHomePlanets(List<Planet> allPlanets) {
 		return allPlanets.stream().filter(p -> p.isHomePlanet()).collect(Collectors.toList());
-	}
-
-	public void handleDefeatedPlayer(Player defeatedPlayer) {
-		knownAsEnemyPlanetBy.remove(defeatedPlayer);
-		incomingShipsPerPlayer.remove(defeatedPlayer);
-		if (defeatedPlayer.equals(inhabitant)) {
-			shipCount = 0;
-			inhabitant = null;
-			isHomePlanet = false;
-		}
 	}
 }

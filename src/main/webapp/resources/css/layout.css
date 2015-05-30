@@ -56,17 +56,7 @@ input {
 
 .gly-spin {
 	-webkit-animation: spin 2s infinite linear;
-	-moz-animation: spin 2s infinite linear;
-	-o-animation: spin 2s infinite linear;
 	animation: spin 2s infinite linear;
-}
-@-moz-keyframes spin {
-  0% {
-    -moz-transform: rotate(0deg);
-  }
-  100% {
-    -moz-transform: rotate(359deg);
-  }
 }
 @-webkit-keyframes spin {
   0% {
@@ -74,14 +64,6 @@ input {
   }
   100% {
     -webkit-transform: rotate(359deg);
-  }
-}
-@-o-keyframes spin {
-  0% {
-    -o-transform: rotate(0deg);
-  }
-  100% {
-    -o-transform: rotate(359deg);
   }
 }
 @keyframes spin {
@@ -208,6 +190,66 @@ h1 {
 
 .neutral {
 	color: #aaa;
+}
+
+.just-inhabited {
+	-webkit-animation: flash-neutral 2s infinite;
+	animation: flash-neutral 2s infinite;
+}
+@-webkit-keyframes flash-neutral {
+  0% {
+		color: #aaf;
+  }
+  33% {
+		color: #777;
+  }
+  100% {
+		color: #aaf;
+  }
+}
+@keyframes flash-neutral {
+  0% {
+		color: #aaf;
+  }
+  33% {
+		color: #777;
+  }
+  100% {
+		color: #aaf;
+  }
+}
+
+.under-attack {
+	-webkit-animation: flash-enemy 1s infinite;
+	animation: flash-enemy 1s infinite;
+}
+@-webkit-keyframes flash-enemy {
+  0% {
+		color: #aaf;
+  }
+  60% {
+		color: #aaf;
+  }
+  80% {
+		color: #f88;
+  }
+  100% {
+		color: #aaf;
+  }
+}
+@keyframes flash-enemy {
+  0% {
+		color: #aaf;
+  }
+  60% {
+		color: #aaf;
+  }
+  80% {
+		color: #f88;
+  }
+  100% {
+		color: #aaf;
+  }
 }
 
 .object-icon {

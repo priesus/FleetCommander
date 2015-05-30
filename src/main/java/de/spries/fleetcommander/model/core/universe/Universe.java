@@ -42,15 +42,17 @@ public class Universe {
 	}
 
 	public void runFactoryProductionCycle() {
-		for (Planet planet : planets) {
-			planet.runProductionCycle();
-		}
+		planets.stream().forEach(p -> p.runProductionCycle());
 	}
 
 	public void runShipTravellingCycle() {
 		travellingShipFormations.stream().sorted(ShipFormation.CLOSE_TO_TARGET_FIRST).forEach(s -> s.travel());
 		travellingShipFormations = travellingShipFormations.stream().filter(s -> !s.hasArrived())
 				.collect(Collectors.toSet());
+	}
+
+	public void resetPreviousTurnMarkers() {
+		planets.stream().forEach(p -> p.resetMarkers());
 	}
 
 	public void sendShips(int shipCount, int originPlanetId, int destinationPlanetId, Player player) {

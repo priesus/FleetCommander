@@ -116,6 +116,7 @@ public class Game {
 		turnNumber++;
 		previousTurnEvents.clear();
 		resetReadyStatusOnPlayers();
+		universe.resetPreviousTurnMarkers();
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 

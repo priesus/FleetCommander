@@ -72,6 +72,30 @@ public class PlayerSpecificPlanetTest {
 	}
 
 	@Test
+	public void forwardsCallToIsUnderAttackForSelf() {
+		ownPlanet.isUnderAttack();
+		verify(originalPlanet).isUnderAttack();
+	}
+
+	@Test
+	public void doesNotReturnIsUnderAttackForOtherPlayers() {
+		assertThat(otherPlayersPlanet.isUnderAttack(), is(false));
+		verify(originalPlanet, never()).isUnderAttack();
+	}
+
+	@Test
+	public void forwardsCallToIsJustInhabitedForSelf() {
+		ownPlanet.isJustInhabited();
+		verify(originalPlanet).isJustInhabited();
+	}
+
+	@Test
+	public void doesNotReturnIsJustInhabitedForOtherPlayers() {
+		assertThat(otherPlayersPlanet.isJustInhabited(), is(false));
+		verify(originalPlanet, never()).isJustInhabited();
+	}
+
+	@Test
 	public void forwardsCallToCanBuildFactory() throws Exception {
 		ownPlanet.canBuildFactory();
 		verify(originalPlanet).canBuildFactory(self);

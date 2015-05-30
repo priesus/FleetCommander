@@ -47,6 +47,20 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 		return originalPlanet.isKnownAsEnemyPlanet(viewingPlayer);
 	}
 
+	public boolean isUnderAttack() {
+		if (isInhabitedByMe()) {
+			return originalPlanet.isUnderAttack();
+		}
+		return false;
+	}
+
+	public boolean isJustInhabited() {
+		if (isInhabitedByMe()) {
+			return originalPlanet.isJustInhabited();
+		}
+		return false;
+	}
+
 	public boolean canBuildFactory() {
 		return originalPlanet.canBuildFactory(viewingPlayer);
 	}

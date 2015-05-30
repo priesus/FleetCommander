@@ -148,7 +148,7 @@
 								ng-click="clickPlanetHandler($index)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
-							<div class="object-icon">
+							<div class="object-icon" ng-class="{'under-attack': planet.underAttack, 'just-inhabited': planet.justInhabited}">
 								<span class="glyphicon glyphicon-globe"></span>
 							</div>
 							
