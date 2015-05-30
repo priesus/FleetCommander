@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.spries.fleetcommander.model.core.Game.GameStatus;
+import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.service.core.dto.GameAccessParams;
 import de.spries.fleetcommander.service.core.dto.GameParams;
@@ -49,19 +49,19 @@ public class GamesServiceIT {
 	@Test
 	public void canStartGame() throws Exception {
 		service.addComputerPlayer(gamePlayer);
-		assertThat(service.getGame(gamePlayer).getStatus(), is(GameStatus.PENDING));
+		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
 		GameParams params = new GameParams();
 		service.modifyGame(gamePlayer, params);
-		assertThat(service.getGame(gamePlayer).getStatus(), is(GameStatus.PENDING));
+		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
 		params.setIsStarted(false);
 		service.modifyGame(gamePlayer, params);
-		assertThat(service.getGame(gamePlayer).getStatus(), is(GameStatus.PENDING));
+		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
 		params.setIsStarted(true);
 		service.modifyGame(gamePlayer, params);
-		assertThat(service.getGame(gamePlayer).getStatus(), is(GameStatus.RUNNING));
+		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.RUNNING));
 	}
 
 	@Test

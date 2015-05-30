@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import de.spries.fleetcommander.model.core.Game;
+import de.spries.fleetcommander.model.core.Player.Status;
 import de.spries.fleetcommander.model.core.universe.Universe;
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse;
 
@@ -38,6 +39,11 @@ public class ComputerPlayerTest {
 	@Test
 	public void isntAHumanPlayer() throws Exception {
 		assertThat(player.isHumanPlayer(), is(false));
+	}
+
+	@Test
+	public void isReadyInitially() throws Exception {
+		assertThat(player.getStatus(), is(Status.READY));
 	}
 
 	@Test

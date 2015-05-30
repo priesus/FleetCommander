@@ -18,7 +18,6 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.playerName = $cookies.playerName;
 			var gameStartPoller;
 			var newTurnPoller;
-			var currentTurnNumber;
 
 			$scope.hasActiveGame = function() {
 				return $cookies.gameId !== undefined;
@@ -127,7 +126,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.resumeGame = function() {
 				$scope.gameId = $cookies.gameId;
 				$scope.gameToken = $cookies.gameToken;
-				$scope.refreshGame();
+				$scope.pollForNewTurn();
 			};
 
 			$scope.refreshGame = function() {
@@ -147,7 +146,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.blockingActionInProgress = true;
 				TurnsService.endTurn($scope.gameId, $scope.gameToken).success(function() {
 					$scope.refreshGame().success(function() {
-						if ($scope.game.turnNumber > currentTurnNumber)
+						if ($scope.game.me.status !== 'READY')
 							$scope.handleNewTurn();
 						else
 							$scope.pollForNewTurn();
@@ -165,7 +164,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 				newTurnPoller = $interval(function() {
 					$scope.refreshGame().success(function() {
-						if ($scope.game.turnNumber > currentTurnNumber) {
+						if ($scope.game.me.status !== 'READY') {
 							$scope.stopPollingForNewTurn();
 							$scope.handleNewTurn();
 						}
@@ -188,11 +187,11 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.showPlanetMenu = false;
 				$scope.showTurnEvents = true;
 				$scope.destinationSelectionActive = false;
-				currentTurnNumber = $scope.game.turnNumber;
 			};
 
 			$scope.quitGame = function() {
 				$scope.stopPollingForGameStart();
+				$scope.stopPollingForNewTurn();
 				GamesService.quit($scope.gameId, $scope.gameToken);
 				$scope.showTurnEvents = false;
 				$scope.gameScreen = 'home';

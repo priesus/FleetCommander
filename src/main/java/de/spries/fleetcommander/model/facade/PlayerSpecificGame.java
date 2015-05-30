@@ -6,7 +6,7 @@ import de.spries.fleetcommander.model.ai.AggressiveFleetStrategy;
 import de.spries.fleetcommander.model.ai.ComputerPlayer;
 import de.spries.fleetcommander.model.ai.DefaultBuildingStrategy;
 import de.spries.fleetcommander.model.core.Game;
-import de.spries.fleetcommander.model.core.Game.GameStatus;
+import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.core.TurnEvents;
 
@@ -35,7 +35,7 @@ public class PlayerSpecificGame {
 		originalGame.addPlayer(new Player(playerName));
 	}
 
-	public GameStatus getStatus() {
+	public Status getStatus() {
 		return originalGame.getStatus();
 	}
 

@@ -17,21 +17,26 @@ public class Player {
 		}
 	}
 
+	public static enum Status {
+		PLAYING,
+		READY,
+		DEFEATED,
+		QUIT
+	}
+
 	protected static final int STARTING_CREDITS = 500;
 	protected static final int MAX_CREDITS = 99_999;
 
 	private int id;
 	private String name;
 	private int credits;
-	private boolean active;
-	private boolean hasQuit;
+	private Status status;
 
 	public Player(String name) {
 		id = -1;
 		this.name = name;
 		credits = STARTING_CREDITS;
-		active = true;
-		hasQuit = false;
+		status = Status.PLAYING;
 	}
 
 	public int getId() {
@@ -50,24 +55,45 @@ public class Player {
 		return credits;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public boolean hasQuit() {
-		return hasQuit;
-	}
-
 	public boolean isHumanPlayer() {
 		return true;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	protected boolean isActive() {
+		return Status.PLAYING.equals(status) || Status.READY.equals(status);
+	}
+
+	protected boolean isReady() {
+		return Status.READY.equals(status);
+	}
+
 	public void handleDefeat() {
-		active = false;
+		status = Status.DEFEATED;
+	}
+
+	public void setReady() {
+		if (Status.READY.equals(status)) {
+			throw new IllegalActionException("You have to wait for the other players");
+		}
+		status = Status.READY;
+	}
+
+	public void setPlaying() {
+		if (Status.QUIT.equals(status) || Status.DEFEATED.equals(status)) {
+			throw new IllegalActionException("You're out!");
+		}
+		status = Status.PLAYING;
 	}
 
 	public void handleQuit() {
-		hasQuit = true;
+		if (Status.QUIT.equals(status)) {
+			throw new IllegalActionException("You quit the game already");
+		}
+		status = Status.QUIT;
 	}
 
 	public boolean canAffordFactory() {

@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.core;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -16,7 +17,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import de.spries.fleetcommander.model.core.Game.GameStatus;
+import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.Universe;
@@ -58,15 +59,14 @@ public class StartedGameTest {
 		startedGame.addPlayer(jack);
 		startedGame.addPlayer(computerPlayer);
 		startedGame.addPlayer(computerPlayer2);
-		startedGame.start(john);
-		startedGame.start(jack);
+		startedGame.start();
 
 		someHomePlanet = mock(Planet.class);
 	}
 
 	@Test
 	public void statusIsRunningAfterGameStarted() throws Exception {
-		assertThat(startedGame.getStatus(), is(GameStatus.RUNNING));
+		assertThat(startedGame.getStatus(), is(Status.RUNNING));
 	}
 
 	@Test
@@ -118,18 +118,11 @@ public class StartedGameTest {
 	public void turnDoesntEndBeforeAllPlayersHaveEndedTheirTurn() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
+		doReturn(false).when(jack).isReady();
 		startedGame.endTurn(john);
 
 		verify(universe, never()).runFactoryProductionCycle();
 		verify(universe, never()).runShipTravellingCycle();
-	}
-
-	@Test(expected = IllegalActionException.class)
-	public void cannotEndPlayerTurnTwiceBeforeGameTurnEnded() throws Exception {
-		doReturn(true).when(john).isActive();
-		doReturn(true).when(jack).isActive();
-		startedGame.endTurn(john);
-		startedGame.endTurn(john);
 	}
 
 	@Test(expected = IllegalActionException.class)
@@ -142,7 +135,8 @@ public class StartedGameTest {
 	public void turnEndsAfterAllPlayersHaveEndedTheirTurn() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
-		startedGame.endTurn(john);
+		doReturn(true).when(john).isReady();
+		doReturn(true).when(jack).isReady();
 		startedGame.endTurn(jack);
 
 		verify(universe).runFactoryProductionCycle();
@@ -153,19 +147,8 @@ public class StartedGameTest {
 	public void turnEndsAfterAllActivePlayersHaveEndedTheirTurn() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(false).when(jack).isActive();
-
-		startedGame.endTurn(john);
-
-		verify(universe).runFactoryProductionCycle();
-		verify(universe).runShipTravellingCycle();
-	}
-
-	@Test
-	public void turnEndsOnlyOnceAfterAllPlayersHaveEndedTheirTurn() throws Exception {
-		doReturn(true).when(john).isActive();
-		doReturn(true).when(jack).isActive();
-		startedGame.endTurn(john);
-		startedGame.endTurn(jack);
+		doReturn(true).when(john).isReady();
+		doReturn(false).when(jack).isReady();
 
 		startedGame.endTurn(john);
 
@@ -185,6 +168,20 @@ public class StartedGameTest {
 		verify(jack).notifyNewTurn(startedGame);
 		verify(computerPlayer).notifyNewTurn(startedGame);
 		verify(computerPlayer2).notifyNewTurn(startedGame);
+	}
+
+	@Test
+	public void readyPlayersAreChangedToPlayingAtTurnEnd() throws Exception {
+		doReturn(true).when(john).isReady();
+		doReturn(true).when(jack).isReady();
+		doReturn(true).when(computerPlayer).isReady();
+		doReturn(true).when(computerPlayer2).isReady();
+		startedGame.endTurn();
+
+		verify(john).setPlaying();
+		verify(jack).setPlaying();
+		verify(computerPlayer).setPlaying();
+		verify(computerPlayer2).setPlaying();
 	}
 
 	@Test
@@ -233,7 +230,7 @@ public class StartedGameTest {
 		doReturn(false).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
-		assertThat(startedGame.getStatus(), is(GameStatus.OVER));
+		assertThat(startedGame.getStatus(), is(Status.OVER));
 	}
 
 	@Test
@@ -244,7 +241,7 @@ public class StartedGameTest {
 		doReturn(true).when(computerPlayer2).isActive();
 		startedGame.endTurn();
 
-		assertThat(startedGame.getStatus(), is(GameStatus.OVER));
+		assertThat(startedGame.getStatus(), is(Status.OVER));
 	}
 
 	@Test
@@ -265,6 +262,7 @@ public class StartedGameTest {
 		doReturn(true).when(john).isActive();
 		startedGame.quit(john);
 		verify(john).handleDefeat();
+		assertThat(startedGame.getPlayers(), hasItem(john));
 	}
 
 	@Test
@@ -281,13 +279,14 @@ public class StartedGameTest {
 		doReturn(true).when(computerPlayer).isActive();
 		doReturn(true).when(computerPlayer2).isActive();
 
-		startedGame.endTurn(jack);
-		startedGame.endTurn(computerPlayer);
-		startedGame.endTurn(computerPlayer2);
-
+		doReturn(true).when(jack).isReady();
+		doReturn(true).when(computerPlayer).isReady();
+		doReturn(true).when(computerPlayer2).isReady();
 		verify(jack, never()).notifyNewTurn(startedGame);
+
 		doReturn(false).when(john).isActive();
 		startedGame.quit(john);
+
 		verify(jack).notifyNewTurn(startedGame);
 	}
 
@@ -301,7 +300,7 @@ public class StartedGameTest {
 
 		doReturn(false).when(jack).isActive();
 		startedGame.quit(jack);
-		assertThat(startedGame.getStatus(), is(GameStatus.OVER));
+		assertThat(startedGame.getStatus(), is(Status.OVER));
 	}
 
 	@Test
@@ -311,13 +310,7 @@ public class StartedGameTest {
 		doReturn(true).when(computerPlayer).isActive();
 		doReturn(true).when(computerPlayer2).isActive();
 		startedGame.quit(john);
-		assertThat(startedGame.getStatus(), is(GameStatus.RUNNING));
-	}
-
-	@Test(expected = IllegalActionException.class)
-	public void playersCannotQuitTwice() throws Exception {
-		doReturn(true).when(john).hasQuit();
-		startedGame.quit(john);
+		assertThat(startedGame.getStatus(), is(Status.RUNNING));
 	}
 
 }

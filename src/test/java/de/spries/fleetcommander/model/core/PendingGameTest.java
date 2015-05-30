@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.ai.ComputerPlayer;
-import de.spries.fleetcommander.model.core.Game.GameStatus;
+import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class PendingGameTest {
@@ -48,7 +48,7 @@ public class PendingGameTest {
 
 	@Test
 	public void initialStatusIsPending() throws Exception {
-		assertThat(game.getStatus(), is(GameStatus.PENDING));
+		assertThat(game.getStatus(), is(Status.PENDING));
 	}
 
 	@Test
@@ -132,8 +132,7 @@ public class PendingGameTest {
 	public void playersAreNotifiedOfGameStart() throws Exception {
 		doReturn(true).when(john).isActive();
 		doReturn(true).when(jack).isActive();
-		gameWithPlayers.start(john);
-		gameWithPlayers.start(jack);
+		gameWithPlayers.start();
 
 		verify(john).notifyNewTurn(gameWithPlayers);
 		verify(jack).notifyNewTurn(gameWithPlayers);
@@ -163,21 +162,17 @@ public class PendingGameTest {
 	@Test
 	public void gameDoesntStartBeforeAllPlayersAreReady() throws Exception {
 		gameWithPlayers.start(john);
-		assertThat(gameWithPlayers.getStatus(), is(GameStatus.PENDING));
-	}
-
-	@Test(expected = IllegalActionException.class)
-	public void cannotStartTwicePerPlayer() throws Exception {
-		gameWithPlayers.start(john);
-		gameWithPlayers.start(john);
+		assertThat(gameWithPlayers.getStatus(), is(Status.PENDING));
 	}
 
 	@Test
-	public void gameStartsAfterAllHumanPlayersAreReady() throws Exception {
-		gameWithPlayers.start(john);
+	public void gameStartsAfterAllPlayersAreReady() throws Exception {
+		doReturn(true).when(john).isReady();
+		doReturn(true).when(jack).isReady();
+		doReturn(true).when(computer).isReady();
 		gameWithPlayers.start(jack);
 
-		assertThat(gameWithPlayers.getStatus(), is(GameStatus.RUNNING));
+		assertThat(gameWithPlayers.getStatus(), is(Status.RUNNING));
 	}
 
 }

@@ -74,14 +74,16 @@
 									</div>
 								</div>
 								
-								<!-- TODO visualize which players are ready -->
-								
 								<div class="form-group row">
 									<div class="col-xs-10 col-xs-offset-1">
 										<div class="player-slot col-xs-6 friendly-foreground">
+											<span ng-show="game.me.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
+											<span ng-show="game.me.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
 											{{game.me.name}}
 										</div>
 										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
+											<span ng-show="otherPlayer.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
+											<span ng-show="otherPlayer.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
 											{{otherPlayer.name}}
 										</div>
 										<div class="player-slot col-xs-6" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
@@ -134,7 +136,7 @@
 						<button class="btn btn-default" ng-click="endTurn()" ng-hide="waitingForOtherPlayers" ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
 						<button class="btn btn-default" ng-click="quitGame()">Quit game</button>
 					</div>
-					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.active, 'neutral': !game.me.active}">
+					<div class="game-status-bar" ng-class="{'friendly-foreground': game.me.status === 'PLAYING' || game.me.status === 'READY' , 'neutral': game.me.status === 'QUIT' || game.me.status === 'DEFEATED'}">
 						<span>{{game.me.name}}</span>
 						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
@@ -189,21 +191,21 @@
 									</ul>
 								</div>
 								
-								<div ng-show="game.status === 'OVER' && game.me.active" class="friendly-foreground">
+								<div ng-show="game.status === 'OVER' && game.me.status === 'PLAYING'" class="friendly-foreground">
 									<h3>You win the game!</h3>
 									<ul class="paragraph list-unstyled">
 										<li>All of your enemies home planets have been conquered!</li>
 									</ul>
 								</div>
 								
-								<div ng-show="!game.me.active" class="enemy-foreground">
+								<div ng-show="game.me.status === 'DEFEATED'" class="enemy-foreground">
 									<h3>You lose!</h3>
 									<ul class="paragraph list-unstyled">
 										<li>Your home planet has been conquered by enemy ships.</li>
 									</ul>
 								</div>
 								
-								<div ng-show="game.status !== 'OVER' && game.turnNumber > 1">
+								<div ng-show="game.me.status === 'PLAYING' && game.turnNumber > 1">
 									<h3>Recent events (Turn {{game.turnNumber - 1}})</h3>
 									<ul class="paragraph list-unstyled">
 										<li ng-show="!game.previousTurnEvents.hasEvents">No enemy contact</li>
@@ -281,7 +283,10 @@
 					
 					<div class="other-players-status-bar" ng-show="game.otherPlayers.length > 1">
 						<ul class="list-inline">
-								<li ng-class="{'enemy-foreground': otherPlayer.active, 'neutral': !otherPlayer.active}" ng-repeat="otherPlayer in game.otherPlayers">{{otherPlayer.name}}</li>
+								<li ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}" ng-repeat="otherPlayer in game.otherPlayers">
+									<span ng-show="otherPlayer.status === 'PLAYING'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
+									{{otherPlayer.name}}
+								</li>
 							</ul>
 					</div>
 				</div>
@@ -292,7 +297,7 @@
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-touch.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.js"></script>

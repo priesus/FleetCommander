@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.Player.Status;
 
 public class OtherPlayer {
 
@@ -17,8 +18,8 @@ public class OtherPlayer {
 		return originalPlayer.getName();
 	}
 
-	public boolean isActive() {
-		return originalPlayer.isActive();
+	public Status getStatus() {
+		return originalPlayer.getStatus();
 	}
 
 	public boolean isHumanPlayer() {

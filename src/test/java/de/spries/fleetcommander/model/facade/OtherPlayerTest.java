@@ -26,9 +26,9 @@ public class OtherPlayerTest {
 	}
 
 	@Test
-	public void forwardsCallToIsActive() {
-		viewingPlayer.isActive();
-		verify(originalPlayer).isActive();
+	public void forwardsCallToGetStatus() {
+		viewingPlayer.getStatus();
+		verify(originalPlayer).getStatus();
 	}
 
 	@Test

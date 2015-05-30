@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.spries.fleetcommander.model.core.Player.InsufficientCreditsException;
+import de.spries.fleetcommander.model.core.Player.Status;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import de.spries.fleetcommander.model.core.universe.FactorySite;
 
 public class PlayerTest {
@@ -41,25 +43,65 @@ public class PlayerTest {
 	}
 
 	@Test
-	public void newPlayerIsActive() {
+	public void newPlayerIsPlaying() {
+		assertThat(john.getStatus(), is(Status.PLAYING));
 		assertThat(john.isActive(), is(true));
+		assertThat(john.isReady(), is(false));
 	}
 
 	@Test
-	public void newPlayerHasntQuitYet() {
-		assertThat(john.hasQuit(), is(false));
+	public void readyPlayerIsReady() throws Exception {
+		john.setReady();
+		assertThat(john.getStatus(), is(Status.READY));
+		assertThat(john.isActive(), is(true));
+		assertThat(john.isReady(), is(true));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetReadyTwice() throws Exception {
+		john.setReady();
+		john.setReady();
 	}
 
 	@Test
-	public void defeatedPlayerIsNotActiveAnymore() throws Exception {
+	public void readyPlayerIschangedToPlaying() throws Exception {
+		john.setReady();
+		john.setPlaying();
+		assertThat(john.getStatus(), is(Status.PLAYING));
+		assertThat(john.isActive(), is(true));
+		assertThat(john.isReady(), is(false));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetPlayingForDefeatedPlayer() throws Exception {
 		john.handleDefeat();
+		john.setPlaying();
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotSetPlayingForQuitPlayer() throws Exception {
+		john.handleQuit();
+		john.setPlaying();
+	}
+
+	@Test
+	public void defeatedPlayerIsDefeated() throws Exception {
+		john.handleDefeat();
+		assertThat(john.getStatus(), is(Status.DEFEATED));
 		assertThat(john.isActive(), is(false));
 	}
 
 	@Test
-	public void quittingPlayerHasQuit() throws Exception {
+	public void quittingPlayerIsntActiveAnymore() throws Exception {
 		john.handleQuit();
-		assertThat(john.hasQuit(), is(true));
+		assertThat(john.getStatus(), is(Status.QUIT));
+		assertThat(john.isActive(), is(false));
+	}
+
+	@Test(expected = IllegalActionException.class)
+	public void cannotQuitTwice() throws Exception {
+		john.handleQuit();
+		john.handleQuit();
 	}
 
 	@Test

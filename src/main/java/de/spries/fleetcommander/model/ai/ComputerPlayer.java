@@ -18,6 +18,7 @@ public class ComputerPlayer extends Player {
 		super(name);
 		this.buildingStrategy = buildingStrategy;
 		this.fleetStrategy = fleetStrategy;
+		setReady();
 	}
 
 	@Override

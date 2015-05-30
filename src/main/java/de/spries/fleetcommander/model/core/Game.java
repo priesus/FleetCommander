@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException;
@@ -12,7 +11,7 @@ import de.spries.fleetcommander.model.core.universe.Universe;
 import de.spries.fleetcommander.model.core.universe.UniverseFactory;
 
 public class Game {
-	public enum GameStatus {
+	public enum Status {
 		PENDING,
 		RUNNING,
 		OVER
@@ -21,23 +20,21 @@ public class Game {
 	public static final int MAX_PLAYERS = 6;
 	private int id;
 	private Collection<Player> players;
-	private Collection<Player> readyPlayers;
 	private Universe universe;
-	private GameStatus status;
+	private Status status;
 	private TurnEvents previousTurnEvents;
 	private int nextPlayerId;
 	private int turnNumber;
 
 	public Game() {
 		players = new HashSet<>(MAX_PLAYERS);
-		readyPlayers = new HashSet<>(MAX_PLAYERS);
-		status = GameStatus.PENDING;
+		status = Status.PENDING;
 		nextPlayerId = 1;
 		turnNumber = 0;
 	}
 
 	public void addPlayer(Player player) {
-		if (!GameStatus.PENDING.equals(status)) {
+		if (!Status.PENDING.equals(status)) {
 			throw new IllegalActionException("It's too late to add players");
 		}
 		if (players.size() >= MAX_PLAYERS) {
@@ -59,39 +56,35 @@ public class Game {
 		if (!players.contains(player)) {
 			throw new IllegalActionException("You are not participating in this game");
 		}
-		if (GameStatus.PENDING != status) {
+		if (Status.PENDING != status) {
 			throw new IllegalActionException("The game has started already");
 		}
 		if (players.size() < 2) {
 			throw new IllegalActionException("At least 2 players required to start the game!");
 		}
-		if (readyPlayers.contains(player)) {
-			throw new IllegalActionException("You have to wait for the other players to start the game");
-		}
 
-		readyPlayers.add(player);
-
+		player.setReady();
 		tryStart();
 	}
 
 	private void tryStart() {
-		if (readyPlayers.size() == countHumanPlayers()) {
+		if (countReadyPlayers() == players.size()) {
 			start();
 		}
 	}
 
-	private void start() {
+	protected void start() {
 		turnNumber++;
 		previousTurnEvents = new TurnEvents(players);
 		universe = UniverseFactory.generate(players);
 		universe.setEventBus(previousTurnEvents);
-		status = GameStatus.RUNNING;
+		status = Status.RUNNING;
 
-		readyPlayers.clear();
+		resetReadyStatusOnPlayers();
 		notifyActivePlayersForNewTurn();
 	}
 
-	public GameStatus getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
@@ -105,29 +98,24 @@ public class Game {
 			throw new IllegalActionException(player + " has been defeated and therefore cannot end the turn");
 		}
 
-		if (readyPlayers.contains(player)) {
-			throw new IllegalActionException(player + " has already finished the turn");
-		}
-
-		readyPlayers.add(player);
+		player.setReady();
 		tryEndTurn();
 	}
 
 	private void tryEndTurn() {
-		List<Player> activePlayers = players.stream().filter(Player::isActive).collect(Collectors.toList());
-		if (readyPlayers.containsAll(activePlayers)) {
+		if (countReadyPlayers() == countActivePlayers()) {
 			endTurn();
 		}
 	}
 
 	protected void endTurn() {
-		if (GameStatus.PENDING.equals(status)) {
+		if (Status.PENDING.equals(status)) {
 			throw new IllegalActionException("Game is not in progress, yet");
 		}
 
 		turnNumber++;
 		previousTurnEvents.clear();
-		readyPlayers.clear();
+		resetReadyStatusOnPlayers();
 		universe.runFactoryProductionCycle();
 		universe.runShipTravellingCycle();
 
@@ -137,10 +125,10 @@ public class Game {
 		long numActivePlayers = players.stream().filter(p -> p.isActive()).count();
 		long numActiveHumanPlayers = countActiveHumanPlayers();
 		if (numActivePlayers <= 1 || numActiveHumanPlayers < 1) {
-			status = GameStatus.OVER;
+			status = Status.OVER;
 		}
 
-		if (!GameStatus.OVER.equals(status)) {
+		if (!Status.OVER.equals(status)) {
 			notifyActivePlayersForNewTurn();
 		}
 	}
@@ -149,20 +137,17 @@ public class Game {
 		if (!players.contains(player)) {
 			throw new IllegalActionException(player + " doesn't participate in this game");
 		}
-		if (player.hasQuit()) {
-			throw new IllegalActionException(player + " has already quit");
-		}
 
-		if (GameStatus.PENDING.equals(status)) {
+		if (Status.PENDING.equals(status)) {
 			players.remove(player);
-		} else if (GameStatus.RUNNING.equals(status)) {
+		} else if (Status.RUNNING.equals(status)) {
 			player.handleQuit();
 			handleNewDefeatedPlayer(player);
 			tryEndTurn();
 		}
 
 		if (countActiveHumanPlayers() < 1) {
-			status = GameStatus.OVER;
+			status = Status.OVER;
 		}
 	}
 
@@ -179,12 +164,20 @@ public class Game {
 		players.stream().filter(Player::isActive).forEach(p -> p.notifyNewTurn(this));
 	}
 
+	private void resetReadyStatusOnPlayers() {
+		players.stream().filter(p -> p.isReady()).forEach(p -> p.setPlaying());
+	}
+
 	private long countActiveHumanPlayers() {
 		return players.stream().filter(p -> p.isActive() && p.isHumanPlayer()).count();
 	}
 
-	private long countHumanPlayers() {
-		return players.stream().filter(p -> p.isHumanPlayer()).count();
+	private long countActivePlayers() {
+		return players.stream().filter(p -> p.isActive()).count();
+	}
+
+	private long countReadyPlayers() {
+		return players.stream().filter(p -> p.isReady()).count();
 	}
 
 	public int getId() {
