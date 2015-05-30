@@ -83,8 +83,8 @@
 										</div>
 										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
 											<span ng-show="otherPlayer.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
-											<span ng-show="otherPlayer.status === 'READY'"yer-indicator"><i class="glyphicon glyphicon-ok"></i></span>
-											<span>{{otherPlayer.name}}</span>
+											<span ng-show="otherPlayer.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
+											{{otherPlayer.name}}
 										</div>
 										<div class="player-slot col-xs-6" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
 											&nbsp;
