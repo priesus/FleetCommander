@@ -15,16 +15,16 @@ fleetCommanderApp.controller('GamesCtrl', [
 				ShipsService) {
 
 			$scope.gameScreen = 'home';
-			$scope.playerName = $cookies.playerName;
+			$scope.playerName = $cookies.get('playerName');
 			var gameStartPoller;
 			var newTurnPoller;
 
 			$scope.hasActiveGame = function() {
-				return $cookies.gameId !== undefined;
+				return $cookies.get('gameId') !== undefined;
 			};
 
 			$scope.createNewGame = function() {
-				$cookies.playerName = $scope.playerName;
+				$cookies.put('playerName', $scope.playerName);
 				GamesService.create($scope.playerName).success(function(data) {
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
@@ -40,7 +40,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			$scope.openJoinGameMenu = function() {
 				$scope.joinGameError = undefined;
 				$scope.joiningPlayerCode = '';
-				$cookies.playerName = $scope.playerName;
+				$cookies.put('playerName', $scope.playerName);
 				$scope.gameScreen = 'join';
 			};
 
@@ -77,8 +77,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.startGame = function() {
 				GamesService.start($scope.gameId, $scope.gameToken).success(function() {
-					$cookies.gameId = $scope.gameId;
-					$cookies.gameToken = $scope.gameToken;
+					$cookies.put('gameId', $scope.gameId);
+					$cookies.put('gameToken', $scope.gameToken);
 
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'PENDING')
@@ -124,8 +124,8 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.resumeGame = function() {
-				$scope.gameId = $cookies.gameId;
-				$scope.gameToken = $cookies.gameToken;
+				$scope.gameId = $cookies.get('gameId');
+				$scope.gameToken = $cookies.get('gameToken');
 				$scope.pollForNewTurn();
 			};
 
@@ -196,7 +196,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				$scope.showTurnEvents = false;
 				$scope.gameScreen = 'home';
 				delete $scope.game;
-				delete $cookies.gameId;
+				$cookies.remove('gameId');
 			};
 
 			$scope.clickPlanetHandler = function(planetIndex) {
