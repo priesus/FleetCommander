@@ -75,16 +75,16 @@
 								</div>
 								
 								<div class="form-group row">
-									<div class="col-xs-10 col-xs-offset-1">
+									<div class="col-xs-12">
 										<div class="player-slot col-xs-6 friendly-foreground">
 											<span ng-show="game.me.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
 											<span ng-show="game.me.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
-											{{game.me.name}}
+											<span>{{game.me.name}}</span>
 										</div>
 										<div class="player-slot col-xs-6 enemy-foreground" ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
 											<span ng-show="otherPlayer.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
-											<span ng-show="otherPlayer.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
-											{{otherPlayer.name}}
+											<span ng-show="otherPlayer.status === 'READY'"yer-indicator"><i class="glyphicon glyphicon-ok"></i></span>
+											<span>{{otherPlayer.name}}</span>
 										</div>
 										<div class="player-slot col-xs-6" ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
 											&nbsp;
@@ -281,11 +281,11 @@
 						</div></div>
 					</div>
 					
-					<div class="other-players-status-bar" ng-show="game.otherPlayers.length > 1">
+					<div class="other-players-status-bar" ng-show="game.otherPlayers.length > 1 || game.otherPlayers[0].humanPlayer">
 						<ul class="list-inline">
-								<li ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}" ng-repeat="otherPlayer in game.otherPlayers">
-									<span ng-show="otherPlayer.status === 'PLAYING'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
-									{{otherPlayer.name}}
+								<li ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}" ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
+									<span ng-show="otherPlayer.status === 'PLAYING'" class="player-indicator"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
+									<span>{{otherPlayer.name}}</span>
 								</li>
 							</ul>
 					</div>
