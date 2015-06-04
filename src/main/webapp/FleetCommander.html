@@ -149,7 +149,8 @@
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
 							
 							<div class="object-icon" ng-class="{'under-attack': planet.underAttack, 'just-inhabited': planet.justInhabited}">
-								<span class="glyphicon glyphicon-globe"></span>
+								<span class="glyphicon glyphicon-globe" ng-show="!destinationSelectionActive"></span>
+								<span class="glyphicon glyphicon-record" ng-show="destinationSelectionActive"></span>
 							</div>
 							
 							<div class="object-annotation object-annotation-top-right" ng-if="planet.myHomePlanet">
@@ -174,10 +175,6 @@
 							<div class="object-annotation object-annotation-bottom-right" ng-if="ships.shipCount>0">
 								{{ships.shipCount}}
 							</div>
-						</div>
-						
-						<div class="select-planet-note" ng-show="destinationSelectionActive">
-							Select a destination planet...
 						</div>
 						
 						<div class="outer" ng-show="showTurnEvents"><div class="middle">
