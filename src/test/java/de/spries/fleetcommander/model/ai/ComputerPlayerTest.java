@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import de.spries.fleetcommander.model.ai.ComputerPlayer;
+import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy;
+import de.spries.fleetcommander.model.ai.behavior.FleetStrategy;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player.Status;
 import de.spries.fleetcommander.model.core.universe.Universe;

@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.model.ai;
+package de.spries.fleetcommander.model.ai.behavior;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
+import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy;
+import de.spries.fleetcommander.model.ai.behavior.DefaultBuildingStrategy;
 import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet;
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse;
 

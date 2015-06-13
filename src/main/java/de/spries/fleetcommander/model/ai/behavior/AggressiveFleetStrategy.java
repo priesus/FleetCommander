@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.model.ai;
+package de.spries.fleetcommander.model.ai.behavior;
 
 import java.util.List;
 import java.util.stream.Collectors;

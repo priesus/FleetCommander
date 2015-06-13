@@ -3,6 +3,8 @@ package de.spries.fleetcommander.model.ai;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy;
+import de.spries.fleetcommander.model.ai.behavior.FleetStrategy;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Player;
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame;

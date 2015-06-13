@@ -2,9 +2,9 @@ package de.spries.fleetcommander.model.facade;
 
 import java.util.List;
 
-import de.spries.fleetcommander.model.ai.AggressiveFleetStrategy;
 import de.spries.fleetcommander.model.ai.ComputerPlayer;
-import de.spries.fleetcommander.model.ai.DefaultBuildingStrategy;
+import de.spries.fleetcommander.model.ai.behavior.AggressiveFleetStrategy;
+import de.spries.fleetcommander.model.ai.behavior.DefaultBuildingStrategy;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.Player;
