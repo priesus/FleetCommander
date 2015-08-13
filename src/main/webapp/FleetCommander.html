@@ -141,7 +141,7 @@
 						<span class="pull-right">Credits: {{game.me.credits}}</span>
 					</div>
 					<div class="ingame-screen">
-						<div class="blockidata-ng-overlay" data-ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
+						<div class="blocking-overlay" data-ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
 						<div class="planet"
 								data-ng-repeat="planet in game.universe.planets track by planet.id"
 								data-ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
@@ -167,7 +167,7 @@
 							</div>
 						</div>
 						<div class="travellingShip friendly-foreground"
-								data-ng-repeat="ships in game.universe.travellingShipFormations"
+								data-ng-repeat="ships in game.universe.travellingShipFormations track by $index"
 								data-ng-hide="ships.distanceTravelled===0"
 								style="top: {{ships.positionY / 100 * 334 - 7}}px; left: {{ships.positionX / 100 * 524 - 8}}px;">
 							
