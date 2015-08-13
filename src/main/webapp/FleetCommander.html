@@ -152,9 +152,12 @@
 								<span class="glyphicon glyphicon-globe" data-ng-show="!destinationSelectionActive"></span>
 								<span class="glyphicon glyphicon-record" data-ng-show="destinationSelectionActive"></span>
 							</div>
-							
+
 							<div class="object-annotation object-annotation-top-right" data-ng-if="planet.myHomePlanet">
 								<span class="glyphicon glyphicon-home"></span>
+							</div>
+							<div class="object-annotation-xs object-annotation-top" data-ng-if="planet.inhabitedByMe">
+								<span class="glyphicon glyphicon-unchecked" data-ng-repeat="i in getNumber(planet.factorySite.factoryCount) track by $index"></span>
 							</div>
 							<div class="object-annotation object-annotation-bottom-left" data-ng-if="planet.incomingShipCount>0">
 								<span class="glyphicon glyphicon-share-alt"></span><br/>{{planet.incomingShipCount}}

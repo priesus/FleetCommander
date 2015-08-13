@@ -162,14 +162,14 @@ h1 {
 
 .planet {
 	position: absolute;
-	vertical-align: center;
+	vertical-align: central;
 	cursor: pointer;
 	z-index: 5;
 }
 
 .travellingShip {
 	position: absolute;
-	vertical-align: center;
+	vertical-align: central;
 }
 
 .friendly {
@@ -193,8 +193,8 @@ h1 {
 }
 
 .just-inhabited {
-	-webkit-animation: flash-neutral 2s infinite;
-	animation: flash-neutral 2s infinite;
+	-webkit-animation: flash-neutral 1s infinite;
+	animation: flash-neutral 1s infinite;
 }
 @-webkit-keyframes flash-neutral {
   0% {
@@ -220,8 +220,8 @@ h1 {
 }
 
 .under-attack {
-	-webkit-animation: flash-enemy 1s infinite;
-	animation: flash-enemy 1s infinite;
+	-webkit-animation: flash-enemy 500ms infinite;
+	animation: flash-enemy 500ms infinite;
 }
 @-webkit-keyframes flash-enemy {
   0% {
@@ -261,6 +261,15 @@ h1 {
 .object-annotation {
 	font-size: 8px;
 	position: absolute;
+}
+
+.object-annotation-xs {
+	font-size: 4px;
+	position: absolute;
+}
+
+.object-annotation-top {
+	top: 0;
 }
 
 .object-annotation-top-left {
