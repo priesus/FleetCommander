@@ -23,7 +23,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.createNewGame = function() {
-				$cookies.put('playerName', $scope.playerName);
+				storePlayerNameInCookie();
 				GamesService.create($scope.playerName).success(function(data) {
 					$scope.gameId = data.gameId;
 					$scope.gameToken = data.fullAuthToken;
@@ -37,11 +37,17 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.openJoinGameMenu = function() {
+				storePlayerNameInCookie();
 				$scope.joinGameError = undefined;
 				$scope.joiningPlayerCode = '';
-				$cookies.put('playerName', $scope.playerName);
 				$scope.gameScreen = 'join';
 			};
+
+			var storePlayerNameInCookie = function(){
+				var sixMonthsAhead = new Date();
+				sixMonthsAhead.setMonth(sixMonthsAhead.getMonth()+6);
+				$cookies.put('playerName', $scope.playerName, {'expires': sixMonthsAhead});
+			}
 
 			$scope.requestJoinCode = function() {
 				JoinCodesService.create($scope.gameId, $scope.gameToken).success(function() {
@@ -76,8 +82,10 @@ fleetCommanderApp.controller('GamesCtrl', [
 
 			$scope.startGame = function() {
 				GamesService.start($scope.gameId, $scope.gameToken).success(function() {
-					$cookies.put('gameId', $scope.gameId);
-					$cookies.put('gameToken', $scope.gameToken);
+					var sixMonthsAhead = new Date();
+					sixMonthsAhead.setMonth(sixMonthsAhead.getMonth()+6);
+					$cookies.put('gameId', $scope.gameId, {'expires': sixMonthsAhead});
+					$cookies.put('gameToken', $scope.gameToken, {'expires': sixMonthsAhead});
 
 					$scope.refreshGame().success(function() {
 						if ($scope.game.status === 'PENDING')
