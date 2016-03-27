@@ -47,7 +47,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				var sixMonthsAhead = new Date();
 				sixMonthsAhead.setMonth(sixMonthsAhead.getMonth()+6);
 				$cookies.put('playerName', $scope.playerName, {'expires': sixMonthsAhead});
-			}
+			};
 
 			$scope.requestJoinCode = function() {
 				JoinCodesService.create($scope.gameId, $scope.gameToken).success(function() {
@@ -59,7 +59,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 			};
 
 			$scope.tryToJoinGame = function() {
-				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length != 6)
+				if ($scope.joiningPlayerCode === undefined || $scope.joiningPlayerCode.length !== 6)
 					return;
 
 				GamesService.join($scope.playerName, $scope.joiningPlayerCode).success(function(data) {
@@ -237,7 +237,7 @@ fleetCommanderApp.controller('GamesCtrl', [
 				var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
 
 				if (ships > selectedPlanet.shipCount)
-					ships = selectedPlanet.shipCount
+					ships = selectedPlanet.shipCount;
 				$scope.shipCount = ships;
 			};
 

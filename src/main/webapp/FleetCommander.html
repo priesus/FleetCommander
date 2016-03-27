@@ -4,9 +4,9 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	
+
 	<title>Fleet Commander</title>
-	
+
 	<link rel="shortcut icon" href="resources/img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="resources/img/favicon.ico" type="image/x-icon">
 
@@ -18,7 +18,7 @@
 		<div class="middle">
 			<div id="game-box" class="inner">
 				<h1 data-ng-class="{'hide-on-small': gameScreen === 'ingame'}">Fleet Commander</h1>
-				
+
 				<div data-ng-show="gameScreen === 'home'">
 					<p class="paragraph">
 						Conquer the universe by growing your own fleet of space fighters
@@ -28,7 +28,7 @@
 						You win the game by defeating your opponent fleet commanders
 						by taking over their home planets!
 					</p>
-					
+
 					<form name="gameStartForm">
 						<div class="form-group row" data-ng-class="{'has-error': !gameStartForm.$valid}">
 							<div class="col-xs-6 col-xs-offset-3">
@@ -37,7 +37,7 @@
 									placeholder="e.g. Cpt. Awesome" maxlength="15" required="required" class="form-control" />
 							</div>
 						</div>
-						
+
 						<div>
 							<button class="btn btn-default" data-ng-disabled="!gameStartForm.$valid" data-ng-click="resumeGame()" data-ng-if="hasActiveGame()">
 								Resume game
@@ -51,15 +51,15 @@
 						</div>
 					</form>
 				</div>
-				
+
 				<div data-ng-show="gameScreen === 'players'">
 					<div class="ingame-screen">
 						<div class="outer"><div class="middle">
 							<div class="ingame-menu inner form-horizontal">
 								<button data-ng-click="quitGame()" type="button" class="close"><span>&times;</span></button>
-								
+
 								<h3>Players</h3>
-								
+
 								<div class="form-group">
 									<div class="paragraph">
 										Other players can join this game by using a code
@@ -73,7 +73,7 @@
 										<div data-ng-if="requestJoinCodeError" class="error-msg">{{requestJoinCodeError}}</div>
 									</div>
 								</div>
-								
+
 								<div class="form-group row">
 									<div class="col-xs-12">
 										<div class="player-slot col-xs-6 friendly-foreground">
@@ -91,7 +91,7 @@
 										</div>
 									</div>
 								</div>
-								
+
 								<div>
 									<button class="btn btn-default" data-ng-click="startGame()" data-ng-hide="waitingForOtherPlayers"><span class="shortcut">P</span>lay!</button>
 									<div data-ng-if="startGameError" class="error-msg">{{startGameError}}</div>
@@ -101,17 +101,17 @@
 						</div></div>
 					</div>
 				</div>
-				
+
 				<div data-ng-show="gameScreen === 'join'">
 					<div class="ingame-screen">
 						<div class="outer"><div class="middle">
 							<div class="ingame-menu inner form-horizontal">
 								<button data-ng-click="gameScreen='home'" type="button" class="close"><span>&times;</span></button>
-								
+
 								<h3>Join existing game</h3>
-								
+
 								<!-- TODO allow player to use different name, if it wasn't unique (in error case) -->
-								
+
 								<form name="joinCodeForm">
 									<div class="form-group" data-ng-class="{'has-error': !joinCodeForm.$valid || joinGameError}">
 										<div class="col-xs-6 col-xs-offset-3">
@@ -120,7 +120,7 @@
 										</div>
 										<label for="codeInput" data-ng-if="joinGameError" class="error-msg">{{joinGameError}}</label>
 									</div>
-									
+
 									<div class="form-group">
 										<button class="btn btn-default" data-ng-click="tryToJoinGame()" data-ng-disabled="!joinCodeForm.$valid" type="submit">Join game</button>
 										<button class="btn btn-default" data-ng-click="createNewGame()">Start own game</button>
@@ -130,7 +130,7 @@
 						</div></div>
 					</div>
 				</div>
-				
+
 				<div data-ng-show="gameScreen === 'ingame'">
 					<div class="game-menu">
 						<button class="btn btn-default" data-ng-click="endTurn()" data-ng-hide="waitingForOtherPlayers" data-ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn</button>
@@ -147,7 +147,7 @@
 								data-ng-class="{'friendly': planet.inhabitedByMe, 'enemy': planet.knownAsEnemyPlanet, 'neutral': !planet.inhabitedByMe&&!planet.knownAsEnemyPlanet}"
 								data-ng-click="clickPlanetHandler($index)"
 								style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
-							
+
 							<div class="object-icon" data-ng-class="{'under-attack': planet.underAttack, 'just-inhabited': planet.justInhabited}">
 								<span class="glyphicon glyphicon-globe" data-ng-show="!destinationSelectionActive"></span>
 								<span class="glyphicon glyphicon-record" data-ng-show="destinationSelectionActive"></span>
@@ -170,41 +170,41 @@
 								data-ng-repeat="ships in game.universe.travellingShipFormations track by $index"
 								data-ng-hide="ships.distanceTravelled===0"
 								style="top: {{ships.positionY / 100 * 334 - 7}}px; left: {{ships.positionX / 100 * 524 - 8}}px;">
-							
+
 							<div class="object-icon">
 								<span class="glyphicon glyphicon-send"></span>
 							</div>
-							
+
 							<div class="object-annotation object-annotation-bottom-right" data-ng-if="ships.shipCount>0">
 								{{ships.shipCount}}
 							</div>
 						</div>
-						
+
 						<div class="outer" data-ng-show="showTurnEvents"><div class="middle">
 							<div class="ingame-menu inner form-horizontal">
 								<button data-ng-click="showTurnEvents=false" type="button" class="close"><span>&times;</span></button>
-								
+
 								<div data-ng-show="game.turnNumber === 1">
 									<h3>Your mission</h3>
 									<ul class="paragraph list-unstyled">
 										<li>Find and conquer all enemy home planets!</li>
 									</ul>
 								</div>
-								
+
 								<div data-ng-show="game.status === 'OVER' && game.me.status === 'PLAYING'" class="friendly-foreground">
 									<h3>You win the game!</h3>
 									<ul class="paragraph list-unstyled">
 										<li>All of your enemies home planets have been conquered!</li>
 									</ul>
 								</div>
-								
+
 								<div data-ng-show="game.me.status === 'DEFEATED'" class="enemy-foreground">
 									<h3>You lose!</h3>
 									<ul class="paragraph list-unstyled">
 										<li>Your home planet has been conquered by enemy ships.</li>
 									</ul>
 								</div>
-								
+
 								<div data-ng-show="game.me.status === 'PLAYING' && game.turnNumber > 1">
 									<h3>Recent events (Turn {{game.turnNumber - 1}})</h3>
 									<ul class="paragraph list-unstyled">
@@ -219,11 +219,11 @@
 								<button data-ng-click="showTurnEvents=false"  class="btn btn-default">Ok</button>
 							</div>
 						</div></div>
-						
+
 						<div class="outer" data-ng-show="showPlanetMenu"><div class="middle">
 							<div class="ingame-menu inner">
 								<button data-ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
-								
+
 								<div class="row vert-separated">
 									<div class="col-xs-6">
 										<div class="form-group">
@@ -241,7 +241,10 @@
 											<label for="prodFocus">Production/turn</label>
 											<div class="row">
 												<div class="col-xs-1"><span class="glyphicon glyphicon-usd"></span></div>
-												<div class="col-xs-8"><input id="prodFocus" type="range" min="0" max="20" data-ng-model="productionFocus" data-ng-change="changeProductionFocusOnSelectedPlanet()"></div>
+												<div class="col-xs-8">
+													<input id="prodFocus" type="range" data-ng-model="productionFocus" data-ng-change="changeProductionFocusOnSelectedPlanet()"
+													       min="0" max="20">
+												</div>
 												<div class="col-xs-1"><span class="glyphicon glyphicon-send"></span></div>
 											</div>
 											<div>
@@ -252,7 +255,9 @@
 										</div>
 										<div class="form-group">
 											<div>
-												<button data-ng-click="buildFactoryOnSelectedPlanet()" data-ng-disabled="game.universe.planets[selectedPlanetIndex].factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">Build <span class="shortcut">F</span>actory</button>
+												<button data-ng-click="buildFactoryOnSelectedPlanet()" data-ng-disabled="game.universe.planets[selectedPlanetIndex].factorySite.availableSlots===0 || !game.me.canAffordFactory" class="btn btn-default">
+													Build <span class="shortcut">F</span>actory
+												</button>
 											</div>
 											<div data-ng-class="{'error-msg': !game.me.canAffordFactory}">
 												{{game.me.credits}} / 100 credits
@@ -266,7 +271,10 @@
 											</div>
 											<div class="form-group row">
 												<div class="col-xs-1">1</div>
-												<div class="col-xs-8"><input type="range" name="ships" data-ng-model="shipCount" min="1" max="{{game.universe.planets[selectedPlanetIndex].shipCount}}"></div>
+												<div class="col-xs-8">
+													<input type="range" name="ships" data-ng-model="shipCount"
+													       min="1" max="{{game.universe.planets[selectedPlanetIndex].shipCount}}">
+												</div>
 												<div class="col-xs-1">{{game.universe.planets[selectedPlanetIndex].shipCount}}</div>
 											</div>
 											<div class="form-group">
@@ -280,17 +288,18 @@
 							</div>
 						</div></div>
 					</div>
-					
+
 					<div class="other-players-status-bar" data-ng-show="game.otherPlayers.length > 1 || game.otherPlayers[0].humanPlayer">
 						<ul class="list-inline">
-								<li data-ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}" data-ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
+								<li data-ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}"
+								    data-ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
 									<span data-ng-show="otherPlayer.status === 'PLAYING'" class="player-indicator"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
 									<span>{{otherPlayer.name}}</span>
 								</li>
 							</ul>
 					</div>
 				</div>
-				
+
 				<div id="copyright">&copy; Stefan Pries 2015</div>
 			</div>
 		</div>
@@ -298,10 +307,10 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-touch.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-cookies.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-touch.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-cookies.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>
 	<script src="resources/js/controllers.js"></script>
 	<script src="resources/js/services.js"></script>
 	<script>
@@ -309,7 +318,7 @@
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
+
 		ga('create', 'UA-61031970-1', 'auto');
 		ga('send', 'pageview');
 	</script>

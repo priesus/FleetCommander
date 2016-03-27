@@ -10,10 +10,9 @@ html, body {
 	background: radial-gradient(ellipse at center, rgba(85, 88, 94, 1) 0%, rgba(0, 0, 0, 1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55585e', endColorstr='#000000', GradientType=1);
 	font-family: Silkscreen, Arial, sans-serif;
-	
+
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
-	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
@@ -22,7 +21,6 @@ html, body {
 .selectable{
 	-webkit-touch-callout: default;
 	-webkit-user-select: text;
-	-khtml-user-select: text;
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
@@ -104,9 +102,8 @@ input {
 }
 
 #game-box {
-	width: 98%;
 	width: 600px;
-	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.5);
 	padding: 30px 30px 0;
 	float: none;
 	border-radius: 5px;
@@ -125,7 +122,7 @@ h1 {
 
 /* Game screen */
 .game-menu {
-	
+
 }
 
 .player-slot {
@@ -304,7 +301,7 @@ h1 {
 .ingame-menu {
 	position: relative;
 	width: 90%;
-	box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.5);
 	padding: 10px;
 	float: none;
 	border-radius: 5px;
