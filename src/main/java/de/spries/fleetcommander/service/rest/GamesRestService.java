@@ -67,7 +67,7 @@ public class GamesRestService {
 	private Response createGame(String playerName) {
 		GameAccessParams accessParams = SERVICE.createNewGame(playerName);
 		return noCacheResponse(Response.Status.CREATED)
-				.header("Location", "/rest/games/" + accessParams.getGameId())
+				.header("Location", "/api/games/" + accessParams.getGameId())
 				.entity(accessParams).build();
 	}
 
@@ -76,7 +76,7 @@ public class GamesRestService {
 			GameAccessParams accessParams = SERVICE.joinGame(playerName, joinCode);
 
 			return noCacheResponse(Response.Status.CREATED)
-					.header("Location", "/rest/games/" + accessParams.getGameId())
+					.header("Location", "/api/games/" + accessParams.getGameId())
 					.entity(accessParams).build();
 		} catch (InvalidCodeException e) {
 			return noCacheResponse(Response.Status.NOT_FOUND).entity(new RestError(e.getMessage()))
@@ -100,7 +100,7 @@ public class GamesRestService {
 		try {
 			SERVICE.createJoinCode(gameId);
 			return noCacheResponse(Response.Status.CREATED)
-					.header("Location", "/rest/games/" + gameId + "/joinCodes")
+					.header("Location", "/api/games/" + gameId + "/joinCodes")
 					.build();
 		} catch (JoinCodeLimitReachedException e) {
 			return noCacheResponse(Response.Status.CONFLICT).entity(new RestError(e.getMessage()))

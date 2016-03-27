@@ -166,7 +166,6 @@
 						</goals>
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
-							<daemon>true</daemon>
 							<httpConnector>
 								<port>80</port>
 							</httpConnector>

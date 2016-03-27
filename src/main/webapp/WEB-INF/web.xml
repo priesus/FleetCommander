@@ -19,6 +19,6 @@
 
 	<servlet-mapping>
 		<servlet-name>FleetCommanderServlet</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 </web-app>

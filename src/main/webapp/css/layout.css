@@ -51,12 +51,6 @@ html, body {
 	}
 }
 
-@media ( max-height : 558px) {
-	.hide-on-small {
-		display: none;
-	}
-}
-
 input {
 	text-align: center;
 }

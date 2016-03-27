@@ -31,12 +31,12 @@ public class GamesRestServiceIT {
 
 	@Before
 	public void setUp() {
-		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
+		Response response = when("{\"playerName\": \"test-player\"}").post("/api/games");
 
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
 
-		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
+		assertThat(gameUrl, startsWith("http://localhost/api/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
 		assertThat(response.getStatusCode(), is(SC_CREATED));
 
@@ -82,7 +82,7 @@ public class GamesRestServiceIT {
 
 	@Test
 	public void canJoinGameViaValidCode() throws Exception {
-		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
+		Response response = when("{\"playerName\": \"test-player\"}").post("/api/games");
 
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
@@ -97,19 +97,19 @@ public class GamesRestServiceIT {
 		assertThat(joinCodes, hasSize(1));
 
 		Response joinResponse = when("{\"playerName\":\"new-test-player\", \"joinCode\": \"" + joinCodes.get(0) + "\"}")
-				.post("/rest/games");
+				.post("/api/games");
 
 		gameUrl = joinResponse.getHeader("Location");
 		gameAuthToken = joinResponse.getBody().jsonPath().getString("fullAuthToken");
 
-		assertThat(gameUrl, startsWith("http://localhost/rest/games/"));
+		assertThat(gameUrl, startsWith("http://localhost/api/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
 		assertThat(joinResponse.getStatusCode(), is(SC_CREATED));
 	}
 
 	@Test
 	public void cannotJoinGameWithDuplicatePlayerName() throws Exception {
-		Response response = when("{\"playerName\": \"test-player\"}").post("/rest/games");
+		Response response = when("{\"playerName\": \"test-player\"}").post("/api/games");
 
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
@@ -124,13 +124,13 @@ public class GamesRestServiceIT {
 		assertThat(joinCodes, hasSize(1));
 
 		when("{\"playerName\":\"test-player\", \"joinCode\": \"" + joinCodes.get(0) + "\"}")
-				.post("/rest/games")
+				.post("/api/games")
 				.then().statusCode(SC_CONFLICT);
 	}
 
 	@Test
 	public void cannotJoinGameViaInvalidCode() throws Exception {
-		when("{\"playerName\": \"test-player-2\", \"joinCode\": \"invalidJoinCode\"}").post("/rest/games")
+		when("{\"playerName\": \"test-player-2\", \"joinCode\": \"invalidJoinCode\"}").post("/api/games")
 				.then().statusCode(SC_NOT_FOUND)
 				.and().body("error", is("invalidjoincode is an invalid code"));
 	}

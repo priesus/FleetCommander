@@ -1,0 +1,30 @@
+<p class="paragraph">
+	Conquer the universe by growing your own fleet of space fighters
+	to invade other player's planets in this turn-based strategy game!
+</p>
+<p class="paragraph">
+	You win the game by defeating your opponent fleet commanders
+	by taking over their home planets!
+</p>
+
+<form name="gameStartForm">
+	<div class="form-group row" data-ng-class="{'has-error': !gameStartForm.$valid}">
+		<div class="col-xs-6 col-xs-offset-3">
+			<label for="playerNameInput">Enter your name:</label>
+			<input id="playerNameInput" name="playerName" data-ng-model="playerName" autofocus="autofocus"
+			       placeholder="e.g. Cpt. Awesome" maxlength="15" required="required" class="form-control" />
+		</div>
+	</div>
+
+	<div>
+		<button class="btn btn-default" data-ng-click="resumeGame()" data-ng-disabled="!gameStartForm.$valid" data-ng-if="hasActiveGame()">
+			Resume game
+		</button>
+		<button class="btn btn-default" data-ng-click="createNewGame()" data-ng-disabled="!gameStartForm.$valid">
+			Start new game!
+		</button>
+		<button class="btn btn-default" data-ng-click="joinGame()" data-ng-disabled="!gameStartForm.$valid">
+			Join game
+		</button>
+	</div>
+</form>

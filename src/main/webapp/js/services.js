@@ -5,7 +5,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		create : function(playerName) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games',
+				url : 'api/games',
 				data : {
 					'playerName' : playerName
 				}
@@ -14,7 +14,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		join : function(playerName, joinCode) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games',
+				url : 'api/games',
 				data : {
 					'playerName' : playerName,
 					'joinCode' : joinCode
@@ -24,7 +24,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		get : function(gameId, token) {
 			return $http({
 				method : 'GET',
-				url : 'rest/games/' + gameId,
+				url : 'api/games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -33,7 +33,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		quit : function(gameId, token) {
 			return $http({
 				method : 'DELETE',
-				url : 'rest/games/' + gameId,
+				url : 'api/games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -42,7 +42,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		start : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId,
+				url : 'api/games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
@@ -59,7 +59,7 @@ fleetCommanderServices.factory('JoinCodesService', [ '$http', function($http) {
 		create : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/joinCodes',
+				url : 'api/games/' + gameId + '/joinCodes',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -68,7 +68,7 @@ fleetCommanderServices.factory('JoinCodesService', [ '$http', function($http) {
 		getAllActive : function(gameId, token) {
 			return $http({
 				method : 'GET',
-				url : 'rest/games/' + gameId + '/joinCodes',
+				url : 'api/games/' + gameId + '/joinCodes',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -82,7 +82,7 @@ fleetCommanderServices.factory('PlayersService', [ '$http', function($http) {
 		addComputerPlayer : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/players',
+				url : 'api/games/' + gameId + '/players',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -96,7 +96,7 @@ fleetCommanderServices.factory('TurnsService', [ '$http', function($http) {
 		endTurn : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/turns',
+				url : 'api/games/' + gameId + '/turns',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -110,7 +110,7 @@ fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 		buildFactory : function(gameId, token, planetId) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/universe/planets/' + planetId + '/factories',
+				url : 'api/games/' + gameId + '/universe/planets/' + planetId + '/factories',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -119,7 +119,7 @@ fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 		changeProductionFocus : function(gameId, token, planetId, focus) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/universe/planets/' + planetId,
+				url : 'api/games/' + gameId + '/universe/planets/' + planetId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
@@ -136,7 +136,7 @@ fleetCommanderServices.factory('ShipsService', [ '$http', function($http) {
 		sendShips : function(gameId, token, ships, origin, dest) {
 			return $http({
 				method : 'POST',
-				url : 'rest/games/' + gameId + '/universe/travellingShipFormations',
+				url : 'api/games/' + gameId + '/universe/travellingShipFormations',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
