@@ -13,17 +13,17 @@ fleetCommanderControllers.controller('HomeCtrl', [
 
 		$scope.createNewGame = function() {
 			storePlayerNameInCookie($scope.playerName);
-			$location.path("/create");
+			$location.path('/create');
 		};
 
 		$scope.resumeGame = function() {
 			storePlayerNameInCookie($scope.playerName);
-			$location.path("/games/{{activeGameId}}");
+			$location.path('/games/{{activeGameId}}');
 		};
 
 		$scope.joinGame = function() {
 			storePlayerNameInCookie($scope.playerName);
-			$location.path("/join");
+			$location.path('/join');
 		};
 
 		var storePlayerNameInCookie = function(playerName){
@@ -45,7 +45,7 @@ fleetCommanderControllers.controller('CreateCtrl', [
 				storeGameCredentialsInCookie(gameId, gameToken);
 				requestJoinCode(gameId, gameToken);
 
-				$location.path("/players");
+				$location.path('/players');
 			});
 		};
 
@@ -64,8 +64,8 @@ fleetCommanderControllers.controller('CreateCtrl', [
 	}]);
 
 fleetCommanderControllers.controller('PlayersCtrl', [
-	'$scope', '$cookies', '$interval', '$location', 'GamesService', 'JoinCodesService', 'PlayersService',
-	function($scope, $cookies, $interval, $location, GamesService, JoinCodesService, PlayersService) {
+	'$scope', '$document', '$cookies', '$interval', '$location', 'GamesService', 'JoinCodesService', 'PlayersService',
+	function($scope, $document, $cookies, $interval, $location, GamesService, JoinCodesService, PlayersService) {
 
 		$scope.playerName = $cookies.get('playerName');
 		$scope.gameId = $cookies.get('gameId');
@@ -105,15 +105,11 @@ fleetCommanderControllers.controller('PlayersCtrl', [
 
 		$scope.cancelGameSetup = function() {
 			GamesService.quit($scope.gameId, $scope.gameToken);
-			$location.path("/");
+			$location.path('/');
 		};
 
-		$scope.$on('$destroy', function() {
-			stopPollingForGameStart();
-		});
-
-		$scope.onKeyDown = function($event) {
-			switch ($event.keyCode) {
+		var handlePlayersKeyDown = function(event) {
+			switch (event.keyCode) {
 				case 80: // [P]lay
 					$scope.startGame();
 					break;
@@ -128,7 +124,14 @@ fleetCommanderControllers.controller('PlayersCtrl', [
 					$scope.cancelGameSetup();
 					break;
 			}
+			$scope.$apply();
 		};
+		$document.on('keydown', handlePlayersKeyDown);
+
+		$scope.$on('$destroy', function() {
+			stopPollingForGameStart();
+			$document.unbind('keydown', handlePlayersKeyDown);
+		});
 
 		var pollForGameStart = function() {
 			if (angular.isDefined(gameStartPoller))
@@ -163,15 +166,15 @@ fleetCommanderControllers.controller('PlayersCtrl', [
 				$scope.waitingForOtherPlayers = $scope.game.status === 'PENDING' && $scope.game.me.status === 'READY';
 
 				if ($scope.game.status !== 'PENDING')
-					$location.path("/games/" + $scope.gameId);
+					$location.path('/games/' + $scope.gameId);
 			});
 		};
 		pollForGameStart();
 	}]);
 
 fleetCommanderControllers.controller('JoinCtrl', [
-	'$scope', '$cookies', '$interval', '$location', 'GamesService',
-	function($scope, $cookies, $interval, $location, GamesService) {
+	'$scope', '$document', '$cookies', '$interval', '$location', 'GamesService',
+	function($scope, $document, $cookies, $interval, $location, GamesService) {
 
 		$scope.playerName = $cookies.get('playerName');
 
@@ -181,7 +184,7 @@ fleetCommanderControllers.controller('JoinCtrl', [
 
 			GamesService.join($scope.playerName, $scope.joiningPlayerCode).success(function(data) {
 				storeGameCredentialsInCookie(data.gameId, data.fullAuthToken);
-				$location.path("/players");
+				$location.path('/players');
 			}).error(function(data) {
 				if (data !== null)
 					$scope.joinGameError = data.error;
@@ -190,16 +193,22 @@ fleetCommanderControllers.controller('JoinCtrl', [
 
 		$scope.createNewGame = function() {
 			storePlayerNameInCookie($scope.playerName);
-			$location.path("/create");
+			$location.path('/create');
 		};
 
-		$scope.onKeyDown = function($event) {
-			switch ($event.keyCode) {
+		var handleJoinKeyDown = function(event) {
+			switch (event.keyCode) {
 				case 27: // [Esc]
-					$location.path("/");
+					$location.path('/');
 					break;
 			}
+			$scope.$apply();
 		};
+		$document.on('keydown', handleJoinKeyDown);
+
+		$scope.$on('$destroy', function() {
+			$document.unbind('keydown', handleJoinKeyDown);
+		});
 
 		var storeGameCredentialsInCookie = function(gameId, gameToken){
 			var sixMonthsAhead = new Date();
@@ -216,9 +225,9 @@ fleetCommanderControllers.controller('JoinCtrl', [
 	}]);
 
 fleetCommanderControllers.controller('IngameCtrl', [
-	'$scope', '$cookies', '$interval', '$location',
+	'$scope', '$document', '$cookies', '$interval', '$location',
 	'GamesService', 'JoinCodesService', 'PlayersService', 'TurnsService', 'PlanetsService', 'ShipsService',
-	function($scope, $cookies, $interval, $location,
+	function($scope, $document, $cookies, $interval, $location,
 	         GamesService, JoinCodesService, PlayersService, TurnsService, PlanetsService, ShipsService) {
 
 		$scope.playerName = $cookies.get('playerName');
@@ -368,12 +377,8 @@ fleetCommanderControllers.controller('IngameCtrl', [
 			return new Array(num);
 		};
 
-		$scope.$on('$destroy', function() {
-			stopPollingForNewTurn();
-		});
-
-		$scope.onKeyDown = function($event) {
-			switch ($event.keyCode) {
+		var handleIngameKeyDown = function(event) {
+			switch (event.keyCode) {
 				case 83: // [s]end ships
 					$scope.prepareSendShips();
 					break;
@@ -392,5 +397,12 @@ fleetCommanderControllers.controller('IngameCtrl', [
 					$scope.showPlanetMenu = false;
 					break;
 			}
+			$scope.$apply();
 		};
+		$document.on('keydown', handleIngameKeyDown);
+
+		$scope.$on('$destroy', function() {
+			stopPollingForNewTurn();
+			$document.unbind('keydown', handleIngameKeyDown);
+		});
 	}]);
