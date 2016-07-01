@@ -2,6 +2,8 @@
 
 Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" for Palm OS from Zindaware.
 
+* Build Status: [![Build Status](https://travis-ci.org/priesus/FleetCommander.svg?branch=master)](https://travis-ci.org/priesus/FleetCommander)
+
 ## Where can I try it out? ##
 
 * [Fleet Commander](http://fleetcommander.priesus.de/)
