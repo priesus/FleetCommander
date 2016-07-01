@@ -167,7 +167,7 @@
 						<configuration>
 							<scanIntervalSeconds>0</scanIntervalSeconds>
 							<httpConnector>
-								<port>80</port>
+								<port>8080</port>
 							</httpConnector>
 						</configuration>
 					</execution>

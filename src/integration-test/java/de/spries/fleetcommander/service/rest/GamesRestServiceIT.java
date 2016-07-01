@@ -8,6 +8,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -26,6 +27,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 public class GamesRestServiceIT {
 
 	private static final String SEND_SHIPS_REQUEST_BODY = "{\"shipCount\": %d, \"originPlanetId\": %d, \"destinationPlanetId\": %d}";
+	public static final int SERVER_PORT = 8080;
 	private String gameUrl;
 	private String gameAuthToken;
 
@@ -36,7 +38,8 @@ public class GamesRestServiceIT {
 		gameUrl = response.getHeader("Location");
 		gameAuthToken = response.getBody().jsonPath().getString("fullAuthToken");
 
-		assertThat(gameUrl, startsWith("http://localhost/api/games/"));
+		assertThat(gameUrl, startsWith("http://localhost"));
+		assertThat(gameUrl, containsString("/api/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
 		assertThat(response.getStatusCode(), is(SC_CREATED));
 
@@ -102,7 +105,8 @@ public class GamesRestServiceIT {
 		gameUrl = joinResponse.getHeader("Location");
 		gameAuthToken = joinResponse.getBody().jsonPath().getString("fullAuthToken");
 
-		assertThat(gameUrl, startsWith("http://localhost/api/games/"));
+		assertThat(gameUrl, startsWith("http://localhost"));
+		assertThat(gameUrl, containsString("/api/games/"));
 		assertThat(gameAuthToken, is(notNullValue()));
 		assertThat(joinResponse.getStatusCode(), is(SC_CREATED));
 	}
@@ -265,7 +269,7 @@ public class GamesRestServiceIT {
 	}
 
 	private RequestSpecification when(String jsonBody) {
-		RequestSpecification spec = given().port(80).contentType(ContentType.JSON);
+		RequestSpecification spec = given().port(SERVER_PORT).contentType(ContentType.JSON);
 		if (jsonBody != null) {
 			spec = spec.body(jsonBody);
 		}
