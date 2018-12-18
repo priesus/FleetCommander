@@ -1,5 +1,11 @@
 package de.spries.fleetcommander.model.facade;
 
+import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.universe.Planet;
+import de.spries.fleetcommander.model.core.universe.PlanetClass;
+import org.junit.Before;
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -7,12 +13,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.universe.Planet;
+import static org.mockito.Mockito.when;
 
 public class PlayerSpecificPlanetTest {
 
@@ -51,6 +52,19 @@ public class PlayerSpecificPlanetTest {
 	public void forwardsCallToGetY() {
 		otherPlayersPlanet.getY();
 		verify(originalPlanet).getY();
+	}
+
+	@Test
+	public void forwardsCallToPlanetClassForSelf() {
+		when(originalPlanet.getPlanetClass()).thenReturn(PlanetClass.P);
+		ownPlanet.getPlanetClass();
+		verify(originalPlanet).getPlanetClass();
+	}
+
+	@Test
+	public void doesNotReturnPlanetClassForOtherPlayers() {
+		assertThat(otherPlayersPlanet.getPlanetClass(), is("?"));
+		verify(originalPlanet, never()).getPlanetClass();
 	}
 
 	@Test

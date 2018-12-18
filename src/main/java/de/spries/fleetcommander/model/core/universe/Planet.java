@@ -7,14 +7,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import de.spries.fleetcommander.model.core.Player;
+import de.spries.fleetcommander.model.core.common.IllegalActionException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import de.spries.fleetcommander.model.core.Player;
-import de.spries.fleetcommander.model.core.common.IllegalActionException;
 
 public class Planet implements HasCoordinates {
 
@@ -23,6 +21,7 @@ public class Planet implements HasCoordinates {
 	private int id;
 	private final int x;
 	private final int y;
+	private PlanetClass planetClass;
 	private boolean isHomePlanet;
 	private Player inhabitant;
 	private float shipCount;
@@ -31,15 +30,23 @@ public class Planet implements HasCoordinates {
 	private boolean underAttack;
 	private boolean justInhabited;
 
-	private FactorySite factorySite = new FactorySite();
+	private FactorySite factorySite;
 
 	private TurnEventBus turnEventBus;
 
 	public Planet(int x, int y) {
-		this(x, y, null);
+		this(x, y, PlanetClass.B);
+	}
+
+	public Planet(int x, int y, PlanetClass planetClass) {
+		this(x, y, planetClass, null);
 	}
 
 	public Planet(int x, int y, Player inhabitant) {
+		this(x, y, PlanetClass.B, inhabitant);
+	}
+
+	public Planet(int x, int y, PlanetClass planetClass, Player inhabitant) {
 		this.x = x;
 		this.y = y;
 		incomingShipsPerPlayer = new HashMap<>();
@@ -52,6 +59,8 @@ public class Planet implements HasCoordinates {
 			shipCount = 0;
 			isHomePlanet = false;
 		}
+		this.planetClass = planetClass;
+		factorySite = new FactorySite(planetClass);
 		resetMarkers();
 	}
 
@@ -73,15 +82,16 @@ public class Planet implements HasCoordinates {
 		return y;
 	}
 
+	public PlanetClass getPlanetClass() {
+		return planetClass;
+	}
+
 	public boolean isHomePlanet() {
 		return isHomePlanet;
 	}
 
 	public boolean isHomePlanetOf(Player player) {
-		if (isHomePlanet && player.equals(inhabitant)) {
-			return true;
-		}
-		return false;
+		return isHomePlanet && player.equals(inhabitant);
 	}
 
 	public boolean isInhabited() {

@@ -35,6 +35,10 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 		return originalPlanet.getY();
 	}
 
+	public String getPlanetClass() {
+		return isInhabitedByMe() ? originalPlanet.getPlanetClass().name() : "?";
+	}
+
 	public boolean isMyHomePlanet() {
 		return originalPlanet.isHomePlanetOf(viewingPlayer);
 	}

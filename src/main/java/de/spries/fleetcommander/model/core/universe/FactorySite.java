@@ -5,13 +5,17 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 public class FactorySite {
 
 	public static final int FACTORY_COST = 100;
-	public static final int CREDITS_PER_FACTORY_PER_TURN = 40;
-	public static final float SHIPS_PER_FACTORY_PER_TURN = 0.7f;
 
 	private static final int MAX_PRODUCTION_FOCUS = 20;
 	private static final int FACTORY_SLOTS = 6;
+
+	private PlanetClass planetClass;
 	private int factoryCount = 0;
 	private int shipProductionFocus = MAX_PRODUCTION_FOCUS / 2;
+
+	public FactorySite(PlanetClass planetClass) {
+		this.planetClass = planetClass;
+	}
 
 	protected void buildFactory() {
 		if (FACTORY_SLOTS == factoryCount) {
@@ -30,11 +34,11 @@ public class FactorySite {
 
 	public int getProducedCreditsPerTurn() {
 		int creditsProductionFocus = MAX_PRODUCTION_FOCUS - shipProductionFocus;
-		return factoryCount * CREDITS_PER_FACTORY_PER_TURN * creditsProductionFocus / MAX_PRODUCTION_FOCUS;
+		return factoryCount * planetClass.getCreditsPerFactoryPerTurn() * creditsProductionFocus / MAX_PRODUCTION_FOCUS;
 	}
 
 	public float getProducedShipsPerTurn() {
-		return factoryCount * SHIPS_PER_FACTORY_PER_TURN * shipProductionFocus / MAX_PRODUCTION_FOCUS;
+		return factoryCount * planetClass.getShipsPerFactoryPerTurn() * shipProductionFocus / MAX_PRODUCTION_FOCUS;
 	}
 
 	public boolean hasAvailableSlots() {
@@ -55,7 +59,7 @@ public class FactorySite {
 	 */
 	protected void setShipProductionFocus(int prodFocus) {
 		if (prodFocus < 0 || prodFocus > MAX_PRODUCTION_FOCUS) {
-			throw new IllegalActionException("Production focus of factory sited must be between 0 and "
+			throw new IllegalActionException("Production focus of factory sites must be between 0 and "
 					+ MAX_PRODUCTION_FOCUS);
 		}
 		shipProductionFocus = prodFocus;
