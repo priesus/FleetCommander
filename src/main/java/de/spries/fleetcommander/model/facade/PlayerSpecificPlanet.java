@@ -43,6 +43,11 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 		return originalPlanet.isHomePlanetOf(viewingPlayer);
 	}
 
+	public boolean isHomePlanet() {
+		return originalPlanet.isHomePlanetOf(viewingPlayer)
+				|| originalPlanet.isHomePlanet() && isKnownAsEnemyPlanet();
+	}
+
 	public boolean isInhabitedByMe() {
 		return originalPlanet.isInhabitedBy(viewingPlayer);
 	}

@@ -17,15 +17,10 @@ public interface HasCoordinates {
 	}
 
 	static <T extends HasCoordinates> List<T> sortByDistanceAsc(List<T> objects, T referenceObject) {
-		Comparator<T> CLOSE_OBJECTS_FIRST = new Comparator<T>() {
-
-			@Override
-			public int compare(HasCoordinates o1, HasCoordinates o2) {
-				return Double.compare(o1.distanceTo(referenceObject), o2.distanceTo(referenceObject));
-			}
-		};
-
-		return objects.stream().sorted(CLOSE_OBJECTS_FIRST).collect(Collectors.toList());
+		return objects.stream().sorted(getComparatorForClosestFirst(referenceObject)).collect(Collectors.toList());
 	}
 
+	static <T extends HasCoordinates> Comparator<T> getComparatorForClosestFirst(T referenceObject) {
+		return Comparator.comparingDouble(o -> o.distanceTo(referenceObject));
+	}
 }

@@ -74,6 +74,35 @@ public class PlayerSpecificPlanetTest {
 	}
 
 	@Test
+	public void isHomePlanetWhenOwnHomePlanet() {
+		when(originalPlanet.isHomePlanetOf(self)).thenReturn(true);
+		assertThat(ownPlanet.isHomePlanet(), is(true));
+	}
+
+	@Test
+	public void isNoHomePlanetWhenNotHomePlanetAtAll() {
+		when(originalPlanet.isHomePlanetOf(self)).thenReturn(false);
+		when(originalPlanet.isHomePlanet()).thenReturn(false);
+		assertThat(ownPlanet.isHomePlanet(), is(false));
+	}
+
+	@Test
+	public void isHomePlanetWhenOtherPlayersHomePlanetAndVisited() {
+		when(originalPlanet.isHomePlanetOf(self)).thenReturn(false);
+		when(originalPlanet.isHomePlanet()).thenReturn(true);
+		when(originalPlanet.isKnownAsEnemyPlanet(self)).thenReturn(true);
+		assertThat(ownPlanet.isHomePlanet(), is(true));
+	}
+
+	@Test
+	public void isNoHomePlanetWhenOtherPlayersHomePlanetAndNotVisited() {
+		when(originalPlanet.isHomePlanetOf(self)).thenReturn(false);
+		when(originalPlanet.isHomePlanet()).thenReturn(true);
+		when(originalPlanet.isKnownAsEnemyPlanet(self)).thenReturn(false);
+		assertThat(ownPlanet.isHomePlanet(), is(false));
+	}
+
+	@Test
 	public void forwardsCallToIsInhabitedBy() {
 		ownPlanet.isInhabitedByMe();
 		verify(originalPlanet).isInhabitedBy(self);

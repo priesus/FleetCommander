@@ -5,6 +5,8 @@ import java.util.List;
 import de.spries.fleetcommander.model.ai.ComputerPlayer;
 import de.spries.fleetcommander.model.ai.behavior.AggressiveFleetStrategy;
 import de.spries.fleetcommander.model.ai.behavior.DefaultBuildingStrategy;
+import de.spries.fleetcommander.model.ai.behavior.DefaultProductionStrategy;
+import de.spries.fleetcommander.model.ai.behavior.SearchEnemyHomePlanetFleetStrategy;
 import de.spries.fleetcommander.model.core.Game;
 import de.spries.fleetcommander.model.core.Game.Status;
 import de.spries.fleetcommander.model.core.Player;
@@ -27,7 +29,7 @@ public class PlayerSpecificGame {
 	public void addComputerPlayer() {
 		long numComputerPlayers = getOtherPlayers().stream().filter(p -> !p.isHumanPlayer()).count();
 		String name = "Computer " + (numComputerPlayers + 1);
-		ComputerPlayer player = new ComputerPlayer(name, new DefaultBuildingStrategy(), new AggressiveFleetStrategy());
+		ComputerPlayer player = new ComputerPlayer(name, new DefaultBuildingStrategy(), new SearchEnemyHomePlanetFleetStrategy(), new DefaultProductionStrategy());
 		originalGame.addPlayer(player);
 	}
 

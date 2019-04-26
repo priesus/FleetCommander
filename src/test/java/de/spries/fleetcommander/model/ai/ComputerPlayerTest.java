@@ -2,16 +2,17 @@ package de.spries.fleetcommander.model.ai;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import de.spries.fleetcommander.model.ai.behavior.ProductionStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import de.spries.fleetcommander.model.ai.ComputerPlayer;
 import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy;
 import de.spries.fleetcommander.model.ai.behavior.FleetStrategy;
 import de.spries.fleetcommander.model.core.Game;
@@ -26,12 +27,14 @@ public class ComputerPlayerTest {
 	private Universe universe;
 	private BuildingStrategy buildingStrategy;
 	private FleetStrategy fleetStrategy;
+	private ProductionStrategy prodStrategy;
 
 	@Before
 	public void setUp() {
 		buildingStrategy = mock(BuildingStrategy.class);
 		fleetStrategy = mock(FleetStrategy.class);
-		player = new ComputerPlayer("Computer", buildingStrategy, fleetStrategy);
+		prodStrategy = mock(ProductionStrategy.class);
+		player = new ComputerPlayer("Computer", buildingStrategy, fleetStrategy, prodStrategy);
 
 		game = mock(Game.class);
 		universe = mock(Universe.class);
@@ -59,6 +62,12 @@ public class ComputerPlayerTest {
 	public void callsFleetStrategy() throws Exception {
 		player.notifyNewTurn(game);
 		verify(fleetStrategy).sendShips(Mockito.any(PlayerSpecificUniverse.class));
+	}
+
+	@Test
+	public void callsProductionStrategy() throws Exception {
+		player.notifyNewTurn(game);
+		verify(prodStrategy).updateProductionFocus(Mockito.any(PlayerSpecificUniverse.class), anyInt());
 	}
 
 	@Test

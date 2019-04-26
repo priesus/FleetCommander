@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.ai;
 
+import de.spries.fleetcommander.model.ai.behavior.ProductionStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,11 +16,13 @@ public class ComputerPlayer extends Player {
 	private static final Logger LOGGER = LogManager.getLogger(ComputerPlayer.class.getName());
 	private BuildingStrategy buildingStrategy;
 	private FleetStrategy fleetStrategy;
+	private ProductionStrategy productionStrategy;
 
-	public ComputerPlayer(String name, BuildingStrategy buildingStrategy, FleetStrategy fleetStrategy) {
+	public ComputerPlayer(String name, BuildingStrategy buildingStrategy, FleetStrategy fleetStrategy, ProductionStrategy prodStrategy) {
 		super(name);
 		this.buildingStrategy = buildingStrategy;
 		this.fleetStrategy = fleetStrategy;
+		productionStrategy = prodStrategy;
 		setReady();
 	}
 
@@ -42,8 +45,9 @@ public class ComputerPlayer extends Player {
 
 	public void playTurn(PlayerSpecificGame game) {
 		PlayerSpecificUniverse universe = game.getUniverse();
-		buildingStrategy.buildFactories(universe);
 		fleetStrategy.sendShips(universe);
+		buildingStrategy.buildFactories(universe);
+		productionStrategy.updateProductionFocus(universe, getCredits());
 	}
 
 }

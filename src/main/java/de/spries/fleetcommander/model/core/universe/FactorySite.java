@@ -5,9 +5,9 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException;
 public class FactorySite {
 
 	public static final int FACTORY_COST = 100;
+	public static final int MAX_PRODUCTION_FOCUS = 20;
+	public static final int FACTORY_SLOTS = 6;
 
-	private static final int MAX_PRODUCTION_FOCUS = 20;
-	private static final int FACTORY_SLOTS = 6;
 
 	private PlanetClass planetClass;
 	private int factoryCount = 0;
