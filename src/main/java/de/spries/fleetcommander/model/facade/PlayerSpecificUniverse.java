@@ -8,6 +8,8 @@ import de.spries.fleetcommander.model.core.universe.Planet;
 import de.spries.fleetcommander.model.core.universe.ShipFormation;
 import de.spries.fleetcommander.model.core.universe.Universe;
 
+import static de.spries.fleetcommander.model.facade.TestMode.TEST_MODE;
+
 public class PlayerSpecificUniverse {
 
 	private Universe originalUniverse;
@@ -39,6 +41,8 @@ public class PlayerSpecificUniverse {
 	}
 
 	public Collection<ShipFormation> getTravellingShipFormations() {
+		if(TEST_MODE)
+			return originalUniverse.getTravellingShipFormations();
 		return ShipFormation.filterByCommander(originalUniverse.getTravellingShipFormations(), viewingPlayer);
 	}
 

@@ -21,25 +21,26 @@ public class SearchEnemyHomePlanetFleetStrategy implements FleetStrategy {
 				.sorted(HasCoordinates.getComparatorForClosestFirst(homePlanet))
 				.collect(Collectors.toList());
 
-		if(enemyHomePlanet.isPresent()) {
-			// Full attack on enemy home planet
-			for (PlayerSpecificPlanet myPlanet : myPlanets) {
-				universe.sendShips(myPlanet.getShipCount(), myPlanet.getId(), enemyHomePlanet.get().getId());
+		// Expand to next closest uninhabited planets
+		for (PlayerSpecificPlanet unknownPlanet : unknownPlanets) {
+			// send 1 ship from closest of my own planets which has ships > 0
+			Optional<PlayerSpecificPlanet> closestOwnPlanetWhichHasShips = myPlanets.stream()
+					.sorted(HasCoordinates.getComparatorForClosestFirst(unknownPlanet))
+					.filter(p -> p.getShipCount() > 0)
+					.findFirst();
+			if(!closestOwnPlanetWhichHasShips.isPresent()){
+				break;
 			}
+			universe.sendShips(1, closestOwnPlanetWhichHasShips.get().getId(), unknownPlanet.getId());
 		}
-		else {
-			// Expand to next closest uninhabited planets
-			for (PlayerSpecificPlanet unknownPlanet : unknownPlanets) {
-				// send 1 ship from closest of my own planets which has ships > 0
-				Optional<PlayerSpecificPlanet> closestOwnPlanetWhichHasShips = myPlanets.stream()
-						.sorted(HasCoordinates.getComparatorForClosestFirst(unknownPlanet))
-						.filter(p -> p.getShipCount() > 0)
-						.findFirst();
-				if(!closestOwnPlanetWhichHasShips.isPresent()){
-					break;
-				}
-				universe.sendShips(1, closestOwnPlanetWhichHasShips.get().getId(), unknownPlanet.getId());
-			}
+
+		if (enemyHomePlanet.isPresent()) {
+			// Full attack on enemy home planet
+			myPlanets.stream()
+					.filter(p -> p.getShipCount() > 0)
+					.forEach(p ->
+									 universe.sendShips(p.getShipCount(), p.getId(), enemyHomePlanet.get().getId())
+					);
 		}
 	}
 

@@ -53,6 +53,8 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 	}
 
 	public boolean isKnownAsEnemyPlanet() {
+		if(TestMode.TEST_MODE && viewingPlayer.isHumanPlayer())
+			return originalPlanet.isInhabited() && !originalPlanet.isInhabitedBy(viewingPlayer);
 		return originalPlanet.isKnownAsEnemyPlanet(viewingPlayer);
 	}
 
@@ -75,7 +77,7 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 	}
 
 	public int getShipCount() {
-		if (isInhabitedByMe()) {
+		if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
 			return originalPlanet.getShipCount();
 		}
 		return 0;
@@ -86,7 +88,7 @@ public class PlayerSpecificPlanet implements HasCoordinates {
 	}
 
 	public FactorySite getFactorySite() {
-		if (isInhabitedByMe()) {
+		if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
 			return originalPlanet.getFactorySite();
 		}
 		return null;
