@@ -71,8 +71,14 @@
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-test</artifactId>
+			<artifactId>kotlin-test-junit</artifactId>
 			<version>${kotlin.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.nhaarman</groupId>
+			<artifactId>mockito-kotlin</artifactId>
+			<version>1.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -99,17 +105,6 @@
 			<version>2.4.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.6.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.6.2</version>
-		</dependency>
 
 	</dependencies>
 
@@ -126,7 +121,6 @@
 						<configuration>
 							<sourceDirs>
 								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-								<sourceDir>${project.basedir}/src/main/java</sourceDir>
 							</sourceDirs>
 						</configuration>
 					</execution>
@@ -136,11 +130,17 @@
 						<configuration>
 							<sourceDirs>
 								<sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-								<sourceDir>${project.basedir}/src/test/java</sourceDir>
 							</sourceDirs>
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jetbrains.kotlin</groupId>
+						<artifactId>kotlin-maven-allopen</artifactId>
+						<version>${kotlin.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -202,7 +202,6 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>src/integration-test/java</source>
 								<source>src/integration-test/kotlin</source>
 							</sources>
 						</configuration>

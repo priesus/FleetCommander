@@ -3,10 +3,11 @@ package de.spries.fleetcommander.model.core
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.core.universe.Universe
 import de.spries.fleetcommander.model.core.universe.UniverseFactory
-import java.util.ArrayList
-import java.util.HashSet
+import org.apache.commons.lang3.RandomStringUtils
+import java.util.Locale
 
-class Game {
+class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
+
     var id: Int = 0
     val players = mutableListOf<Player>()
     var universe: Universe? = null
@@ -69,7 +70,7 @@ class Game {
     fun start() {
         turnNumber++
         previousTurnEvents = TurnEvents(players)
-        universe = UniverseFactory.generate(players)
+        universe = universeGenerator.invoke(players)
         universe!!.setEventBus(previousTurnEvents!!)
         status = Status.RUNNING
 

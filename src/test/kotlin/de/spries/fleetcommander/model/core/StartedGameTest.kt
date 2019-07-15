@@ -1,0 +1,351 @@
+package de.spries.fleetcommander.model.core
+
+import org.hamcrest.Matchers.hasItem
+import org.hamcrest.Matchers.`is`
+import org.junit.Assert.assertThat
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.inOrder
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
+
+import org.junit.Before
+import org.junit.Test
+
+import de.spries.fleetcommander.model.core.Game.Status
+import de.spries.fleetcommander.model.core.common.IllegalActionException
+import de.spries.fleetcommander.model.core.universe.Planet
+import de.spries.fleetcommander.model.core.universe.Universe
+
+class StartedGameTest {
+
+    private lateinit var startedGame: Game
+    private lateinit var universe: Universe
+    private lateinit var jack: Player
+    private lateinit var john: Player
+    private lateinit var computerPlayer: Player
+    private lateinit var computerPlayer2: Player
+    private lateinit var otherPlayer: Player
+    private lateinit var someHomePlanet: Planet
+
+    @Before
+    @Throws(Exception::class)
+    fun setUp() {
+        john = mock(Player::class.java)
+        jack = mock(Player::class.java)
+        computerPlayer = mock(Player::class.java)
+        computerPlayer2 = mock(Player::class.java)
+        otherPlayer = mock(Player::class.java)
+
+        doReturn(true).`when`(john).isHumanPlayer()
+        doReturn(true).`when`(jack).isHumanPlayer()
+        doReturn(false).`when`(computerPlayer).isHumanPlayer()
+        doReturn(false).`when`(computerPlayer2).isHumanPlayer()
+
+        val universeMock = mock(Universe::class.java)
+        universe = universeMock
+
+        startedGame = Game(universeGenerator = {universeMock})
+        startedGame!!.addPlayer(john!!)
+        startedGame!!.addPlayer(jack!!)
+        startedGame!!.addPlayer(computerPlayer!!)
+        startedGame!!.addPlayer(computerPlayer2!!)
+        startedGame!!.start()
+
+        someHomePlanet = mock(Planet::class.java)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun statusIsRunningAfterGameStarted() {
+        assertThat(startedGame!!.status, `is`(Status.RUNNING))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun turnNumberIsOneInitially() {
+        assertThat(startedGame!!.turnNumber, `is`(1))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun turnNumberIncreasesWithEndedTurns() {
+        startedGame!!.endTurn()
+        assertThat(startedGame!!.turnNumber, `is`(2))
+        startedGame!!.endTurn()
+        assertThat(startedGame!!.turnNumber, `is`(3))
+    }
+
+    @Test(expected = IllegalActionException::class)
+    @Throws(Exception::class)
+    fun cannotStartGameTwice() {
+        startedGame!!.start(john!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun gameHasAUniverse() {
+        assertThat(startedGame!!.universe, `is`(universe))
+    }
+
+    @Test(expected = IllegalActionException::class)
+    @Throws(Exception::class)
+    fun cannotAddPlayersAfterGameHasStarted() {
+        startedGame!!.addPlayer(otherPlayer!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun endingTurnRunsFactoryCycle() {
+        startedGame!!.endTurn()
+        verify(universe).runFactoryProductionCycle()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun endingTurnResetsPreviousTurnMarkersBeforeShipsTravel() {
+        startedGame!!.endTurn()
+        val inOrder = inOrder(universe)
+        inOrder.verify(universe).resetPreviousTurnMarkers()
+        inOrder.verify(universe).runShipTravellingCycle()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun endingTurnRunsProductionCycleBeforeShipsTravel() {
+        startedGame!!.endTurn()
+        val inOrder = inOrder(universe)
+        inOrder.verify(universe).runFactoryProductionCycle()
+        inOrder.verify(universe).runShipTravellingCycle()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun endingTurnRunsShipTravellingCycle() {
+        startedGame!!.endTurn()
+        verify(universe).runShipTravellingCycle()
+    }
+
+    @Test(expected = IllegalActionException::class)
+    @Throws(Exception::class)
+    fun playerThatDoesntParticipateCannotEndTurn() {
+        startedGame!!.endTurn(otherPlayer!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun turnDoesntEndBeforeAllPlayersHaveEndedTheirTurn() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(false).`when`(jack).isReady
+        startedGame!!.endTurn(john!!)
+
+        verify(universe, never()).runFactoryProductionCycle()
+        verify(universe, never()).runShipTravellingCycle()
+    }
+
+    @Test(expected = IllegalActionException::class)
+    @Throws(Exception::class)
+    fun defeatedPlayersCannotEndTurn() {
+        doReturn(false).`when`(john).isActive
+        startedGame!!.endTurn(john!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun turnEndsAfterAllPlayersHaveEndedTheirTurn() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(true).`when`(john).isReady
+        doReturn(true).`when`(jack).isReady
+        startedGame!!.endTurn(jack!!)
+
+        verify(universe).runFactoryProductionCycle()
+        verify(universe).runShipTravellingCycle()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun turnEndsAfterAllActivePlayersHaveEndedTheirTurn() {
+        doReturn(true).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(true).`when`(john).isReady
+        doReturn(false).`when`(jack).isReady
+
+        startedGame!!.endTurn(john!!)
+
+        verify(universe).runFactoryProductionCycle()
+        verify(universe).runShipTravellingCycle()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun activePlayersAreNotifiedOfTurnEnd() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(true).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+        startedGame!!.endTurn()
+
+        verify(john).notifyNewTurn(startedGame!!)
+        verify(jack).notifyNewTurn(startedGame!!)
+        verify(computerPlayer).notifyNewTurn(startedGame!!)
+        verify(computerPlayer2).notifyNewTurn(startedGame!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun readyPlayersAreChangedToPlayingAtTurnEnd() {
+        doReturn(true).`when`(john).isReady
+        doReturn(true).`when`(jack).isReady
+        doReturn(true).`when`(computerPlayer).isReady
+        doReturn(true).`when`(computerPlayer2).isReady
+        startedGame!!.endTurn()
+
+        verify(john).setPlaying()
+        verify(jack).setPlaying()
+        verify(computerPlayer).setPlaying()
+        verify(computerPlayer2).setPlaying()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun defeatedPlayersAreNotNotifiedOfTurnEnd() {
+        doReturn(true).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(false).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+        startedGame!!.endTurn()
+
+        verify(john).notifyNewTurn(startedGame!!)
+        verify(jack, never()).notifyNewTurn(startedGame!!)
+        verify(computerPlayer, never()).notifyNewTurn(startedGame!!)
+        verify(computerPlayer2).notifyNewTurn(startedGame!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun setsNewDefeatedPlayersInactive() {
+        doReturn(true).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(null).`when`(universe).getHomePlanetOf(john!!)
+        doReturn(null).`when`(universe).getHomePlanetOf(jack!!)
+        startedGame!!.endTurn()
+
+        verify(john).handleDefeat()
+        verify(jack, never()).handleDefeat()
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun notifiesUniverseForDefeatedPlayers() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(someHomePlanet).`when`(universe).getHomePlanetOf(john!!)
+        doReturn(null).`when`(universe).getHomePlanetOf(jack!!)
+        startedGame!!.endTurn()
+
+        verify(universe).handleDefeatedPlayer(jack!!)
+        verify(universe, never()).handleDefeatedPlayer(john!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun gameOverWhenLastPlayerIsHuman() {
+        doReturn(true).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(false).`when`(computerPlayer).isActive
+        doReturn(false).`when`(computerPlayer2).isActive
+        startedGame!!.endTurn()
+
+        assertThat(startedGame!!.status, `is`(Status.OVER))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun gameOverWhenNoHumanPlayersLeft() {
+        doReturn(false).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(true).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+        startedGame!!.endTurn()
+
+        assertThat(startedGame!!.status, `is`(Status.OVER))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun noPlayersNotifiedAfterGameEnd() {
+        doReturn(true).`when`(john).isActive
+        doReturn(false).`when`(jack).isActive
+        doReturn(false).`when`(computerPlayer).isActive
+        doReturn(false).`when`(computerPlayer2).isActive
+        startedGame!!.endTurn()
+
+        verify(john, never()).notifyNewTurn(startedGame!!)
+        verify(jack, never()).notifyNewTurn(startedGame!!)
+        verify(computerPlayer, never()).notifyNewTurn(startedGame!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun quittingPlayerBecomesInactive() {
+        doReturn(true).`when`(john).isActive
+        startedGame!!.quit(john!!)
+        verify(john).handleDefeat()
+        assertThat<List<Player>>(startedGame!!.players, hasItem(john))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun quittingPlayerIsTreatedAsDefeated() {
+        doReturn(true).`when`(john).isActive
+        startedGame!!.quit(john!!)
+        verify(universe).handleDefeatedPlayer(john!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun quittingEndsTurnIfPlayerWasOnlyPlayerStillPlaying() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(true).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+
+        doReturn(true).`when`(jack).isReady
+        doReturn(true).`when`(computerPlayer).isReady
+        doReturn(true).`when`(computerPlayer2).isReady
+        verify(jack, never()).notifyNewTurn(startedGame!!)
+
+        doReturn(false).`when`(john).isActive
+        startedGame!!.quit(john!!)
+
+        verify(jack).notifyNewTurn(startedGame!!)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun quittingEndsGameIfLastHumanPlayerLeft() {
+        doReturn(true).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+
+        doReturn(false).`when`(john).isActive
+        startedGame!!.quit(john!!)
+
+        doReturn(false).`when`(jack).isActive
+        startedGame!!.quit(jack!!)
+        assertThat(startedGame!!.status, `is`(Status.OVER))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun quittingDoesntEndGameIfActiveHumanPlayersLeft() {
+        doReturn(true).`when`(john).isActive
+        doReturn(true).`when`(jack).isActive
+        doReturn(true).`when`(computerPlayer).isActive
+        doReturn(true).`when`(computerPlayer2).isActive
+        startedGame!!.quit(john!!)
+        assertThat(startedGame!!.status, `is`(Status.RUNNING))
+    }
+
+}

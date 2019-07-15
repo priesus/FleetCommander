@@ -5,8 +5,10 @@ import java.util.HashSet
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 
-enum class JoinCodes private constructor() {
+enum class JoinCodes {
     INSTANCE;
+
+    var randomGenerator: (() -> (String)) = ({ RandomStringUtils.randomAlphanumeric(6).toLowerCase(Locale.ROOT) })
 
     private val gameIdPerCode: MutableMap<String, Int> = ConcurrentHashMap()
     private val codesPerGameId: MutableMap<Int, MutableCollection<String>> = ConcurrentHashMap()
@@ -23,7 +25,7 @@ enum class JoinCodes private constructor() {
 
         var code: String?
         do {
-            code = RandomStringUtils.randomAlphanumeric(6).toLowerCase(Locale.ROOT)
+            code = randomGenerator.invoke()
         } while (gameCodes.contains(code) || code!!.contains("0") || code.contains("o"))
 
         gameIdPerCode[code] = gameId
