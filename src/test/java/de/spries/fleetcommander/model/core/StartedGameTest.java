@@ -54,7 +54,7 @@ public class StartedGameTest {
 
 		universe = mock(Universe.class);
 		PowerMockito.mockStatic(UniverseFactory.class);
-		PowerMockito.when(UniverseFactory.generate(Mockito.anyListOf(Player.class))).thenReturn(universe);
+		PowerMockito.when(UniverseFactory.INSTANCE.generate(Mockito.anyListOf(Player.class))).thenReturn(universe);
 
 		startedGame = new Game();
 		startedGame.addPlayer(john);

@@ -24,25 +24,25 @@ public class UniverseFactoryTest {
 
 	@Test
 	public void generatedUniverseHasMorePlanetsThanPlayers() throws Exception {
-		Universe universe = UniverseFactory.generate(JOHN_ONLY);
+		Universe universe = UniverseFactory.INSTANCE.generate(JOHN_ONLY);
 		assertThat(universe.getPlanets().size(), greaterThan(JOHN_ONLY.size()));
 	}
 
 	@Test
 	public void playerHasHomePlanet() throws Exception {
-		Universe universe = UniverseFactory.generate(JOHN_ONLY);
+		Universe universe = UniverseFactory.INSTANCE.generate(JOHN_ONLY);
 		assertThat(universe.getHomePlanetOf(JOHN), is(notNullValue()));
 	}
 
 	@Test
 	public void playersNotParticipatingInGameDontHaveAHomePlanet() throws Exception {
-		Universe universe = UniverseFactory.generate(JOHN_ONLY);
+		Universe universe = UniverseFactory.INSTANCE.generate(JOHN_ONLY);
 		assertThat(universe.getHomePlanetOf(OTHER_PLAYER), is(nullValue()));
 	}
 
 	@Test
 	public void everyPlanetHasAUniqueId() throws Exception {
-		Universe universe = UniverseFactory.generate(JOHN_ONLY);
+		Universe universe = UniverseFactory.INSTANCE.generate(JOHN_ONLY);
 		Set<Integer> planetIds = universe.getPlanets().stream().map(p -> p.getId())
 				.collect(Collectors.toSet());
 

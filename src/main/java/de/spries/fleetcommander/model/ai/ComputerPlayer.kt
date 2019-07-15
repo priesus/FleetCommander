@@ -1,15 +1,15 @@
 package de.spries.fleetcommander.model.ai
 
-import de.spries.fleetcommander.model.ai.behavior.ProductionStrategy
-
 import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy
 import de.spries.fleetcommander.model.ai.behavior.FleetStrategy
+import de.spries.fleetcommander.model.ai.behavior.ProductionStrategy
 import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame
 import mu.KotlinLogging
 
-class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy) : Player(name) {
+class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy)
+    : Player(name) {
 
     private val log = KotlinLogging.logger {}
 

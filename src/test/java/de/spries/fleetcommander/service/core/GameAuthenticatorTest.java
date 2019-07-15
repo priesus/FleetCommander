@@ -11,10 +11,10 @@ import de.spries.fleetcommander.service.core.dto.GamePlayer;
 public class GameAuthenticatorTest {
 
 	private static final String INVALID_TOKEN = "invalid token";
-	private static final GamePlayer FIRST_GAME_FIRST_PLAYER = GamePlayer.forIds(1, 1);
-	private static final GamePlayer FIRST_GAME_SECOND_PLAYER = GamePlayer.forIds(1, 2);
-	private static final GamePlayer SECOND_GAME_FIRST_PLAYER = GamePlayer.forIds(2, 1);
-	private static final GamePlayer INEXISTENT_GAME_PLAYER = GamePlayer.forIds(123, 123);
+	private static final GamePlayer FIRST_GAME_FIRST_PLAYER = GamePlayer.Companion.forIds(1, 1);
+	private static final GamePlayer FIRST_GAME_SECOND_PLAYER = GamePlayer.Companion.forIds(1, 2);
+	private static final GamePlayer SECOND_GAME_FIRST_PLAYER = GamePlayer.Companion.forIds(2, 1);
+	private static final GamePlayer INEXISTENT_GAME_PLAYER = GamePlayer.Companion.forIds(123, 123);
 
 	private String firstGamePlayerToken;
 

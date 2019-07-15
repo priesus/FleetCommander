@@ -25,7 +25,7 @@ public class GamesServiceIT {
 	public void setUp() {
 		service = new GamesService();
 		GameAccessParams accessParams = service.createNewGame("Player 1");
-		gamePlayer = GamePlayer.forIds(accessParams.getGameId(), accessParams.getPlayerId());
+		gamePlayer = GamePlayer.Companion.forIds(accessParams.getGameId(), accessParams.getPlayerId());
 	}
 
 	@Test
