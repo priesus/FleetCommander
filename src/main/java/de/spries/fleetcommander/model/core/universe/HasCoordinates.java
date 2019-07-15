@@ -16,10 +16,6 @@ public interface HasCoordinates {
 		return Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 	}
 
-	static <T extends HasCoordinates> List<T> sortByDistanceAsc(List<T> objects, T referenceObject) {
-		return objects.stream().sorted(getComparatorForClosestFirst(referenceObject)).collect(Collectors.toList());
-	}
-
 	static <T extends HasCoordinates> Comparator<T> getComparatorForClosestFirst(T referenceObject) {
 		return Comparator.comparingDouble(o -> o.distanceTo(referenceObject));
 	}
