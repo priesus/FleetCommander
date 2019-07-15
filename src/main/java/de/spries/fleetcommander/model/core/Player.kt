@@ -100,7 +100,7 @@ open class Player(val name: String) {
         const val STARTING_CREDITS = 500
         const val MAX_CREDITS = 99999
 
-        fun filterAllOtherPlayers(players: List<Player>, viewingPlayer: Player): List<Player> {
+        fun filterAllOtherPlayers(players: Collection<Player>, viewingPlayer: Player): Collection<Player> {
             return players.filter { p -> p != viewingPlayer }
         }
     }

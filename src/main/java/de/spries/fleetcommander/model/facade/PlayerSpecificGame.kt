@@ -29,13 +29,13 @@ class PlayerSpecificGame(private val originalGame: Game, private val viewingPlay
 
     val universe: PlayerSpecificUniverse?
         get() = if (originalGame.universe != null) {
-            PlayerSpecificUniverse.convert(originalGame.universe, viewingPlayer)
+            PlayerSpecificUniverse.convert(originalGame.universe!!, viewingPlayer)
         } else null
 
     val me: OwnPlayer
         get() = OwnPlayer(viewingPlayer)
 
-    val otherPlayers: List<OtherPlayer>
+    val otherPlayers: Collection<OtherPlayer>
         get() {
             val otherOriginalPlayers = Player.filterAllOtherPlayers(originalGame.players, viewingPlayer)
             return OtherPlayer.convert(otherOriginalPlayers)

@@ -6,18 +6,16 @@ import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 class AggressiveFleetStrategy : FleetStrategy {
 
     override fun sendShips(universe: PlayerSpecificUniverse) {
-        val homePlanet = universe.homePlanet
+        val homePlanet = universe.homePlanet!!
         val allPlanets = universe.planets
         val myPlanets = PlayerSpecificPlanet.filterMyPlanets(allPlanets)
         val enemyPlanets = allPlanets
                 .filter { p -> p.isKnownAsEnemyPlanet }
-                .toList()
 
         if (enemyPlanets.isEmpty()) {
             val unknownPlanets = allPlanets
                     .filter { p -> !p.isInhabitedByMe && p.incomingShipCount == 0 }
                     .sortedBy { p -> p.distanceTo(homePlanet) }
-                    .toList()
 
             val numPlanetsToInvade = Math.min(unknownPlanets.size, homePlanet.shipCount)
             val planetsToInvade = unknownPlanets.subList(0, numPlanetsToInvade)

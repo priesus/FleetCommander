@@ -1,7 +1,6 @@
 package de.spries.fleetcommander.service.core
 
 import de.spries.fleetcommander.service.core.dto.GamePlayer
-import org.apache.commons.lang3.StringUtils
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 

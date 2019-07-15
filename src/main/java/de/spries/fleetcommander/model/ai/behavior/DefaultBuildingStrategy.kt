@@ -8,7 +8,7 @@ class DefaultBuildingStrategy : BuildingStrategy {
     override fun buildFactories(universe: PlayerSpecificUniverse) {
         val allPlanets = universe.planets
         val myPlanets = PlayerSpecificPlanet.filterMyPlanets(allPlanets)
-                .sortedBy { it.distanceTo(universe.homePlanet) }
+                .sortedBy { it.distanceTo(universe.homePlanet!!) }
 
         for (planet in myPlanets) {
             while (planet.canBuildFactory()) {

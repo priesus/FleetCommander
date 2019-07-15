@@ -21,7 +21,7 @@ enum class JoinCodes private constructor() {
                     + " active codes for this game")
         }
 
-        var code: String? = null
+        var code: String?
         do {
             code = RandomStringUtils.randomAlphanumeric(6).toLowerCase(Locale.ROOT)
         } while (gameCodes.contains(code) || code!!.contains("0") || code.contains("o"))

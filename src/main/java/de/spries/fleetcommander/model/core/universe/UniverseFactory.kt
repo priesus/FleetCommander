@@ -6,7 +6,7 @@ import java.util.ArrayList
 import java.util.Random
 
 object UniverseFactory {
-    const val PLANET_COUNT = 100
+    private const val PLANET_COUNT = 100
     private const val MIN_PLANET_OFFSET = -2
     private const val MAX_PLANET_OFFSET = 2
     private val rand = Random()

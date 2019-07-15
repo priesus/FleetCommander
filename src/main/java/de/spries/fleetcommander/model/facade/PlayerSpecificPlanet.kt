@@ -5,7 +5,8 @@ import de.spries.fleetcommander.model.core.universe.FactorySite
 import de.spries.fleetcommander.model.core.universe.HasCoordinates
 import de.spries.fleetcommander.model.core.universe.Planet
 
-data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player) : HasCoordinates {
+data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player)
+    : HasCoordinates(originalPlanet.x, originalPlanet.y) {
 
     val id: Int
         get() = originalPlanet.id
@@ -39,7 +40,7 @@ data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val 
 
     val shipCount: Int
         get() = if (isInhabitedByMe || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
-            originalPlanet.shipCount
+            originalPlanet.getShipCount()
         } else 0
 
     val incomingShipCount: Int
@@ -49,14 +50,6 @@ data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val 
         get() = if (isInhabitedByMe || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
             originalPlanet.factorySite
         } else null
-
-    override fun getX(): Int {
-        return originalPlanet.x
-    }
-
-    override fun getY(): Int {
-        return originalPlanet.y
-    }
 
     fun canBuildFactory(): Boolean {
         return originalPlanet.canBuildFactory(viewingPlayer)

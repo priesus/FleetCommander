@@ -12,7 +12,7 @@ class SearchEnemyHomePlanetFleetStrategy : FleetStrategy {
         val enemyHomePlanet = allPlanets.firstOrNull { p -> p.isKnownAsEnemyPlanet && p.isHomePlanet }
         val unknownPlanets = allPlanets
                 .filter { p -> !p.isInhabitedByMe && !p.isKnownAsEnemyPlanet && p.incomingShipCount == 0 }
-                .sortedBy { it.distanceTo(homePlanet) }
+                .sortedBy { it.distanceTo(homePlanet!!) }
                 .toList()
 
         // Expand to next closest uninhabited planets

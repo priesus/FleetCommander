@@ -8,7 +8,7 @@ import java.util.HashSet
 
 class Game {
     var id: Int = 0
-    private val players = HashSet<Player>(MAX_PLAYERS)
+    val players = HashSet<Player>(MAX_PLAYERS)
     var universe: Universe? = null
         private set
     var status = Status.PENDING

@@ -9,7 +9,7 @@ class DefaultProductionStrategy : ProductionStrategy {
     override fun updateProductionFocus(universe: PlayerSpecificUniverse, availablePlayerCredits: Int) {
         val allPlanets = universe.planets
         val myPlanets = PlayerSpecificPlanet.filterMyPlanets(allPlanets)
-                .sortedBy { it.distanceTo(universe.homePlanet) }
+                .sortedBy { it.distanceTo(universe.homePlanet!!) }
 
         val openFactorySlots = myPlanets.filter { p -> p.factorySite!!.hasAvailableSlots() }.count()
         val unknownPlanets = allPlanets.filter { p -> !p.isInhabitedByMe && !p.isKnownAsEnemyPlanet }.count()
