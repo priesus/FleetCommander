@@ -26,29 +26,9 @@
 
 		<!-- Core dependencies -->
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>2.2</version>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+			<version>2.9.7</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.microutils</groupId>
@@ -109,29 +89,23 @@
 	</dependencies>
 
 	<build>
+		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<version>${kotlin.version}</version>
+
 				<executions>
 					<execution>
 						<id>compile</id>
 						<goals> <goal>compile</goal> </goals>
-						<configuration>
-							<sourceDirs>
-								<sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-							</sourceDirs>
-						</configuration>
 					</execution>
+
 					<execution>
 						<id>test-compile</id>
 						<goals> <goal>test-compile</goal> </goals>
-						<configuration>
-							<sourceDirs>
-								<sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-							</sourceDirs>
-						</configuration>
 					</execution>
 				</executions>
 				<dependencies>
@@ -141,38 +115,6 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-				<executions>
-					<!-- Replacing default-compile as it is treated specially by maven -->
-					<execution>
-						<id>default-compile</id>
-						<phase>none</phase>
-					</execution>
-					<!-- Replacing default-testCompile as it is treated specially by maven -->
-					<execution>
-						<id>default-testCompile</id>
-						<phase>none</phase>
-					</execution>
-					<execution>
-						<id>java-compile</id>
-						<phase>compile</phase>
-						<goals> <goal>compile</goal> </goals>
-					</execution>
-					<execution>
-						<id>java-test-compile</id>
-						<phase>test-compile</phase>
-						<goals> <goal>testCompile</goal> </goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>

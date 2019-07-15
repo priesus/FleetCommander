@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.service.rest
+package de.spries.fleetcommander
 
 import com.jayway.restassured.RestAssured.given
 import com.jayway.restassured.http.ContentType
@@ -28,6 +28,7 @@ class GamesRestServiceIT {
         val response = `when`("{\"playerName\": \"test-player\"}").post("/api/games")
 
         gameUrl = response.getHeader("Location")
+        assertThat(response.body.asString(), `is`(""))
         gameAuthToken = response.body.jsonPath().getString("fullAuthToken")
 
         assertThat(gameUrl, startsWith("http://localhost"))

@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.service.core
+package de.spries.fleetcommander
 
 import de.spries.fleetcommander.model.core.Game.Status
 import de.spries.fleetcommander.model.core.common.IllegalActionException
@@ -31,7 +31,6 @@ class GamesServiceIT {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canAddComputerPlayer() {
         assertThat(service.getGame(gamePlayer).otherPlayers, hasSize(0))
 
@@ -45,7 +44,6 @@ class GamesServiceIT {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canStartGame() {
         service.addComputerPlayer(gamePlayer)
         assertThat(service.getGame(gamePlayer).status, `is`(Status.PENDING))
@@ -61,7 +59,6 @@ class GamesServiceIT {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canJoinViaCreatedJoinCode() {
         val gameId = gamePlayer.gameId
 
@@ -75,14 +72,12 @@ class GamesServiceIT {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun playerCannotAccessPendingGameAfterQuitting() {
         service.quitGame(gamePlayer)
         service.getGame(gamePlayer)
     }
 
     @Test
-    @Throws(Exception::class)
     fun startingGameInvalidatesAllJoinCodes() {
         service.addComputerPlayer(gamePlayer)
         val gameId = gamePlayer.gameId
