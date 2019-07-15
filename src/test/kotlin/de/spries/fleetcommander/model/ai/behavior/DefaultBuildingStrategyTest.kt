@@ -1,7 +1,7 @@
 package de.spries.fleetcommander.model.ai.behavior
 
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 import org.junit.Before

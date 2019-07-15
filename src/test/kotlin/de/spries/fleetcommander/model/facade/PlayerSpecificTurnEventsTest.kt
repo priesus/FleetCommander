@@ -1,6 +1,6 @@
 package de.spries.fleetcommander.model.facade
 
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.mock
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.TurnEvents
 import org.junit.Before
