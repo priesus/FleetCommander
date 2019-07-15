@@ -5,24 +5,25 @@ import de.spries.fleetcommander.model.core.universe.ShipFormation
 import de.spries.fleetcommander.model.core.universe.Universe
 
 
-class PlayerSpecificUniverse(private val originalUniverse: Universe, private val viewingPlayer: Player) {
+open class PlayerSpecificUniverse(private val originalUniverse: Universe, private val viewingPlayer: Player) {
 
-    val planets: List<PlayerSpecificPlanet>
-        get() = PlayerSpecificPlanet.convert(originalUniverse.planets, viewingPlayer)
+    fun getPlanets(): List<PlayerSpecificPlanet> {
+        return originalUniverse.planets.map { PlayerSpecificPlanet(it, viewingPlayer) }
+    }
 
-    val homePlanet: PlayerSpecificPlanet?
-        get() {
-            val homePlanet = originalUniverse.getHomePlanetOf(viewingPlayer) ?: return null
-            return PlayerSpecificPlanet.convert(homePlanet, viewingPlayer)
-        }
+    fun getHomePlanet(): PlayerSpecificPlanet? {
+        val homePlanet = originalUniverse.getHomePlanetOf(viewingPlayer) ?: return null
+        return PlayerSpecificPlanet(homePlanet, viewingPlayer)
+    }
 
-    val travellingShipFormations: Collection<ShipFormation>
-        get() = if (TestMode.TEST_MODE) originalUniverse.travellingShipFormations
+    fun getTravellingShipFormations(): Collection<ShipFormation> {
+        return if (TestMode.TEST_MODE) originalUniverse.travellingShipFormations
         else originalUniverse.travellingShipFormations
                 .filter { s -> s.commander === viewingPlayer }
+    }
 
     fun getPlanet(planetId: Int): PlayerSpecificPlanet {
-        return PlayerSpecificPlanet.convert(originalUniverse.getPlanetForId(planetId), viewingPlayer)
+        return PlayerSpecificPlanet(originalUniverse.getPlanetForId(planetId), viewingPlayer)
     }
 
     fun sendShips(shipCount: Int, originPlanetId: Int, destinationPlanetId: Int) {

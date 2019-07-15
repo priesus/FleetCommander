@@ -1,13 +1,11 @@
 package de.spries.fleetcommander.model.facade
 
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-
-import org.junit.Before
-import org.junit.Test
-
+import com.nhaarman.mockito_kotlin.mock
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.TurnEvents
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito.verify
 
 class PlayerSpecificTurnEventsTest {
 
@@ -17,46 +15,46 @@ class PlayerSpecificTurnEventsTest {
 
     @Before
     fun setUp() {
-        originalEvents = mock(TurnEvents::class.java)
-        self = mock(Player::class.java)
-        ownEvents = PlayerSpecificTurnEvents(originalEvents!!, self!!)
+        originalEvents = mock()
+        self = mock()
+        ownEvents = PlayerSpecificTurnEvents(originalEvents, self)
     }
 
     @Test
     fun forwardsCallToConqueredEnemyPlanets() {
-        ownEvents!!.conqueredEnemyPlanets
-        verify(originalEvents).getConqueredEnemyPlanets(self!!)
+        ownEvents.getConqueredEnemyPlanets()
+        verify(originalEvents).getConqueredEnemyPlanets(self)
     }
 
     @Test
     fun forwardsCallToConqueredUninhabitedPlanets() {
-        ownEvents!!.conqueredUninhabitedPlanets
-        verify(originalEvents).getConqueredUninhabitedPlanets(self!!)
+        ownEvents.getConqueredUninhabitedPlanets()
+        verify(originalEvents).getConqueredUninhabitedPlanets(self)
     }
 
     @Test
     fun forwardsCallToLostShipFormations() {
-        ownEvents!!.lostShipFormations
-        verify(originalEvents).getLostShipFormations(self!!)
+        ownEvents.getLostShipFormations()
+        verify(originalEvents).getLostShipFormations(self)
     }
 
     @Test
     fun forwardsCallToDefendedPlanets() {
-        ownEvents!!.defendedPlanets
-        verify(originalEvents).getDefendedPlanets(self!!)
+        ownEvents.getDefendedPlanets()
+        verify(originalEvents).getDefendedPlanets(self)
     }
 
     @Test
     fun forwardsCallToLostPlanets() {
-        ownEvents!!.lostPlanets
-        verify(originalEvents).getLostPlanets(self!!)
+        ownEvents.getLostPlanets()
+        verify(originalEvents).getLostPlanets(self)
     }
 
     @Test
     @Throws(Exception::class)
     fun forwardsCallToHasEvents() {
-        ownEvents!!.hasEvents
-        verify(originalEvents).hasEvents(self!!)
+        ownEvents.hasEvents()
+        verify(originalEvents).hasEvents(self)
     }
 
 }

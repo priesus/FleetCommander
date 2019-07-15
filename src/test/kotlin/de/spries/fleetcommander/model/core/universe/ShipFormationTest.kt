@@ -1,39 +1,38 @@
 package de.spries.fleetcommander.model.core.universe
 
-import org.hamcrest.Matchers.greaterThan
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
+import de.spries.fleetcommander.model.core.Player
+import de.spries.fleetcommander.model.core.common.IllegalActionException
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.lessThan
 import org.hamcrest.Matchers.lessThanOrEqualTo
 import org.junit.Assert.assertThat
+import org.junit.Before
+import org.junit.Test
 import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 
-import org.junit.Before
-import org.junit.Test
-
-import de.spries.fleetcommander.model.core.Player
-import de.spries.fleetcommander.model.core.common.IllegalActionException
-
 class ShipFormationTest {
     private lateinit var existingFormation: ShipFormation
-    private var originPlanet = mock(Planet::class.java)
-    private var closePlanet = mock(Planet::class.java)
-    private var moreDistantPlanet = mock(Planet::class.java)
-    private var distantPlanet = mock(Planet::class.java)
+    private lateinit var originPlanet: Planet
+    private lateinit var closePlanet: Planet
+    private lateinit var moreDistantPlanet: Planet
+    private lateinit var distantPlanet: Planet
 
     @Before
     fun setUp() {
-        originPlanet = mock(Planet::class.java)
-        closePlanet = mock(Planet::class.java)
-        moreDistantPlanet = mock(Planet::class.java)
-        distantPlanet = mock(Planet::class.java)
+        originPlanet = mock()
+        closePlanet = mock()
+        moreDistantPlanet = mock()
+        distantPlanet = mock()
 
         existingFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
-        doReturn(1.0 * ShipFormation.DISTANCE_PER_TURN).`when`(originPlanet).distanceTo(closePlanet)
-        doReturn(2.0 * ShipFormation.DISTANCE_PER_TURN).`when`(originPlanet).distanceTo(moreDistantPlanet)
-        doReturn(3.0 * ShipFormation.DISTANCE_PER_TURN).`when`(originPlanet).distanceTo(distantPlanet)
+        whenever(originPlanet.distanceTo(closePlanet)).thenReturn(1.0 * ShipFormation.DISTANCE_PER_TURN)
+        whenever(originPlanet.distanceTo(moreDistantPlanet)).thenReturn(2.0 * ShipFormation.DISTANCE_PER_TURN)
+        whenever(originPlanet.distanceTo(distantPlanet)).thenReturn(3.0 * ShipFormation.DISTANCE_PER_TURN)
     }
 
     @Test(expected = IllegalActionException::class)
@@ -49,58 +48,58 @@ class ShipFormationTest {
     @Test
     fun formationCannotJoinIfOriginIsDifferent() {
         val newShipFormation = ShipFormation(1, closePlanet, closePlanet, JOHN)
-        assertThat(newShipFormation.canJoin(existingFormation!!), `is`(false))
+        assertThat(newShipFormation.canJoin(existingFormation), `is`(false))
     }
 
     @Test
     fun formationCannotJoinIfDestinationIsDifferent() {
         val newShipFormation = ShipFormation(1, originPlanet, originPlanet, JOHN)
-        assertThat(newShipFormation.canJoin(existingFormation!!), `is`(false))
+        assertThat(newShipFormation.canJoin(existingFormation), `is`(false))
     }
 
     @Test
     fun formationCannotJoinIfCommanderIsDifferent() {
         val newShipFormation = ShipFormation(1, originPlanet, closePlanet, JACK)
-        assertThat(newShipFormation.canJoin(existingFormation!!), `is`(false))
+        assertThat(newShipFormation.canJoin(existingFormation), `is`(false))
     }
 
     @Test
     fun formationCannotJoinIfDistancetravelledIsDifferent() {
         val newShipFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
         newShipFormation.travel()
-        assertThat(newShipFormation.canJoin(existingFormation!!), `is`(false))
+        assertThat(newShipFormation.canJoin(existingFormation), `is`(false))
     }
 
     @Test
     fun formationCanJoinIfRouteAndCommanderAreEqual() {
         val newShipFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
-        assertThat(newShipFormation.canJoin(existingFormation!!), `is`(true))
+        assertThat(newShipFormation.canJoin(existingFormation), `is`(true))
     }
 
     @Test
     fun mergingIncreasesShipCountOfExistingFormation() {
         val joiningFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
-        joiningFormation.join(existingFormation!!)
-        assertThat(existingFormation!!.shipCount, `is`(2))
+        joiningFormation.join(existingFormation)
+        assertThat(existingFormation.shipCount, `is`(2))
     }
 
     @Test
     fun mergingDecreasesShipCountOfJoiningFormationToZero() {
         val joiningFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
-        joiningFormation.join(existingFormation!!)
+        joiningFormation.join(existingFormation)
         assertThat(joiningFormation.shipCount, `is`(0))
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun cannotMergeFormationsIfCommanderIsNotEqual() {
         val joiningFormation = ShipFormation(1, originPlanet, closePlanet, JACK)
-        joiningFormation.join(existingFormation!!)
+        joiningFormation.join(existingFormation)
     }
 
     @Test
     fun landingOnDestinationTransfersShipsToPlanet() {
-        existingFormation!!.landOnDestination()
-        assertThat(existingFormation!!.shipCount, `is`(0))
+        existingFormation.landOnDestination()
+        assertThat(existingFormation.shipCount, `is`(0))
         verify(closePlanet).landShips(1, JOHN)
     }
 
@@ -145,12 +144,12 @@ class ShipFormationTest {
         sf.travel()
         verify(distantPlanet, never()).landShips(1, JOHN)
         assertThat(sf.hasArrived(), `is`(false))
-        assertThat(sf.distanceRemaining, `is`(greaterThan(0.0)))
+        assertThat(sf.distanceRemaining(), `is`(greaterThan(0.0)))
 
         sf.travel()
         verify(distantPlanet).landShips(1, JOHN)
         assertThat(sf.hasArrived(), `is`(true))
-        assertThat(sf.distanceRemaining, `is`(lessThanOrEqualTo(0.0)))
+        assertThat(sf.distanceRemaining(), `is`(lessThanOrEqualTo(0.0)))
     }
 
     @Test
@@ -185,8 +184,8 @@ class ShipFormationTest {
 
     companion object {
 
-        private val JOHN = mock(Player::class.java)
-        private val JACK = mock(Player::class.java)
+        private val JOHN = mock<Player>()
+        private val JACK = mock<Player>()
     }
 
 }

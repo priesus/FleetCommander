@@ -1,4 +1,4 @@
-package de.spries.fleetcommander
+package de.spries.fleetcommander.service.rest
 
 import com.jayway.restassured.RestAssured.given
 import com.jayway.restassured.http.ContentType

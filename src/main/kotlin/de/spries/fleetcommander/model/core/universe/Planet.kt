@@ -3,7 +3,8 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null) : HasCoordinates(x, y) {
+open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null)
+    : HasCoordinates(x, y) {
 
     var id: Int = 0
     var isHomePlanet = false
@@ -22,10 +23,7 @@ class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetCl
 
     private var turnEventBus: TurnEventBus? = null
 
-    val isInhabited: Boolean
-        get() = inhabitant != null
-
-    constructor(x: Int, y: Int, inhabitant: Player) : this(x, y, PlanetClass.B, inhabitant)
+    constructor(x: Int = 0, y: Int = 0, inhabitant: Player) : this(x, y, PlanetClass.B, inhabitant)
 
     init {
         if (inhabitant != null) {
@@ -40,6 +38,8 @@ class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetCl
         return isHomePlanet && player == inhabitant
     }
 
+    fun isInhabited() = inhabitant != null
+
     fun isInhabitedBy(player: Player): Boolean {
         return player == inhabitant
     }
@@ -50,8 +50,8 @@ class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetCl
 
     fun runProductionCycle() {
         if (inhabitant != null) {
-            shipCount += factorySite.producedShipsPerTurn
-            inhabitant!!.addCredits(factorySite.producedCreditsPerTurn)
+            shipCount += factorySite.getProducedShipsPerTurn()
+            inhabitant!!.addCredits(factorySite.getProducedCreditsPerTurn())
         }
     }
 
@@ -106,7 +106,7 @@ class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetCl
         if (shipsToLand <= 0) {
             throw IllegalActionException("Cannot land $shipsToLand ships")
         }
-        if (!isInhabited) {
+        if (!isInhabited()) {
             turnEventBus!!.fireConqueredUninhabitedPlanet(invader)
             inhabitant = invader
             shipCount += shipsToLand.toFloat()
@@ -200,15 +200,6 @@ class Planet @JvmOverloads constructor(x: Int, y: Int, val planetClass: PlanetCl
     }
 
     companion object {
-
         private const val HOME_PLANET_STARTING_SHIPS = 6f
-
-        fun findById(planets: List<Planet>, planetId: Int): Planet {
-            return planets.first { p -> p.id == planetId }
-        }
-
-        fun filterHomePlanets(allPlanets: List<Planet>): List<Planet> {
-            return allPlanets.filter { p -> p.isHomePlanet }
-        }
     }
 }

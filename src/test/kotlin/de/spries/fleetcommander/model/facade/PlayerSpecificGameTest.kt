@@ -1,23 +1,19 @@
 package de.spries.fleetcommander.model.facade
 
-import org.hamcrest.Matchers.hasSize
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.nullValue
-import org.junit.Assert.assertThat
-import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
-
-import java.util.Arrays
-
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.hasSize
+import org.hamcrest.Matchers.nullValue
+import org.junit.Assert.assertThat
+import org.junit.Before
+import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 
 class PlayerSpecificGameTest {
 
@@ -29,34 +25,34 @@ class PlayerSpecificGameTest {
 
     @Before
     fun setUp() {
-        originalGame = mock(Game::class.java)
-        self = mock(Player::class.java)
-        otherPlayer = mock(Player::class.java)
-        computerPlayer = mock(Player::class.java)
+        originalGame = mock()
+        self = mock()
+        otherPlayer = mock()
+        computerPlayer = mock()
 
-        doReturn(true).`when`(self).isHumanPlayer()
-        doReturn(true).`when`(otherPlayer).isHumanPlayer()
-        doReturn(false).`when`(computerPlayer).isHumanPlayer()
+        whenever(self.isHumanPlayer()).thenReturn(true)
+        whenever(otherPlayer.isHumanPlayer()).thenReturn(true)
+        whenever(computerPlayer.isHumanPlayer()).thenReturn(false)
 
         doReturn("Myself").`when`(self).name
 
-        doReturn(Arrays.asList(self, otherPlayer)).`when`(originalGame).players
-        ownGame = PlayerSpecificGame(originalGame!!, self!!)
+        doReturn(listOf(self, otherPlayer)).`when`(originalGame).players
+        ownGame = PlayerSpecificGame(originalGame, self)
     }
 
     @Test
     fun forwardsCallToGetId() {
-        ownGame!!.id
+        ownGame.getId()
         verify(originalGame).id
     }
 
     @Test
     @Throws(Exception::class)
     fun addsComputerPlayerWithName() {
-        ownGame!!.addComputerPlayer()
+        ownGame.addComputerPlayer()
 
-        doReturn(Arrays.asList(self, otherPlayer, computerPlayer)).`when`(originalGame).players
-        ownGame!!.addComputerPlayer()
+        doReturn(listOf(self, otherPlayer, computerPlayer)).`when`(originalGame).players
+        ownGame.addComputerPlayer()
 
         val argument = ArgumentCaptor.forClass(Player::class.java)
         verify(originalGame, times(2)).addPlayer(argument.capture())
@@ -67,7 +63,7 @@ class PlayerSpecificGameTest {
     @Test
     @Throws(Exception::class)
     fun addsHumanPlayerWithName() {
-        ownGame!!.addHumanPlayer("Player 2")
+        ownGame.addHumanPlayer("Player 2")
 
         val argument = ArgumentCaptor.forClass(Player::class.java)
         verify(originalGame).addPlayer(argument.capture())
@@ -76,26 +72,26 @@ class PlayerSpecificGameTest {
 
     @Test
     fun forwardsCallToStart() {
-        ownGame!!.start()
-        verify(originalGame).start(self!!)
+        ownGame.start()
+        verify(originalGame).start(self)
     }
 
     @Test
     fun forwardsCallToGetStatus() {
-        ownGame!!.status
+        ownGame.getStatus()
         verify(originalGame).status
     }
 
     @Test
     fun forwardsCallToGetTurnNumber() {
-        ownGame!!.turnNumber
+        ownGame.getTurnNumber()
         verify(originalGame).turnNumber
     }
 
     @Test
     @Throws(Exception::class)
     fun forwardsCallToGetPreviousTurnEvents() {
-        ownGame!!.previousTurnEvents
+        ownGame.getPreviousTurnEvents()
         verify(originalGame).previousTurnEvents
     }
 
@@ -103,31 +99,31 @@ class PlayerSpecificGameTest {
     @Throws(Exception::class)
     fun returnsNullTurnEventsIfOriginalGameHasNoEventsYet() {
         doReturn(null).`when`(originalGame).previousTurnEvents
-        assertThat(ownGame!!.previousTurnEvents, `is`(nullValue()))
+        assertThat(ownGame.getPreviousTurnEvents(), `is`(nullValue()))
     }
 
     @Test
     fun forwardsCallToEndTurn() {
-        ownGame!!.endTurn()
-        verify(originalGame).endTurn(self!!)
+        ownGame.endTurn()
+        verify(originalGame).endTurn(self)
     }
 
     @Test
     fun forwardsCallToQuit() {
-        ownGame!!.quit()
-        verify(originalGame).quit(self!!)
+        ownGame.quit()
+        verify(originalGame).quit(self)
     }
 
     @Test
     @Throws(Exception::class)
     fun returnsOwnPlayer() {
-        assertThat(ownGame!!.me.name, `is`("Myself"))
+        assertThat(ownGame.getMe().getName(), `is`("Myself"))
     }
 
     @Test
     @Throws(Exception::class)
     fun returnsOtherPlayers() {
-        assertThat(ownGame!!.otherPlayers, hasSize(1))
+        assertThat(ownGame.getOtherPlayers(), hasSize(1))
     }
 
 }

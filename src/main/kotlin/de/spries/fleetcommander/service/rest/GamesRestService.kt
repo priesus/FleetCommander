@@ -46,7 +46,7 @@ class GamesRestService {
     private fun createGame(playerName: String): Response {
         val accessParams = SERVICE.createNewGame(playerName)
         return noCacheResponse(Response.Status.CREATED)
-                .header("Location", "/api/games/" + accessParams.gameId)
+                .header("Location", "/api/games/" + accessParams.getGameId())
                 .entity(accessParams).build()
     }
 
@@ -55,7 +55,7 @@ class GamesRestService {
             val accessParams = SERVICE.joinGame(playerName, joinCode)
 
             return noCacheResponse(Response.Status.CREATED)
-                    .header("Location", "/api/games/" + accessParams.gameId)
+                    .header("Location", "/api/games/" + accessParams.getGameId())
                     .entity(accessParams).build()
         } catch (e: InvalidCodeException) {
             return noCacheResponse(Response.Status.NOT_FOUND).entity(RestError(e.message))
@@ -69,7 +69,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun getGame(@PathParam("id") gameId: Int, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        val gameView = SERVICE.getGame(GamePlayer.forIds(gameId, playerId))
+        val gameView = SERVICE.getGame(GamePlayer(gameId, playerId))
         return noCacheResponse(Response.Status.OK).entity(gameView).build()
     }
 
@@ -102,7 +102,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun quitGame(@PathParam("id") gameId: Int, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.quitGame(GamePlayer.forIds(gameId, playerId))
+        SERVICE.quitGame(GamePlayer(gameId, playerId))
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -111,7 +111,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun addComputerPlayer(@PathParam("id") gameId: Int, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.addComputerPlayer(GamePlayer.forIds(gameId, playerId))
+        SERVICE.addComputerPlayer(GamePlayer(gameId, playerId))
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -120,7 +120,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun startGame(@PathParam("id") gameId: Int, params: GameParams, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.modifyGame(GamePlayer.forIds(gameId, playerId), params)
+        SERVICE.modifyGame(GamePlayer(gameId, playerId), params)
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -129,7 +129,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun endTurn(@PathParam("id") gameId: Int, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.endTurn(GamePlayer.forIds(gameId, playerId))
+        SERVICE.endTurn(GamePlayer(gameId, playerId))
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -139,7 +139,7 @@ class GamesRestService {
     @Produces(MediaType.APPLICATION_JSON)
     fun sendShips(@PathParam("id") gameId: Int, ships: ShipFormationParams, @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.sendShips(GamePlayer.forIds(gameId, playerId), ships)
+        SERVICE.sendShips(GamePlayer(gameId, playerId), ships)
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -149,7 +149,7 @@ class GamesRestService {
     fun modifyPlanet(@PathParam("id") gameId: Int, @PathParam("planetId") planetId: Int, params: PlanetParams,
                      @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.changePlanetProductionFocus(GamePlayer.forIds(gameId, playerId), planetId, params.productionFocus)
+        SERVICE.changePlanetProductionFocus(GamePlayer(gameId, playerId), planetId, params.productionFocus)
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 
@@ -159,7 +159,7 @@ class GamesRestService {
     fun buildFactory(@PathParam("id") gameId: Int, @PathParam("planetId") planetId: Int,
                      @Context headers: HttpHeaders): Response {
         val playerId = GameAccessTokenFilter.extractPlayerIdFromHeaders(headers)
-        SERVICE.buildFactory(GamePlayer.forIds(gameId, playerId), planetId)
+        SERVICE.buildFactory(GamePlayer(gameId, playerId), planetId)
         return noCacheResponse(Response.Status.ACCEPTED).build()
     }
 

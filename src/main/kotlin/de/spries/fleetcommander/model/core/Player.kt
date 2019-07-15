@@ -3,12 +3,10 @@ package de.spries.fleetcommander.model.core
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.core.universe.FactorySite
 
-open class Player(val name: String) {
+open class Player(val name: String, var id: Int = -1, var credits: Int = STARTING_CREDITS) {
 
     class InsufficientCreditsException(msg: String) : IllegalActionException(msg)
 
-    var id = -1
-    var credits = STARTING_CREDITS
     var status = Status.PLAYING
         private set
 
@@ -16,11 +14,13 @@ open class Player(val name: String) {
         return true
     }
 
-    val isActive: Boolean
-        get() = Status.PLAYING == status || Status.READY == status
+    fun isActive(): Boolean {
+        return Status.PLAYING == status || Status.READY == status
+    }
 
-    val isReady: Boolean
-        get() = Status.READY == status
+    fun isReady(): Boolean {
+        return Status.READY == status
+    }
 
     enum class Status {
         PLAYING,

@@ -7,14 +7,11 @@ data class GameAccessParams(@get:JsonIgnore
                             @get:JsonIgnore
                             val authToken: String) {
 
-    val gameId: Int
-        get() = gamePlayer.gameId
+    fun getGameId() = gamePlayer.gameId
 
-    val playerId: Int
-        @JsonIgnore
-        get() = gamePlayer.playerId
+    @JsonIgnore
+    fun getPlayerId() = gamePlayer.playerId
 
-    val fullAuthToken: String
-        get() = "$playerId:$authToken"
+    fun getFullAuthToken() = "${getPlayerId()}:$authToken"
 
 }

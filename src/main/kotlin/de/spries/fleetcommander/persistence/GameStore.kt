@@ -9,8 +9,7 @@ enum class GameStore {
     private val gameStore: MutableMap<Int, Game> = ConcurrentHashMap()
     private var nextGameId: Int = 1
 
-    val games: Collection<Game>
-        get() = gameStore.values
+    fun getGames() = gameStore.values
 
     @Synchronized
     fun create(game: Game): Int {

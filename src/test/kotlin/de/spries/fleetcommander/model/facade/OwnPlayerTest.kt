@@ -1,12 +1,10 @@
 package de.spries.fleetcommander.model.facade
 
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-
+import com.nhaarman.mockito_kotlin.mock
+import de.spries.fleetcommander.model.core.Player
 import org.junit.Before
 import org.junit.Test
-
-import de.spries.fleetcommander.model.core.Player
+import org.mockito.Mockito.verify
 
 class OwnPlayerTest {
 
@@ -15,20 +13,20 @@ class OwnPlayerTest {
 
     @Before
     fun setUp() {
-        originalPlayer = mock(Player::class.java)
-        viewingPlayer = OwnPlayer(originalPlayer!!)
+        originalPlayer = mock()
+        viewingPlayer = OwnPlayer(originalPlayer)
     }
 
     @Test
     fun forwardsCallToGetNameForOtherPlayers() {
-        viewingPlayer!!.credits
+        viewingPlayer.getCredits()
         verify(originalPlayer).credits
     }
 
     @Test
     @Throws(Exception::class)
     fun forwardsCallToCanAffordFactory() {
-        viewingPlayer!!.canAffordFactory
+        viewingPlayer.canAffordFactory()
         verify(originalPlayer).canAffordFactory()
     }
 }

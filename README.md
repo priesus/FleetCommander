@@ -10,14 +10,14 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 
 ## Which technologies are used ##
 
-* The game rules are coded in Java
+* The game rules are coded in Kotlin
 * The AngularJS front-end talks to the server via the REST interface
 * Currently there is no persistence layer
 
 ## How to get it up and running ##
 
 ### Prerequisites ###
-* Java SDK 8
+* Java JDK 8
 * Maven 3
 
 ### Working with the project ###

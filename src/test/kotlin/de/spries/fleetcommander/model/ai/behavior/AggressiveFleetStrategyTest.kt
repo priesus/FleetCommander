@@ -1,18 +1,13 @@
 package de.spries.fleetcommander.model.ai.behavior
 
-import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-
-import java.util.Arrays
-
-import org.junit.Before
-import org.junit.Test
-
-import de.spries.fleetcommander.model.ai.behavior.AggressiveFleetStrategy
-import de.spries.fleetcommander.model.ai.behavior.FleetStrategy
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.verify
 
 class AggressiveFleetStrategyTest {
 
@@ -26,68 +21,68 @@ class AggressiveFleetStrategyTest {
     @Throws(Exception::class)
     fun setUp() {
         fleetStrategy = AggressiveFleetStrategy()
-        universe = mock(PlayerSpecificUniverse::class.java)
-        homePlanet = mock(PlayerSpecificPlanet::class.java)
-        closePlanet = mock(PlayerSpecificPlanet::class.java)
-        distantPlanet = mock(PlayerSpecificPlanet::class.java)
+        universe = mock()
+        homePlanet = mock()
+        closePlanet = mock()
+        distantPlanet = mock()
 
-        doReturn(homePlanet).`when`(universe).homePlanet
-        val planets = Arrays.asList(closePlanet, distantPlanet, homePlanet)
-        doReturn(planets).`when`(universe).planets
+        doReturn(homePlanet).`when`(universe).getHomePlanet()
+        val planets = listOf(closePlanet, distantPlanet, homePlanet)
+        doReturn(planets).`when`(universe).getPlanets()
 
-        doReturn(0.0).`when`(homePlanet).distanceTo(homePlanet!!)
-        doReturn(1.0).`when`(closePlanet).distanceTo(homePlanet!!)
-        doReturn(2.0).`when`(distantPlanet).distanceTo(homePlanet!!)
+        whenever(homePlanet.distanceTo(homePlanet)).thenReturn(0.0)
+        whenever(closePlanet.distanceTo(homePlanet)).thenReturn(1.0)
+        whenever(distantPlanet.distanceTo(homePlanet)).thenReturn(2.0)
 
-        doReturn(1).`when`(homePlanet).id
-        doReturn(2).`when`(closePlanet).id
-        doReturn(3).`when`(distantPlanet).id
+        doReturn(1).`when`(homePlanet).getId()
+        doReturn(2).`when`(closePlanet).getId()
+        doReturn(3).`when`(distantPlanet).getId()
 
-        doReturn(true).`when`(homePlanet).isInhabitedByMe
-        doReturn(false).`when`(homePlanet).isKnownAsEnemyPlanet
+        doReturn(true).`when`(homePlanet).isInhabitedByMe()
+        doReturn(false).`when`(homePlanet).isKnownAsEnemyPlanet()
     }
 
     @Test
     fun sendsAvailableShipToClosestPlanets() {
-        doReturn(1).`when`(homePlanet).shipCount
-        doReturn(false).`when`(closePlanet).isInhabitedByMe
-        doReturn(false).`when`(distantPlanet).isInhabitedByMe
-        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet
-        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet
-        doReturn(0).`when`(closePlanet).incomingShipCount
-        doReturn(0).`when`(distantPlanet).incomingShipCount
+        doReturn(1).`when`(homePlanet).getShipCount()
+        doReturn(false).`when`(closePlanet).isInhabitedByMe()
+        doReturn(false).`when`(distantPlanet).isInhabitedByMe()
+        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet()
+        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet()
+        doReturn(0).`when`(closePlanet).getIncomingShipCount()
+        doReturn(0).`when`(distantPlanet).getIncomingShipCount()
 
-        fleetStrategy!!.sendShips(universe!!)
+        fleetStrategy.sendShips(universe)
 
         verify(universe).sendShips(1, 1, 2)
     }
 
     @Test
     fun sendsAvailableShipToClosestUninhabitedPlanets() {
-        doReturn(1).`when`(homePlanet).shipCount
-        doReturn(true).`when`(closePlanet).isInhabitedByMe
-        doReturn(false).`when`(distantPlanet).isInhabitedByMe
-        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet
-        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet
-        doReturn(0).`when`(closePlanet).incomingShipCount
-        doReturn(0).`when`(distantPlanet).incomingShipCount
+        doReturn(1).`when`(homePlanet).getShipCount()
+        doReturn(true).`when`(closePlanet).isInhabitedByMe()
+        doReturn(false).`when`(distantPlanet).isInhabitedByMe()
+        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet()
+        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet()
+        doReturn(0).`when`(closePlanet).getIncomingShipCount()
+        doReturn(0).`when`(distantPlanet).getIncomingShipCount()
 
-        fleetStrategy!!.sendShips(universe!!)
+        fleetStrategy.sendShips(universe)
 
         verify(universe).sendShips(1, 1, 3)
     }
 
     @Test
     fun sendsOnlyOneShipToUninhabitedPlanets() {
-        doReturn(2).`when`(homePlanet).shipCount
-        doReturn(false).`when`(closePlanet).isInhabitedByMe
-        doReturn(false).`when`(distantPlanet).isInhabitedByMe
-        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet
-        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet
-        doReturn(0).`when`(closePlanet).incomingShipCount
-        doReturn(0).`when`(distantPlanet).incomingShipCount
+        doReturn(2).`when`(homePlanet).getShipCount()
+        doReturn(false).`when`(closePlanet).isInhabitedByMe()
+        doReturn(false).`when`(distantPlanet).isInhabitedByMe()
+        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet()
+        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet()
+        doReturn(0).`when`(closePlanet).getIncomingShipCount()
+        doReturn(0).`when`(distantPlanet).getIncomingShipCount()
 
-        fleetStrategy!!.sendShips(universe!!)
+        fleetStrategy.sendShips(universe)
 
         verify(universe).sendShips(1, 1, 2)
         verify(universe).sendShips(1, 1, 3)
@@ -95,15 +90,15 @@ class AggressiveFleetStrategyTest {
 
     @Test
     fun sendsOnlyOneShipToPlanetsWithoutIncomingShips() {
-        doReturn(2).`when`(homePlanet).shipCount
-        doReturn(false).`when`(closePlanet).isInhabitedByMe
-        doReturn(false).`when`(distantPlanet).isInhabitedByMe
-        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet
-        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet
-        doReturn(1).`when`(closePlanet).incomingShipCount
-        doReturn(0).`when`(distantPlanet).incomingShipCount
+        doReturn(2).`when`(homePlanet).getShipCount()
+        doReturn(false).`when`(closePlanet).isInhabitedByMe()
+        doReturn(false).`when`(distantPlanet).isInhabitedByMe()
+        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet()
+        doReturn(false).`when`(distantPlanet).isKnownAsEnemyPlanet()
+        doReturn(1).`when`(closePlanet).getIncomingShipCount()
+        doReturn(0).`when`(distantPlanet).getIncomingShipCount()
 
-        fleetStrategy!!.sendShips(universe!!)
+        fleetStrategy.sendShips(universe)
 
         verify(universe).sendShips(1, 1, 3)
     }
@@ -111,14 +106,14 @@ class AggressiveFleetStrategyTest {
     @Test
     @Throws(Exception::class)
     fun sendsAllShipsToEnemyPlanetIfOneIsKnown() {
-        doReturn(2).`when`(homePlanet).shipCount
-        doReturn(3).`when`(closePlanet).shipCount
-        doReturn(true).`when`(closePlanet).isInhabitedByMe
-        doReturn(false).`when`(distantPlanet).isInhabitedByMe
-        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet
-        doReturn(true).`when`(distantPlanet).isKnownAsEnemyPlanet
+        doReturn(2).`when`(homePlanet).getShipCount()
+        doReturn(3).`when`(closePlanet).getShipCount()
+        doReturn(true).`when`(closePlanet).isInhabitedByMe()
+        doReturn(false).`when`(distantPlanet).isInhabitedByMe()
+        doReturn(false).`when`(closePlanet).isKnownAsEnemyPlanet()
+        doReturn(true).`when`(distantPlanet).isKnownAsEnemyPlanet()
 
-        fleetStrategy!!.sendShips(universe!!)
+        fleetStrategy.sendShips(universe)
 
         verify(universe).sendShips(2, 1, 3)
         verify(universe).sendShips(3, 2, 3)

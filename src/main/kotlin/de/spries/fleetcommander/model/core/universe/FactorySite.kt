@@ -2,7 +2,7 @@ package de.spries.fleetcommander.model.core.universe
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-class FactorySite(private val planetClass: PlanetClass) {
+open class FactorySite(private val planetClass: PlanetClass) {
     var factoryCount = 0
         private set
     var shipProductionFocus = MAX_PRODUCTION_FOCUS / 2
@@ -13,20 +13,16 @@ class FactorySite(private val planetClass: PlanetClass) {
             field = prodFocus
         }
 
-    val factorySlotCount: Int
-        get() = FACTORY_SLOTS
+    fun factorySlotCount() = FACTORY_SLOTS
 
-    val producedCreditsPerTurn: Int
-        get() {
-            val creditsProductionFocus = MAX_PRODUCTION_FOCUS - this.shipProductionFocus
-            return factoryCount * planetClass.creditsPerFactoryPerTurn * creditsProductionFocus / MAX_PRODUCTION_FOCUS
-        }
+    fun getProducedCreditsPerTurn(): Int {
+        val creditsProductionFocus = MAX_PRODUCTION_FOCUS - this.shipProductionFocus
+        return factoryCount * planetClass.getCreditsPerFactoryPerTurn() * creditsProductionFocus / MAX_PRODUCTION_FOCUS
+    }
 
-    val producedShipsPerTurn: Float
-        get() = factoryCount.toFloat() * planetClass.shipsPerFactoryPerTurn * this.shipProductionFocus.toFloat() / MAX_PRODUCTION_FOCUS
+    fun getProducedShipsPerTurn() = factoryCount.toFloat() * planetClass.getShipsPerFactoryPerTurn() * this.shipProductionFocus.toFloat() / MAX_PRODUCTION_FOCUS
 
-    val availableSlots: Int
-        get() = FACTORY_SLOTS - factoryCount
+    fun getAvailableSlots() = FACTORY_SLOTS - factoryCount
 
     fun buildFactory() {
         if (FACTORY_SLOTS == factoryCount) {
@@ -45,5 +41,4 @@ class FactorySite(private val planetClass: PlanetClass) {
         const val MAX_PRODUCTION_FOCUS = 20
         const val FACTORY_SLOTS = 6
     }
-
 }

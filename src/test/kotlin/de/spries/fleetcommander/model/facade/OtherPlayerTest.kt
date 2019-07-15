@@ -1,12 +1,10 @@
 package de.spries.fleetcommander.model.facade
 
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-
+import com.nhaarman.mockito_kotlin.mock
+import de.spries.fleetcommander.model.core.Player
 import org.junit.Before
 import org.junit.Test
-
-import de.spries.fleetcommander.model.core.Player
+import org.mockito.Mockito.verify
 
 class OtherPlayerTest {
 
@@ -15,25 +13,25 @@ class OtherPlayerTest {
 
     @Before
     fun setUp() {
-        originalPlayer = mock(Player::class.java)
-        viewingPlayer = OtherPlayer(originalPlayer!!)
+        originalPlayer = mock()
+        viewingPlayer = OtherPlayer(originalPlayer)
     }
 
     @Test
     fun forwardsCallToGetNameForOtherPlayers() {
-        viewingPlayer!!.name
+        viewingPlayer.getName()
         verify(originalPlayer).name
     }
 
     @Test
     fun forwardsCallToGetStatus() {
-        viewingPlayer!!.status
+        viewingPlayer.getStatus()
         verify(originalPlayer).status
     }
 
     @Test
     fun forwardsCallToIsHumanPlayer() {
-        viewingPlayer!!.isHumanPlayer
+        viewingPlayer.isHumanPlayer()
         verify(originalPlayer).isHumanPlayer()
     }
 }

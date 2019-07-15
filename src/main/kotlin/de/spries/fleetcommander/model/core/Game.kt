@@ -3,10 +3,8 @@ package de.spries.fleetcommander.model.core
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.core.universe.Universe
 import de.spries.fleetcommander.model.core.universe.UniverseFactory
-import org.apache.commons.lang3.RandomStringUtils
-import java.util.Locale
 
-class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
+open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
 
     var id: Int = 0
     val players = mutableListOf<Player>()
@@ -83,7 +81,7 @@ class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFac
         if (!players.contains(player)) {
             throw IllegalActionException("$player doesn't participate in this game and therefore cannot end the turn")
         }
-        if (!player.isActive) {
+        if (!player.isActive()) {
             throw IllegalActionException("$player has been defeated and therefore cannot end the turn")
         }
 
@@ -109,11 +107,11 @@ class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFac
         universe!!.runFactoryProductionCycle()
         universe!!.runShipTravellingCycle()
 
-        val newDefeatedPlayers = players.filter { p -> p.isActive }
+        val newDefeatedPlayers = players.filter { p -> p.isActive() }
                 .filter { p -> null == universe!!.getHomePlanetOf(p) }
         handleNewDefeatedPlayers(newDefeatedPlayers)
 
-        val numActivePlayers = players.filter { p -> p.isActive }.count()
+        val numActivePlayers = players.filter { p -> p.isActive() }.count()
         val numActiveHumanPlayers = countActiveHumanPlayers()
         if (numActivePlayers <= 1 || numActiveHumanPlayers < 1) {
             status = Status.OVER
@@ -152,23 +150,23 @@ class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFac
     }
 
     private fun notifyActivePlayersForNewTurn() {
-        players.filter { it.isActive }.forEach { p -> p.notifyNewTurn(this) }
+        players.filter { it.isActive() }.forEach { p -> p.notifyNewTurn(this) }
     }
 
     private fun resetReadyStatusOnPlayers() {
-        players.filter { p -> p.isReady }.forEach { p -> p.setPlaying() }
+        players.filter { p -> p.isReady() }.forEach { p -> p.setPlaying() }
     }
 
     private fun countActiveHumanPlayers(): Int {
-        return players.filter { p -> p.isActive && p.isHumanPlayer() }.count()
+        return players.filter { p -> p.isActive() && p.isHumanPlayer() }.count()
     }
 
     private fun countActivePlayers(): Int {
-        return players.filter { p -> p.isActive }.count()
+        return players.filter { p -> p.isActive() }.count()
     }
 
     private fun countReadyPlayers(): Int {
-        return players.filter { p -> p.isReady }.count()
+        return players.filter { p -> p.isReady() }.count()
     }
 
     fun getPlayerWithId(playerId: Int): Player? {

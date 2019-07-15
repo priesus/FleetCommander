@@ -3,21 +3,19 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-data class ShipFormation(var shipCount: Int = 0, private val origin: Planet, private val destination: Planet, val commander: Player)
+data class ShipFormation(var shipCount: Int = 1, private val origin: Planet, private val destination: Planet, val commander: Player)
     : HasCoordinates(origin.x, origin.y) {
 
+    private val distanceOverall: Double = origin.distanceTo(destination)
     var distanceTravelled = 0
         private set
-    private val distanceOverall: Double
 
-    val distanceRemaining: Double
-        get() = distanceOverall - distanceTravelled
+    fun distanceRemaining() = distanceOverall - distanceTravelled
 
     init {
         if (shipCount <= 0) {
             throw IllegalActionException("Must send positive number of ships")
         }
-        distanceOverall = origin.distanceTo(destination)
     }
 
     fun canJoin(existingFormation: ShipFormation): Boolean {
@@ -52,12 +50,10 @@ data class ShipFormation(var shipCount: Int = 0, private val origin: Planet, pri
     }
 
     fun hasArrived(): Boolean {
-        return distanceRemaining <= 0
+        return distanceRemaining() <= 0
     }
 
     companion object {
-
         const val DISTANCE_PER_TURN = 8
     }
-
 }

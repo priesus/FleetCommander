@@ -2,21 +2,17 @@ package de.spries.fleetcommander.model.core.universe
 
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
-import org.apache.commons.collections4.CollectionUtils
-import java.util.Collections
 
-class Universe(planets: List<Planet>) {
+open class Universe(val planets: List<Planet>) {
 
-    val planets: List<Planet>
     val homePlanets: Collection<Planet>
-        get() = Planet.filterHomePlanets(planets)
+        get() = planets.filter { it.isHomePlanet }
     val travellingShipFormations: MutableCollection<ShipFormation> = mutableSetOf()
 
     init {
-        if (CollectionUtils.isEmpty(planets)) {
+        if (planets.isEmpty()) {
             throw IllegalArgumentException("List of planets required")
         }
-        this.planets = Collections.unmodifiableList(planets)
     }
 
     fun getHomePlanetOf(player: Player): Planet? {
@@ -29,7 +25,7 @@ class Universe(planets: List<Planet>) {
 
     fun runShipTravellingCycle() {
         travellingShipFormations
-                .sortedBy { it.distanceRemaining }
+                .sortedBy { it.distanceRemaining() }
                 .forEach { it.travel() }
         travellingShipFormations.removeIf { it.hasArrived() }
     }
@@ -67,7 +63,7 @@ class Universe(planets: List<Planet>) {
     }
 
     fun getPlanetForId(planetId: Int): Planet {
-        return Planet.findById(planets, planetId)
+        return planets.first { it.id == planetId }
     }
 
     private fun getJoinableShipFormation(newShipFormation: ShipFormation): ShipFormation? {

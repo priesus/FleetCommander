@@ -2,7 +2,6 @@ package de.spries.fleetcommander.persistence
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
-import org.apache.commons.lang3.RandomStringUtils
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.hasItem
@@ -14,11 +13,10 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
 class JoinCodesTest {
 
-    private val randomGenerator:()->String = mock()
+    private val randomGenerator: () -> String = mock()
 
     @Before
     fun setUp() {

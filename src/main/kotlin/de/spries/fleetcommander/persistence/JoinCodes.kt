@@ -1,14 +1,22 @@
 package de.spries.fleetcommander.persistence
 
-import org.apache.commons.lang3.RandomStringUtils
 import java.util.HashSet
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.streams.asSequence
 
 enum class JoinCodes {
     INSTANCE;
 
-    var randomGenerator: (() -> (String)) = ({ RandomStringUtils.randomAlphanumeric(6).toLowerCase(Locale.ROOT) })
+    var randomGenerator: (() -> (String)) = ({
+        val charPool: List<Char> = ('a'..'z') + ('0'..'9')
+        ThreadLocalRandom.current()
+                .ints(6, 0, charPool.size)
+                .asSequence()
+                .map(charPool::get)
+                .joinToString("")
+    })
 
     private val gameIdPerCode: MutableMap<String, Int> = ConcurrentHashMap()
     private val codesPerGameId: MutableMap<Int, MutableCollection<String>> = ConcurrentHashMap()
@@ -17,7 +25,7 @@ enum class JoinCodes {
     @Throws(JoinCodeLimitReachedException::class)
     fun create(gameId: Int): String {
         codesPerGameId.putIfAbsent(gameId, HashSet())
-        val gameCodes = codesPerGameId[gameId]!!.toMutableList()
+        val gameCodes = codesPerGameId[gameId]!!
         if (gameCodes.size >= MAX_ACTIVE_CODES) {
             throw JoinCodeLimitReachedException("There are already " + MAX_ACTIVE_CODES
                     + " active codes for this game")
@@ -63,7 +71,6 @@ enum class JoinCodes {
     }
 
     companion object {
-
         private const val MAX_ACTIVE_CODES = 5
     }
 }

@@ -18,14 +18,11 @@ enum class PlanetClass private constructor(private val productivityFactor: Float
     O(0.1f),
     P(0.05f);
 
-    val creditsPerFactoryPerTurn: Int
-        get() = (CREDITS_PRODUCED_BASELINE * productivityFactor).toInt()
+    fun getCreditsPerFactoryPerTurn() = (CREDITS_PRODUCED_BASELINE * productivityFactor).toInt()
 
-    val shipsPerFactoryPerTurn: Float
-        get() = SHIPS_PRODUCED_BASELINE * productivityFactor
+    fun getShipsPerFactoryPerTurn() = SHIPS_PRODUCED_BASELINE * productivityFactor
 
     companion object {
-
         private const val CREDITS_PRODUCED_BASELINE = 40
         private const val SHIPS_PRODUCED_BASELINE = 0.7f
     }

@@ -1,18 +1,17 @@
 package de.spries.fleetcommander.model.ai.behavior
 
 import de.spries.fleetcommander.model.core.universe.FactorySite
-import de.spries.fleetcommander.model.facade.PlayerSpecificPlanet
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 
-class DefaultProductionStrategy : ProductionStrategy {
+open class DefaultProductionStrategy : ProductionStrategy {
 
     override fun updateProductionFocus(universe: PlayerSpecificUniverse, availablePlayerCredits: Int) {
-        val allPlanets = universe.planets
-        val myPlanets = PlayerSpecificPlanet.filterMyPlanets(allPlanets)
-                .sortedBy { it.distanceTo(universe.homePlanet!!) }
+        val allPlanets = universe.getPlanets()
+        val myPlanets = allPlanets.filter { p -> p.isInhabitedByMe() }
+                .sortedBy { it.distanceTo(universe.getHomePlanet()!!) }
 
-        val openFactorySlots = myPlanets.filter { p -> p.factorySite!!.hasAvailableSlots() }.count()
-        val unknownPlanets = allPlanets.filter { p -> !p.isInhabitedByMe && !p.isKnownAsEnemyPlanet }.count()
+        val openFactorySlots = myPlanets.filter { p -> p.getFactorySite()!!.hasAvailableSlots() }.count()
+        val unknownPlanets = allPlanets.filter { p -> !p.isInhabitedByMe() && !p.isKnownAsEnemyPlanet() }.count()
 
         val potentialOpenFactorySlots = openFactorySlots + unknownPlanets * FactorySite.FACTORY_SLOTS
         val maxFactoryCost = potentialOpenFactorySlots * FactorySite.FACTORY_COST
@@ -24,7 +23,7 @@ class DefaultProductionStrategy : ProductionStrategy {
             myPlanets.forEach { p -> p.changeProductionFocus(BALANCED_BUILDING_FOCUS) }
 
             myPlanets
-                    .filter { p1 -> p1.shipCount > 5 }
+                    .filter { p1 -> p1.getShipCount() > 5 }
                     .toList()
                     .forEach { p -> p.changeProductionFocus(FULL_MONEY_BUILDING_FOCUS) }
         }

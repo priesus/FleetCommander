@@ -3,7 +3,7 @@ package de.spries.fleetcommander.service.rest
 import de.spries.fleetcommander.service.core.GameAuthenticator
 import de.spries.fleetcommander.service.core.dto.GamePlayer
 import de.spries.fleetcommander.service.rest.errorhandling.RestError
-import org.apache.logging.log4j.LogManager
+import mu.KotlinLogging
 import java.io.IOException
 import java.util.regex.Pattern
 import javax.ws.rs.container.ContainerRequestContext
@@ -21,6 +21,8 @@ import javax.ws.rs.ext.Provider
 @PreMatching
 class GameAccessTokenFilter : ContainerRequestFilter {
 
+    private val log = KotlinLogging.logger {}
+
     @Throws(IOException::class)
     override fun filter(requestCtx: ContainerRequestContext) {
         val path = requestCtx.uriInfo.path
@@ -36,14 +38,14 @@ class GameAccessTokenFilter : ContainerRequestFilter {
                 playerId = extractPlayerIdFromContext(requestCtx)
                 token = extractAuthTokenFromContext(requestCtx)
             } catch (e: Exception) {
-                LOGGER.warn("Invalid request headers (playerId/token couldn't be extracted)", e)
+                log.warn("Invalid request headers (playerId/token couldn't be extracted)", e)
                 requestCtx.abortWith(Response.status(Response.Status.BAD_REQUEST)
                         .entity(RestError("Required header 'Authorization' was missing or malformed." + " Expexted value: 'Bearer <playerId>:<authToken>'")).build())
             }
 
-            val gamePlayer = GamePlayer.forIds(gameId, playerId)
+            val gamePlayer = GamePlayer(gameId, playerId)
             if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gamePlayer, token)) {
-                LOGGER.warn("{}: Unauthorized access with token {}", gamePlayer, token)
+                log.warn("{}: Unauthorized access with token {}", gamePlayer, token)
                 requestCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED)
                         .entity(RestError("'Authorization' header was invalid for game $gameId")).build())
             }
@@ -51,8 +53,6 @@ class GameAccessTokenFilter : ContainerRequestFilter {
     }
 
     companion object {
-
-        private val LOGGER = LogManager.getLogger(GameAccessTokenFilter::class.java.name)
 
         const val AUTH_HEADER = "Authorization"
         const val AUTH_TOKEN_PREFIX = "Bearer "

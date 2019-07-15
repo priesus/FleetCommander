@@ -1,12 +1,10 @@
 package de.spries.fleetcommander.service.core
 
+import de.spries.fleetcommander.service.core.dto.GamePlayer
 import org.hamcrest.Matchers.`is`
 import org.junit.Assert.assertThat
-
 import org.junit.Before
 import org.junit.Test
-
-import de.spries.fleetcommander.service.core.dto.GamePlayer
 
 class GameAuthenticatorTest {
 
@@ -67,10 +65,10 @@ class GameAuthenticatorTest {
     companion object {
 
         private const val INVALID_TOKEN = "invalid token"
-        private val FIRST_GAME_FIRST_PLAYER = GamePlayer.forIds(1, 1)
-        private val FIRST_GAME_SECOND_PLAYER = GamePlayer.forIds(1, 2)
-        private val SECOND_GAME_FIRST_PLAYER = GamePlayer.forIds(2, 1)
-        private val INEXISTENT_GAME_PLAYER = GamePlayer.forIds(123, 123)
+        private val FIRST_GAME_FIRST_PLAYER = GamePlayer(1, 1)
+        private val FIRST_GAME_SECOND_PLAYER = GamePlayer(1, 2)
+        private val SECOND_GAME_FIRST_PLAYER = GamePlayer(2, 1)
+        private val INEXISTENT_GAME_PLAYER = GamePlayer(123, 123)
     }
 
 }

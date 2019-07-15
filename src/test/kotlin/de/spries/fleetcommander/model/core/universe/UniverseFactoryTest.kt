@@ -1,18 +1,13 @@
 package de.spries.fleetcommander.model.core.universe
 
-import org.hamcrest.Matchers.greaterThan
+import com.nhaarman.mockito_kotlin.mock
+import de.spries.fleetcommander.model.core.Player
 import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.greaterThan
 import org.hamcrest.Matchers.notNullValue
 import org.hamcrest.Matchers.nullValue
 import org.junit.Assert.assertThat
-import org.mockito.Mockito.mock
-
-import java.util.Arrays
-import java.util.stream.Collectors
-
 import org.junit.Test
-
-import de.spries.fleetcommander.model.core.Player
 
 class UniverseFactoryTest {
 
@@ -48,8 +43,8 @@ class UniverseFactoryTest {
 
     companion object {
 
-        private val JOHN = mock(Player::class.java)
-        private val OTHER_PLAYER = mock(Player::class.java)
-        private val JOHN_ONLY = Arrays.asList(JOHN)
+        private val JOHN = mock<Player>()
+        private val OTHER_PLAYER = mock<Player>()
+        private val JOHN_ONLY = listOf(JOHN)
     }
 }

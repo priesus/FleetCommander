@@ -8,7 +8,7 @@ import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame
 import mu.KotlinLogging
 
-class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy)
+open class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy)
     : Player(name) {
 
     private val log = KotlinLogging.logger {}
@@ -32,8 +32,8 @@ class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrateg
         game.endTurn(this)
     }
 
-    fun playTurn(game: PlayerSpecificGame) {
-        val universe = game.universe
+    private fun playTurn(game: PlayerSpecificGame) {
+        val universe = game.getUniverse()
         fleetStrategy.sendShips(universe!!)
         buildingStrategy.buildFactories(universe)
         productionStrategy.updateProductionFocus(universe, credits)
