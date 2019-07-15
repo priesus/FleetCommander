@@ -16,7 +16,7 @@ open class OtherPlayer(protected var originalPlayer: Player) {
 
     companion object {
 
-        fun convert(otherPlayers: Collection<Player>): Collection<OtherPlayer> {
+        fun convert(otherPlayers: List<Player>): List<OtherPlayer> {
             return otherPlayers
                     .map { p -> OtherPlayer(p) }
         }

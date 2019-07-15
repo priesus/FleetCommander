@@ -27,7 +27,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 public class GamesRestServiceIT {
 
 	private static final String SEND_SHIPS_REQUEST_BODY = "{\"shipCount\": %d, \"originPlanetId\": %d, \"destinationPlanetId\": %d}";
-	public static final int SERVER_PORT = 8080;
+	private static final int SERVER_PORT = 8080;
 	private String gameUrl;
 	private String gameAuthToken;
 

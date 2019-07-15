@@ -51,16 +51,13 @@ public class GamesServiceIT {
 		service.addComputerPlayer(gamePlayer);
 		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
-		GameParams params = new GameParams();
-		service.modifyGame(gamePlayer, params);
+		service.modifyGame(gamePlayer, new GameParams(false));
 		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
-		params.setIsStarted(false);
-		service.modifyGame(gamePlayer, params);
+		service.modifyGame(gamePlayer, new GameParams(false));
 		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.PENDING));
 
-		params.setIsStarted(true);
-		service.modifyGame(gamePlayer, params);
+		service.modifyGame(gamePlayer, new GameParams(true));
 		assertThat(service.getGame(gamePlayer).getStatus(), is(Status.RUNNING));
 	}
 
@@ -92,8 +89,7 @@ public class GamesServiceIT {
 		service.createJoinCode(gameId);
 		service.createJoinCode(gameId);
 
-		GameParams params = new GameParams();
-		params.setIsStarted(true);
+		GameParams params = new GameParams(true);
 		service.modifyGame(gamePlayer, params);
 
 		assertThat(service.getActiveJoinCodes(gameId), is(empty()));

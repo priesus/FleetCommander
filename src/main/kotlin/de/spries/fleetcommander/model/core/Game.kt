@@ -8,7 +8,7 @@ import java.util.HashSet
 
 class Game {
     var id: Int = 0
-    val players = HashSet<Player>(MAX_PLAYERS)
+    val players = mutableListOf<Player>()
     var universe: Universe? = null
         private set
     var status = Status.PENDING
@@ -168,10 +168,6 @@ class Game {
 
     private fun countReadyPlayers(): Int {
         return players.filter { p -> p.isReady }.count()
-    }
-
-    fun getPlayers(): List<Player> {
-        return ArrayList(players)
     }
 
     fun getPlayerWithId(playerId: Int): Player? {

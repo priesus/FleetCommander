@@ -35,7 +35,7 @@ class PlayerSpecificGame(private val originalGame: Game, private val viewingPlay
     val me: OwnPlayer
         get() = OwnPlayer(viewingPlayer)
 
-    val otherPlayers: Collection<OtherPlayer>
+    val otherPlayers: List<OtherPlayer>
         get() {
             val otherOriginalPlayers = Player.filterAllOtherPlayers(originalGame.players, viewingPlayer)
             return OtherPlayer.convert(otherOriginalPlayers)
