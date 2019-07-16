@@ -40,8 +40,8 @@ fleetCommanderControllers.controller('CreateCtrl', [
 		var createNewGame = function() {
 			var playerName = $cookies.get('playerName');
 			GamesService.create(playerName).success(function(data) {
-				var gameId = data.gameId;
-				var gameToken = data.fullAuthToken;
+				var gameId = data.game_id;
+				var gameToken = data.full_auth_token;
 				storeGameCredentialsInCookie(gameId, gameToken);
 				requestJoinCode(gameId, gameToken);
 
@@ -87,7 +87,7 @@ fleetCommanderControllers.controller('PlayersCtrl', [
 		};
 
 		$scope.addComputerPlayer = function() {
-			if ($scope.game.otherPlayers.length < 5) {
+			if ($scope.game.other_players.length < 5) {
 				PlayersService.addComputerPlayer($scope.gameId, $scope.gameToken).success(function () {
 					refreshGame();
 				});
@@ -147,7 +147,7 @@ fleetCommanderControllers.controller('PlayersCtrl', [
 
 		var refreshActiveJoinCodes = function() {
 			JoinCodesService.getAllActive($scope.gameId, $scope.gameToken).success(function(data) {
-				$scope.activeJoinCodes = data.joinCodes;
+				$scope.activeJoinCodes = data.join_codes;
 			});
 		};
 
@@ -183,7 +183,7 @@ fleetCommanderControllers.controller('JoinCtrl', [
 				return;
 
 			GamesService.join($scope.playerName, $scope.joiningPlayerCode).success(function(data) {
-				storeGameCredentialsInCookie(data.gameId, data.fullAuthToken);
+				storeGameCredentialsInCookie(data.game_id, data.full_auth_token);
 				$location.path('/players');
 			}).error(function(data) {
 				if (data !== null)
@@ -316,12 +316,12 @@ fleetCommanderControllers.controller('IngameCtrl', [
 
 			var planet = $scope.game.universe.planets[planetIndex];
 
-			if (!$scope.destinationSelectionActive && planet.inhabitedByMe) {
+			if (!$scope.destinationSelectionActive && planet.inhabited_by_me) {
 				// Open planet menu
 				$scope.selectedPlanetIndex = planetIndex;
 				$scope.showPlanetMenu = true;
 				$scope.setShipCount(1);
-				$scope.productionFocus = planet.factorySite.shipProductionFocus;
+				$scope.productionFocus = planet.factory_site.ship_production_focus;
 
 			} else if ($scope.destinationSelectionActive) {
 				// Send ships from previously selected planet to this planet
@@ -346,13 +346,13 @@ fleetCommanderControllers.controller('IngameCtrl', [
 		};
 
 		$scope.buildFactoryOnSelectedPlanet = function() {
-			if (!$scope.game.me.canAffordFactory)
+			if (!$scope.game.me.can_afford_factory)
 				return;
 
 			var selectedPlanet = $scope.game.universe.planets[$scope.selectedPlanetIndex];
 			PlanetsService.buildFactory($scope.gameId, $scope.gameToken, selectedPlanet.id).success(function() {
-				$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.factoryCount++;
-				$scope.game.universe.planets[$scope.selectedPlanetIndex].factorySite.availableSlots--;
+				$scope.game.universe.planets[$scope.selectedPlanetIndex].factory_site.factory_count++;
+				$scope.game.universe.planets[$scope.selectedPlanetIndex].factory_site.available_slots--;
 				refreshGameData();
 			});
 		};

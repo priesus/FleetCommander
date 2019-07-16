@@ -86,7 +86,7 @@ class GamesService {
 
     fun modifyGame(gamePlayer: GamePlayer, params: GameParams) {
         log.debug("{}: Modify with params {}", gamePlayer, params)
-        if (java.lang.Boolean.TRUE == params.isStarted) {
+        if (java.lang.Boolean.TRUE == params.started) {
             val game = getGame(gamePlayer)
             game.start()
             JoinCodes.INSTANCE.invalidateAll(gamePlayer.gameId)

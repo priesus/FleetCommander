@@ -12,9 +12,7 @@ import org.hamcrest.Matchers.notNullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.Ignore
 
-@Ignore
 class GamesServiceIT {
 
     private lateinit var service: GamesService

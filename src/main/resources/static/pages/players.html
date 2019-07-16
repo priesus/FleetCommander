@@ -14,7 +14,7 @@
 				</div>
 				<div>
 					<button class="btn btn-default btn-sm" data-ng-click="requestJoinCode()" data-ng-disabled="5 === activeJoinCodes.length">Request code</button>
-					<button class="btn btn-default btn-sm" data-ng-click="addComputerPlayer()" data-ng-disabled="5 === game.otherPlayers.length"><span class="shortcut">A</span>dd Computer Player</button>
+					<button class="btn btn-default btn-sm" data-ng-click="addComputerPlayer()" data-ng-disabled="5 === game.other_players.length"><span class="shortcut">A</span>dd Computer Player</button>
 					<div data-ng-if="requestJoinCodeError" class="error-msg">{{requestJoinCodeError}}</div>
 				</div>
 			</div>
@@ -26,12 +26,12 @@
 						<span data-ng-show="game.me.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
 						<span>{{game.me.name}}</span>
 					</div>
-					<div class="player-slot col-xs-6 enemy-foreground" data-ng-repeat="otherPlayer in game.otherPlayers track by otherPlayer.name">
+					<div class="player-slot col-xs-6 enemy-foreground" data-ng-repeat="otherPlayer in game.other_players track by otherPlayer.name">
 						<span data-ng-show="otherPlayer.status !== 'READY'"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
 						<span data-ng-show="otherPlayer.status === 'READY'"><i class="glyphicon glyphicon-ok"></i></span>
 						{{otherPlayer.name}}
 					</div>
-					<div class="player-slot col-xs-6" data-ng-repeat="i in getNumber(5 - game.otherPlayers.length) track by $index">
+					<div class="player-slot col-xs-6" data-ng-repeat="i in getNumber(5 - game.other_players.length) track by $index">
 						&nbsp;
 					</div>
 				</div>

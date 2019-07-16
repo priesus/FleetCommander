@@ -1,31 +1,28 @@
 package de.spries.fleetcommander.service.rest
 
+import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.service.core.GameAuthenticator
 import de.spries.fleetcommander.service.core.dto.GamePlayer
-import de.spries.fleetcommander.service.rest.errorhandling.RestError
 import mu.KotlinLogging
-import java.io.IOException
+import org.springframework.http.HttpHeaders
+import org.springframework.stereotype.Component
 import java.util.regex.Pattern
-import javax.ws.rs.container.ContainerRequestContext
-import javax.ws.rs.container.ContainerRequestFilter
-import javax.ws.rs.container.PreMatching
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.Response
-import javax.ws.rs.ext.Provider
+import javax.servlet.Filter
+import javax.servlet.FilterChain
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.http.HttpServletRequest
 
-/**
- * This request filter is supposed to block unauthorized access to game data.
- * Clients must provide a header "Authorization" with the value "Bearer *security-token*" in order to access this data.
- */
-@Provider
-@PreMatching
-class GameAccessTokenFilter : ContainerRequestFilter {
+@Component
+class GameAccessTokenFilter : Filter {
 
     private val log = KotlinLogging.logger {}
 
-    @Throws(IOException::class)
-    override fun filter(requestCtx: ContainerRequestContext) {
-        val path = requestCtx.uriInfo.path
+    @Override
+    override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
+
+        val req = request as HttpServletRequest
+        val path = req.requestURI
 
         val protectedPathMatcher = PROTECTED_PATHS.matcher(path)
         if (protectedPathMatcher.find()) {
@@ -35,22 +32,24 @@ class GameAccessTokenFilter : ContainerRequestFilter {
             var playerId = 0
             var token: String? = null
             try {
-                playerId = extractPlayerIdFromContext(requestCtx)
-                token = extractAuthTokenFromContext(requestCtx)
+                playerId = extractPlayerIdFromContext(req)
+                token = extractAuthTokenFromContext(req)
+
             } catch (e: Exception) {
                 log.warn("Invalid request headers (playerId/token couldn't be extracted)", e)
-                requestCtx.abortWith(Response.status(Response.Status.BAD_REQUEST)
-                        .entity(RestError("Required header 'Authorization' was missing or malformed." + " Expexted value: 'Bearer <playerId>:<authToken>'")).build())
+                throw IllegalActionException("Required header 'Authorization' was missing or malformed." + " Expexted value: 'Bearer <playerId>:<authToken>'")
             }
 
             val gamePlayer = GamePlayer(gameId, playerId)
             if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gamePlayer, token)) {
                 log.warn("{}: Unauthorized access with token {}", gamePlayer, token)
-                requestCtx.abortWith(Response.status(Response.Status.UNAUTHORIZED)
-                        .entity(RestError("'Authorization' header was invalid for game $gameId")).build())
+                throw IllegalActionException("'Authorization' header was invalid for game $gameId")
             }
         }
+
+        chain.doFilter(request, response)
     }
+
 
     companion object {
 
@@ -58,7 +57,7 @@ class GameAccessTokenFilter : ContainerRequestFilter {
         const val AUTH_TOKEN_PREFIX = "Bearer "
         private val PROTECTED_PATHS = Pattern.compile("^games/(?<gameId>\\d+)")
 
-        private fun extractPlayerIdFromContext(requestCtx: ContainerRequestContext): Int {
+        private fun extractPlayerIdFromContext(requestCtx: HttpServletRequest): Int {
             val playerToken = extractAuthFromContext(requestCtx)
             val playerAndToken = playerToken!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             return Integer.parseInt(playerAndToken[0])
@@ -70,19 +69,19 @@ class GameAccessTokenFilter : ContainerRequestFilter {
             return Integer.parseInt(playerAndToken[0])
         }
 
-        private fun extractAuthTokenFromContext(requestCtx: ContainerRequestContext): String {
+        private fun extractAuthTokenFromContext(requestCtx: HttpServletRequest): String {
             val playerToken = extractAuthFromContext(requestCtx)
             val playerAndToken = playerToken!!.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             return playerAndToken[1]
         }
 
-        private fun extractAuthFromContext(requestCtx: ContainerRequestContext): String? {
-            val token = requestCtx.getHeaderString(AUTH_HEADER)
+        private fun extractAuthFromContext(requestCtx: HttpServletRequest): String? {
+            val token = requestCtx.getHeader(AUTH_HEADER)
             return extractTokenFromHeaderValue(token)
         }
 
         private fun extractAuthFromHeaders(headers: HttpHeaders): String? {
-            val token = headers.getHeaderString(AUTH_HEADER)
+            val token = headers.getValue(AUTH_HEADER).firstOrNull()
             return extractTokenFromHeaderValue(token)
         }
 
@@ -92,5 +91,4 @@ class GameAccessTokenFilter : ContainerRequestFilter {
             } else null
         }
     }
-
 }

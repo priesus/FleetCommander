@@ -5,26 +5,26 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		create : function(playerName) {
 			return $http({
 				method : 'POST',
-				url : 'api/games',
+				url : 'games',
 				data : {
-					'playerName' : playerName
+					'player_name' : playerName
 				}
 			});
 		},
 		join : function(playerName, joinCode) {
 			return $http({
 				method : 'POST',
-				url : 'api/games',
+				url : 'games',
 				data : {
-					'playerName' : playerName,
-					'joinCode' : joinCode
+					'player_name' : playerName,
+					'join_code' : joinCode
 				}
 			});
 		},
 		get : function(gameId, token) {
 			return $http({
 				method : 'GET',
-				url : 'api/games/' + gameId,
+				url : 'games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -33,7 +33,7 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		quit : function(gameId, token) {
 			return $http({
 				method : 'DELETE',
-				url : 'api/games/' + gameId,
+				url : 'games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -42,12 +42,12 @@ fleetCommanderServices.factory('GamesService', [ '$http', function($http) {
 		start : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId,
+				url : 'games/' + gameId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
 				data : {
-					isStarted : true
+					'started' : true
 				}
 			});
 		}
@@ -59,7 +59,7 @@ fleetCommanderServices.factory('JoinCodesService', [ '$http', function($http) {
 		create : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/joinCodes',
+				url : 'games/' + gameId + '/join-codes',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -68,7 +68,7 @@ fleetCommanderServices.factory('JoinCodesService', [ '$http', function($http) {
 		getAllActive : function(gameId, token) {
 			return $http({
 				method : 'GET',
-				url : 'api/games/' + gameId + '/joinCodes',
+				url : 'games/' + gameId + '/join-codes',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -82,7 +82,7 @@ fleetCommanderServices.factory('PlayersService', [ '$http', function($http) {
 		addComputerPlayer : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/players',
+				url : 'games/' + gameId + '/players',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -96,7 +96,7 @@ fleetCommanderServices.factory('TurnsService', [ '$http', function($http) {
 		endTurn : function(gameId, token) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/turns',
+				url : 'games/' + gameId + '/turns',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -110,7 +110,7 @@ fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 		buildFactory : function(gameId, token, planetId) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/universe/planets/' + planetId + '/factories',
+				url : 'games/' + gameId + '/universe/planets/' + planetId + '/factories',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				}
@@ -119,12 +119,12 @@ fleetCommanderServices.factory('PlanetsService', [ '$http', function($http) {
 		changeProductionFocus : function(gameId, token, planetId, focus) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/universe/planets/' + planetId,
+				url : 'games/' + gameId + '/universe/planets/' + planetId,
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
 				data : {
-					productionFocus : focus
+					'production_focus' : focus
 				}
 			});
 		}
@@ -136,14 +136,14 @@ fleetCommanderServices.factory('ShipsService', [ '$http', function($http) {
 		sendShips : function(gameId, token, ships, origin, dest) {
 			return $http({
 				method : 'POST',
-				url : 'api/games/' + gameId + '/universe/travellingShipFormations',
+				url : 'games/' + gameId + '/universe/travelling-ship-formations',
 				headers : {
 					'Authorization' : 'Bearer ' + token
 				},
 				data : {
-					'shipCount' : ships,
-					'originPlanetId' : origin,
-					'destinationPlanetId' : dest
+					'ship_count' : ships,
+					'origin_planet_id' : origin,
+					'destination_planet_id' : dest
 				}
 			});
 		}
