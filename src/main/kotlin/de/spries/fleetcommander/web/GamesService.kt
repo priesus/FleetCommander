@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.service.core
+package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player
@@ -8,10 +8,10 @@ import de.spries.fleetcommander.persistence.GameStore
 import de.spries.fleetcommander.persistence.InvalidCodeException
 import de.spries.fleetcommander.persistence.JoinCodeLimitReachedException
 import de.spries.fleetcommander.persistence.JoinCodes
-import de.spries.fleetcommander.service.core.dto.GameAccessParams
-import de.spries.fleetcommander.service.core.dto.GameParams
-import de.spries.fleetcommander.service.core.dto.GamePlayer
-import de.spries.fleetcommander.service.core.dto.ShipFormationParams
+import de.spries.fleetcommander.web.dto.GameAccessParams
+import de.spries.fleetcommander.web.dto.GameParams
+import de.spries.fleetcommander.web.dto.GamePlayer
+import de.spries.fleetcommander.web.dto.ShipFormationParams
 import mu.KotlinLogging
 
 class GamesService {

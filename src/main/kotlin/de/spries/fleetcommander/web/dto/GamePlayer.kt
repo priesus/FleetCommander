@@ -1,3 +1,3 @@
-package de.spries.fleetcommander.service.core.dto
+package de.spries.fleetcommander.web.dto
 
 data class GamePlayer(val gameId: Int, val playerId: Int)

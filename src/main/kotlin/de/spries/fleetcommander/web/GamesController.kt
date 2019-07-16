@@ -1,11 +1,10 @@
-package de.spries.fleetcommander.service.rest
+package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame
-import de.spries.fleetcommander.service.core.GamesService
-import de.spries.fleetcommander.service.core.dto.GameAccessParams
-import de.spries.fleetcommander.service.core.dto.GameParams
-import de.spries.fleetcommander.service.core.dto.GamePlayer
-import de.spries.fleetcommander.service.core.dto.ShipFormationParams
+import de.spries.fleetcommander.web.dto.GameAccessParams
+import de.spries.fleetcommander.web.dto.GameParams
+import de.spries.fleetcommander.web.dto.GamePlayer
+import de.spries.fleetcommander.web.dto.ShipFormationParams
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

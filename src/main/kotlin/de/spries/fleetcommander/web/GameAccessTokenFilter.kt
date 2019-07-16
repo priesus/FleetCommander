@@ -1,8 +1,7 @@
-package de.spries.fleetcommander.service.rest
+package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException
-import de.spries.fleetcommander.service.core.GameAuthenticator
-import de.spries.fleetcommander.service.core.dto.GamePlayer
+import de.spries.fleetcommander.web.dto.GamePlayer
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component

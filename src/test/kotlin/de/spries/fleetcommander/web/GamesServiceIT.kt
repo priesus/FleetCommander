@@ -1,9 +1,9 @@
-package de.spries.fleetcommander.service.core
+package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.model.core.Game.Status
 import de.spries.fleetcommander.model.core.common.IllegalActionException
-import de.spries.fleetcommander.service.core.dto.GameParams
-import de.spries.fleetcommander.service.core.dto.GamePlayer
+import de.spries.fleetcommander.web.dto.GameParams
+import de.spries.fleetcommander.web.dto.GamePlayer
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.empty
 import org.hamcrest.Matchers.hasItem

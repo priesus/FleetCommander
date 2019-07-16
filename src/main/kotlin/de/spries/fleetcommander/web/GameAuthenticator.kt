@@ -1,6 +1,6 @@
-package de.spries.fleetcommander.service.core
+package de.spries.fleetcommander.web
 
-import de.spries.fleetcommander.service.core.dto.GamePlayer
+import de.spries.fleetcommander.web.dto.GamePlayer
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 

@@ -1,4 +1,4 @@
-package de.spries.fleetcommander.service.core.dto
+package de.spries.fleetcommander.web.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
