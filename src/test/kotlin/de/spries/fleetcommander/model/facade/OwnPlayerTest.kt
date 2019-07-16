@@ -26,7 +26,7 @@ class OwnPlayerTest {
     @Test
     @Throws(Exception::class)
     fun forwardsCallToCanAffordFactory() {
-        viewingPlayer.canAffordFactory()
+        viewingPlayer.getCanAffordFactory()
         verify(originalPlayer).canAffordFactory()
     }
 }

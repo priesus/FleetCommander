@@ -6,5 +6,5 @@ open class OwnPlayer(originalPlayer: Player) : OtherPlayer(originalPlayer) {
 
     fun getCredits() = originalPlayer.getCredits()
 
-    fun canAffordFactory() = originalPlayer.canAffordFactory()
+    fun getCanAffordFactory() = originalPlayer.canAffordFactory()
 }

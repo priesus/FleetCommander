@@ -71,7 +71,7 @@
 				</ul>
 			</div>
 
-			<div data-ng-show="game.me.status === 'PLAYING' && game.turnNumber > 1">
+			<div data-ng-show="game.me.status === 'PLAYING' && game.turn_number > 1">
 				<h3>Recent events (Turn #{{game.turn_number - 1}})</h3>
 				<ul class="paragraph list-unstyled">
 					<li data-ng-show="!game.previous_turn_events.has_events">No enemy contact</li>
@@ -99,7 +99,7 @@
 						<div class="factory-slot" data-ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factory_site.factory_count) track by $index">
 							<img src="img/factory.svg" height="19px" width="19px">
 						</div>
-						<div class="factory-slot" data-ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factory_site..available_slots) track by $index">
+						<div class="factory-slot" data-ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factory_site.available_slots) track by $index">
 							&nbsp;
 						</div>
 					</div>
@@ -121,7 +121,7 @@
 					</div>
 					<div class="form-group">
 						<div>
-							<button data-ng-click="buildFactoryOnSelectedPlanet()" data-ng-disabled="game.universe.planets[selectedPlanetIndex].factory_site..available_slots===0 || !game.me.can_afford_factory" class="btn btn-default">
+							<button data-ng-click="buildFactoryOnSelectedPlanet()" data-ng-disabled="game.universe.planets[selectedPlanetIndex].factory_site.available_slots===0 || !game.me.can_afford_factory" class="btn btn-default">
 								Build <span class="shortcut">F</span>actory
 							</button>
 						</div>
