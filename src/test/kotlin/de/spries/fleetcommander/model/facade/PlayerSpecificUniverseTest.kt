@@ -37,15 +37,15 @@ class PlayerSpecificUniverseTest {
         myHomePlanet = mock()
         otherPlayersHomePlanet = mock()
 
-        whenever(originalUniverse.planets).thenReturn(listOf(mock()))
+        whenever(originalUniverse.getPlanets()).thenReturn(listOf(mock()))
         whenever(originalUniverse.getHomePlanetOf(self)).thenReturn(myHomePlanet)
         whenever(originalUniverse.getHomePlanetOf(otherPlayer)).thenReturn(otherPlayersHomePlanet)
 
         myShips = mock()
         otherPlayersShips = mock()
-        doReturn(self).`when`(myShips).commander
-        doReturn(otherPlayer).`when`(otherPlayersShips).commander
-        doReturn(listOf(myShips, otherPlayersShips)).`when`(originalUniverse).travellingShipFormations
+        doReturn(self).`when`(myShips).getCommander()
+        doReturn(otherPlayer).`when`(otherPlayersShips).getCommander()
+        doReturn(listOf(myShips, otherPlayersShips)).`when`(originalUniverse).getTravellingShipFormations()
 
         ownUniverseView = PlayerSpecificUniverse(originalUniverse, self)
         otherUniverseView = PlayerSpecificUniverse(originalUniverse, otherPlayer)

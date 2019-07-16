@@ -77,14 +77,14 @@ class PlanetTest {
     @Throws(Exception::class)
     fun inhabitantIsRemovedWhenPlayerIsDefeated() {
         johnsHomePlanet.handleDefeatedPlayer(john)
-        assertThat(johnsHomePlanet.inhabitant, `is`(nullValue()))
+        assertThat(johnsHomePlanet.inhabitant(), `is`(nullValue()))
     }
 
     @Test
     @Throws(Exception::class)
     fun defeatedPlayerHasNoEffectOnOtherPlayersPlanetInhabitant() {
         johnsHomePlanet.handleDefeatedPlayer(jack)
-        assertThat(johnsHomePlanet.inhabitant, `is`(john))
+        assertThat(johnsHomePlanet.inhabitant(), `is`(john))
     }
 
     @Test
@@ -137,7 +137,7 @@ class PlanetTest {
     @Throws(Exception::class)
     fun homePlanetIsNeutralizedForDefeatedPlayers() {
         johnsHomePlanet.handleDefeatedPlayer(john)
-        assertThat(johnsHomePlanet.isHomePlanet, `is`(false))
+        assertThat(johnsHomePlanet.isHomePlanet(), `is`(false))
     }
 
 }

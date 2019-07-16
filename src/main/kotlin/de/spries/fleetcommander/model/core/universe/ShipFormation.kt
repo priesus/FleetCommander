@@ -3,14 +3,16 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-data class ShipFormation(var shipCount: Int = 1, private val origin: Planet, private val destination: Planet, val commander: Player)
+data class ShipFormation(private var shipCount: Int = 1, private val origin: Planet, private val destination: Planet, private val commander: Player)
     : HasCoordinates(origin.x, origin.y) {
 
     private val distanceOverall: Double = origin.distanceTo(destination)
-    var distanceTravelled = 0
-        private set
+    private var distanceTravelled = 0
 
-    fun distanceRemaining() = distanceOverall - distanceTravelled
+    fun getShipCount() = shipCount
+    fun getCommander() = commander
+    fun getDistanceTravelled() = distanceTravelled
+    fun getDistanceRemaining() = distanceOverall - distanceTravelled
 
     init {
         if (shipCount <= 0) {
@@ -50,7 +52,7 @@ data class ShipFormation(var shipCount: Int = 1, private val origin: Planet, pri
     }
 
     fun hasArrived(): Boolean {
-        return distanceRemaining() <= 0
+        return getDistanceRemaining() <= 0
     }
 
     companion object {

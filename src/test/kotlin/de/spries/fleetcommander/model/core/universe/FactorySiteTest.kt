@@ -52,7 +52,7 @@ class FactorySiteTest {
     @Test
     @Throws(Exception::class)
     fun emptyFactorySiteHasNoFactories() {
-        assertThat(factorySite.factoryCount, `is`(0))
+        assertThat(factorySite.getFactoryCount(), `is`(0))
     }
 
     @Test
@@ -60,7 +60,7 @@ class FactorySiteTest {
     fun factoryCountIncreasesWithEachBuiltFactory() {
         for (i in 0..5) {
             factorySite.buildFactory()
-            assertThat(factorySite.factoryCount, `is`(i + 1))
+            assertThat(factorySite.getFactoryCount(), `is`(i + 1))
         }
     }
 
@@ -93,14 +93,14 @@ class FactorySiteTest {
     @Test
     @Throws(Exception::class)
     fun initialProductionFocusIsBalanced50Percent() {
-        assertThat(factorySite.shipProductionFocus, `is`(10))
+        assertThat(factorySite.getShipProductionFocus(), `is`(10))
     }
 
     @Test
     @Throws(Exception::class)
     fun fullProductionFocusOnShipsProducesShipsOnly() {
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 20
+        factorySite.updateShipProductionFocus(20)
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(SHIPS_PER_FACTORY_PER_TURN))
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(0))
     }
@@ -109,7 +109,7 @@ class FactorySiteTest {
     @Throws(Exception::class)
     fun fullProductionFocusOnCreditsProducesCreditsOnly() {
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 0
+        factorySite.updateShipProductionFocus(0)
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(CREDITS_PER_FACTORY_PER_TURN))
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(0f))
     }
@@ -118,7 +118,7 @@ class FactorySiteTest {
     @Throws(Exception::class)
     fun balancedProductionFocusProducesBothShipsAndCredits() {
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 10
+        factorySite.updateShipProductionFocus(10)
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(CREDITS_PER_FACTORY_PER_TURN / 2))
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(SHIPS_PER_FACTORY_PER_TURN / 2))
     }
@@ -128,7 +128,7 @@ class FactorySiteTest {
     fun differentPlanetClassProducesDifferentResources() {
         val factorySite = FactorySite(PlanetClass.P)
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 10
+        factorySite.updateShipProductionFocus(10)
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(PlanetClass.P.getCreditsPerFactoryPerTurn() / 2))
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(PlanetClass.P.getShipsPerFactoryPerTurn() / 2))
     }
@@ -137,7 +137,7 @@ class FactorySiteTest {
     @Throws(Exception::class)
     fun shipProductionFocusProducesMoreShipsThanCredits() {
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 15
+        factorySite.updateShipProductionFocus(15)
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(CREDITS_PER_FACTORY_PER_TURN / 4 * 1))
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(SHIPS_PER_FACTORY_PER_TURN / 4 * 3))
     }
@@ -146,7 +146,7 @@ class FactorySiteTest {
     @Throws(Exception::class)
     fun creditProductionFocusProducesMoreCreditsThanShips() {
         factorySite.buildFactory()
-        factorySite.shipProductionFocus = 5
+        factorySite.updateShipProductionFocus(5)
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(CREDITS_PER_FACTORY_PER_TURN / 4 * 3))
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(SHIPS_PER_FACTORY_PER_TURN / 4 * 1))
     }
@@ -154,13 +154,13 @@ class FactorySiteTest {
     @Test(expected = IllegalActionException::class)
     @Throws(Exception::class)
     fun cannotSetNegativeProductionFocus() {
-        factorySite.shipProductionFocus = -1
+        factorySite.updateShipProductionFocus(-1)
     }
 
     @Test(expected = IllegalActionException::class)
     @Throws(Exception::class)
     fun cannotSetProductionFocusGreaterThan20() {
-        factorySite.shipProductionFocus = 21
+        factorySite.updateShipProductionFocus(21)
     }
 
     companion object {

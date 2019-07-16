@@ -8,7 +8,7 @@ import de.spries.fleetcommander.model.core.universe.Universe
 open class PlayerSpecificUniverse(private val originalUniverse: Universe, private val viewingPlayer: Player) {
 
     fun getPlanets(): List<PlayerSpecificPlanet> {
-        return originalUniverse.planets.map { PlayerSpecificPlanet(it, viewingPlayer) }
+        return originalUniverse.getPlanets().map { PlayerSpecificPlanet(it, viewingPlayer) }
     }
 
     fun getHomePlanet(): PlayerSpecificPlanet? {
@@ -17,9 +17,9 @@ open class PlayerSpecificUniverse(private val originalUniverse: Universe, privat
     }
 
     fun getTravellingShipFormations(): Collection<ShipFormation> {
-        return if (TestMode.TEST_MODE) originalUniverse.travellingShipFormations
-        else originalUniverse.travellingShipFormations
-                .filter { s -> s.commander === viewingPlayer }
+        return if (TestMode.TEST_MODE) originalUniverse.getTravellingShipFormations()
+        else originalUniverse.getTravellingShipFormations()
+                .filter { s -> s.getCommander() === viewingPlayer }
     }
 
     fun getPlanet(planetId: Int): PlayerSpecificPlanet {

@@ -80,14 +80,14 @@ class ShipFormationTest {
     fun mergingIncreasesShipCountOfExistingFormation() {
         val joiningFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
         joiningFormation.join(existingFormation)
-        assertThat(existingFormation.shipCount, `is`(2))
+        assertThat(existingFormation.getShipCount(), `is`(2))
     }
 
     @Test
     fun mergingDecreasesShipCountOfJoiningFormationToZero() {
         val joiningFormation = ShipFormation(1, originPlanet, closePlanet, JOHN)
         joiningFormation.join(existingFormation)
-        assertThat(joiningFormation.shipCount, `is`(0))
+        assertThat(joiningFormation.getShipCount(), `is`(0))
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -99,7 +99,7 @@ class ShipFormationTest {
     @Test
     fun landingOnDestinationTransfersShipsToPlanet() {
         existingFormation.landOnDestination()
-        assertThat(existingFormation.shipCount, `is`(0))
+        assertThat(existingFormation.getShipCount(), `is`(0))
         verify(closePlanet).landShips(1, JOHN)
     }
 
@@ -144,12 +144,12 @@ class ShipFormationTest {
         sf.travel()
         verify(distantPlanet, never()).landShips(1, JOHN)
         assertThat(sf.hasArrived(), `is`(false))
-        assertThat(sf.distanceRemaining(), `is`(greaterThan(0.0)))
+        assertThat(sf.getDistanceRemaining(), `is`(greaterThan(0.0)))
 
         sf.travel()
         verify(distantPlanet).landShips(1, JOHN)
         assertThat(sf.hasArrived(), `is`(true))
-        assertThat(sf.distanceRemaining(), `is`(lessThanOrEqualTo(0.0)))
+        assertThat(sf.getDistanceRemaining(), `is`(lessThanOrEqualTo(0.0)))
     }
 
     @Test
@@ -158,9 +158,9 @@ class ShipFormationTest {
         val sf = ShipFormation(1, originPlanet, moreDistantPlanet, JOHN)
 
         sf.travel()
-        assertThat(sf.distanceTravelled, `is`(1 * ShipFormation.DISTANCE_PER_TURN))
+        assertThat(sf.getDistanceTravelled(), `is`(1 * ShipFormation.DISTANCE_PER_TURN))
         sf.travel()
-        assertThat(sf.distanceTravelled, `is`(2 * ShipFormation.DISTANCE_PER_TURN))
+        assertThat(sf.getDistanceTravelled(), `is`(2 * ShipFormation.DISTANCE_PER_TURN))
     }
 
     @Test

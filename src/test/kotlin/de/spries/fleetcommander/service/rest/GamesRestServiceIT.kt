@@ -18,7 +18,9 @@ import org.hamcrest.Matchers.startsWith
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.Ignore
 
+@Ignore
 class GamesRestServiceIT {
     private var gameUrl: String? = null
     private var gameAuthToken: String? = null

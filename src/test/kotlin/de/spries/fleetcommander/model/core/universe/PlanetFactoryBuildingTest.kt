@@ -1,5 +1,7 @@
 package de.spries.fleetcommander.model.core.universe
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import de.spries.fleetcommander.model.core.Player
@@ -10,7 +12,6 @@ import org.junit.Assert.assertThat
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
@@ -28,7 +29,8 @@ class PlanetFactoryBuildingTest {
         jack = mock()
         johnsFactorySite = mock()
 
-        johnsHomePlanet = Planet(0, 0, john)
+        johnsHomePlanet = Planet(0, 0, john, johnsFactorySite)
+        johnsHomePlanet.getFactorySite()
         uninhabitedPlanet = Planet(0, 0)
     }
 
@@ -83,11 +85,11 @@ class PlanetFactoryBuildingTest {
     @Test
     @Throws(Exception::class)
     fun buildingFactoryReducesPlayerCredits() {
-        doReturn(SUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
 
         johnsHomePlanet.buildFactory(john)
-        verify(john).reduceCredits(Mockito.eq(SUFFICIENT_CREDITS))
+        verify(john).reduceCredits(eq(SUFFICIENT_CREDITS))
     }
 
     @Test
@@ -103,14 +105,14 @@ class PlanetFactoryBuildingTest {
             // expected behavior
         }
 
-        verify(john, never()).reduceCredits(Mockito.anyInt())
+        verify(john, never()).reduceCredits(any())
     }
 
     @Test
     @Throws(Exception::class)
     fun cannotBuildFactoryWithInsufficientCredits_() {
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
-        whenever(john.reduceCredits(Mockito.anyInt())).thenThrow(InsufficientCreditsException("error"))
+        whenever(john.reduceCredits(any())).thenThrow(InsufficientCreditsException("error"))
 
         try {
             johnsHomePlanet.buildFactory(john)
@@ -125,17 +127,17 @@ class PlanetFactoryBuildingTest {
     @Test
     @Throws(Exception::class)
     fun cannotBuildFactoryWithInsufficientCredits() {
-        doReturn(INSUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(INSUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
 
         assertThat(johnsHomePlanet.canBuildFactory(john), `is`(false))
-        verify(john).credits
+        verify(john).getCredits()
     }
 
     @Test
     @Throws(Exception::class)
     fun cannotBuildFactoryWithoutAvailableSlots() {
-        doReturn(SUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(false)
 
         assertThat(johnsHomePlanet.canBuildFactory(john), `is`(false))
@@ -145,7 +147,7 @@ class PlanetFactoryBuildingTest {
     @Test
     @Throws(Exception::class)
     fun cannotBuildFactoryOnOtherPlayersPlanet() {
-        doReturn(SUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
         assertThat(johnsHomePlanet.canBuildFactory(jack), `is`(false))
     }
@@ -153,7 +155,7 @@ class PlanetFactoryBuildingTest {
     @Test
     @Throws(Exception::class)
     fun cannotBuildFactoryOnUninhabitedPlanet() {
-        doReturn(SUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
         assertThat(uninhabitedPlanet.canBuildFactory(john), `is`(false))
     }
@@ -161,7 +163,7 @@ class PlanetFactoryBuildingTest {
     @Test
     @Throws(Exception::class)
     fun canBuildFactory() {
-        doReturn(SUFFICIENT_CREDITS).`when`(john).credits
+        doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
         assertThat(johnsHomePlanet.canBuildFactory(john), `is`(true))
     }
@@ -170,7 +172,7 @@ class PlanetFactoryBuildingTest {
     @Throws(Exception::class)
     fun canSetProductionFocusIfInhabitant() {
         johnsHomePlanet.setProductionFocus(1, john)
-        verify(johnsFactorySite).shipProductionFocus = 1
+        verify(johnsFactorySite).updateShipProductionFocus(1)
     }
 
     @Test(expected = IllegalActionException::class)

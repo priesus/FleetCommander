@@ -9,26 +9,26 @@ import de.spries.fleetcommander.model.core.Player
 
 open class PlayerSpecificGame(private val originalGame: Game, private val viewingPlayer: Player) {
 
-    fun getId() = originalGame.id
+    fun getId() = originalGame.getId()
 
-    fun getStatus() = originalGame.status
+    fun getStatus() = originalGame.getStatus()
 
-    fun getTurnNumber() = originalGame.turnNumber
+    fun getTurnNumber() = originalGame.getTurnNumber()
 
     fun getPreviousTurnEvents(): PlayerSpecificTurnEvents? {
-        val events = originalGame.previousTurnEvents
+        val events = originalGame.getPreviousTurnEvents()
         return if (events != null) {
             PlayerSpecificTurnEvents(events, viewingPlayer)
         } else null
     }
 
-    fun getUniverse() = if (originalGame.universe != null) {
-        PlayerSpecificUniverse.convert(originalGame.universe!!, viewingPlayer)
+    fun getUniverse() = if (originalGame.getUniverse() != null) {
+        PlayerSpecificUniverse.convert(originalGame.getUniverse()!!, viewingPlayer)
     } else null
 
     fun getMe() = OwnPlayer(viewingPlayer)
 
-    fun getOtherPlayers() = Player.filterAllOtherPlayers(originalGame.players, viewingPlayer)
+    fun getOtherPlayers() = Player.filterAllOtherPlayers(originalGame.getPlayers(), viewingPlayer)
             .map { OtherPlayer(it) }
 
     fun addComputerPlayer() {

@@ -20,13 +20,13 @@ class OtherPlayerTest {
     @Test
     fun forwardsCallToGetNameForOtherPlayers() {
         viewingPlayer.getName()
-        verify(originalPlayer).name
+        verify(originalPlayer).getName()
     }
 
     @Test
     fun forwardsCallToGetStatus() {
         viewingPlayer.getStatus()
-        verify(originalPlayer).status
+        verify(originalPlayer).getStatus()
     }
 
     @Test

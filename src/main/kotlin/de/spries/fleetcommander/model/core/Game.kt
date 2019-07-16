@@ -6,23 +6,30 @@ import de.spries.fleetcommander.model.core.universe.UniverseFactory
 
 open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
 
-    var id: Int = 0
-    val players = mutableListOf<Player>()
-    var universe: Universe? = null
-        private set
-    var status = Status.PENDING
-        private set
-    var previousTurnEvents: TurnEvents? = null
-        private set
+    private var id: Int = 0
+    private val players = mutableListOf<Player>()
+    private var universe: Universe? = null
+    private var status = Status.PENDING
+    private var previousTurnEvents: TurnEvents? = null
     private var nextPlayerId = 1
-    var turnNumber = 0
-        private set
+    private var turnNumber = 0
 
     enum class Status {
         PENDING,
         RUNNING,
         OVER
     }
+
+    fun getId() = id
+    fun assignId(id: Int) {
+        this.id = id
+    }
+
+    fun getPlayers() = players
+    fun getUniverse() = universe
+    fun getStatus() = status
+    fun getPreviousTurnEvents() = previousTurnEvents
+    fun getTurnNumber() = turnNumber
 
     fun addPlayer(player: Player) {
         if (Status.PENDING != status) {
@@ -32,7 +39,7 @@ open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { Univer
             throw IllegalActionException("Limit of $MAX_PLAYERS players reached")
         }
         if (players.contains(player)) {
-            throw IllegalActionException("There is already a player named " + player.name)
+            throw IllegalActionException("There is already a player named " + player.getName())
         }
 
         assignPlayerId(player)
@@ -41,7 +48,7 @@ open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { Univer
 
     @Synchronized
     private fun assignPlayerId(player: Player) {
-        player.id = nextPlayerId++
+        player.assignId(nextPlayerId++)
     }
 
     fun start(player: Player) {
@@ -170,7 +177,7 @@ open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { Univer
     }
 
     fun getPlayerWithId(playerId: Int): Player? {
-        return players.firstOrNull { p -> p.id == playerId }
+        return players.firstOrNull { p -> p.getId() == playerId }
     }
 
     companion object {

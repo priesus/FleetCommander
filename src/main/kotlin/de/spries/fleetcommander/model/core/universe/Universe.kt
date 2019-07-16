@@ -3,17 +3,19 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-open class Universe(val planets: List<Planet>) {
+open class Universe(private val planets: List<Planet>) {
 
-    val homePlanets: Collection<Planet>
-        get() = planets.filter { it.isHomePlanet }
-    val travellingShipFormations: MutableCollection<ShipFormation> = mutableSetOf()
+    private val travellingShipFormations: MutableCollection<ShipFormation> = mutableListOf()
 
     init {
         if (planets.isEmpty()) {
             throw IllegalArgumentException("List of planets required")
         }
     }
+
+    fun getPlanets() = planets
+    fun getHomePlanets() = planets.filter { it.isHomePlanet() }
+    fun getTravellingShipFormations() = travellingShipFormations
 
     fun getHomePlanetOf(player: Player): Planet? {
         return planets.firstOrNull { it.isHomePlanetOf(player) }
@@ -25,7 +27,7 @@ open class Universe(val planets: List<Planet>) {
 
     fun runShipTravellingCycle() {
         travellingShipFormations
-                .sortedBy { it.distanceRemaining() }
+                .sortedBy { it.getDistanceRemaining() }
                 .forEach { it.travel() }
         travellingShipFormations.removeIf { it.hasArrived() }
     }
@@ -81,6 +83,6 @@ open class Universe(val planets: List<Planet>) {
 
     fun handleDefeatedPlayer(newDefeatedPlayer: Player) {
         planets.forEach { p -> p.handleDefeatedPlayer(newDefeatedPlayer) }
-        travellingShipFormations.removeIf { it.commander == newDefeatedPlayer }
+        travellingShipFormations.removeIf { it.getCommander() == newDefeatedPlayer }
     }
 }

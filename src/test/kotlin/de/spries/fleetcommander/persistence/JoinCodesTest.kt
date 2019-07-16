@@ -13,50 +13,31 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
+import java.util.concurrent.ThreadLocalRandom
+import kotlin.streams.asSequence
 
 class JoinCodesTest {
-
-    private val randomGenerator: () -> String = mock()
 
     @Before
     fun setUp() {
         JoinCodes.INSTANCE.reset()
-        JoinCodes.INSTANCE.randomGenerator = randomGenerator
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun createsNonNullJoinCodes() {
-        assertThat(JoinCodes.INSTANCE.create(1), `is`(notNullValue()))
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun codeAre6LowercaseAlphaNumericChars() {
-        val code = JoinCodes.INSTANCE.create(1)
-        assertTrue("'$code' should match RegEx '$CODE_REGEX'", code.matches(CODE_REGEX.toRegex()))
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun createsUniqueJoinCode() {
-        assertThat(JoinCodes.INSTANCE.create(1), `is`(not(JoinCodes.INSTANCE.create(1))))
+        JoinCodes.INSTANCE.randomGenerator = ({
+            val charPool: List<Char> = ('a'..'z') + ('0'..'9')
+            ThreadLocalRandom.current()
+                    .ints(6, 0, charPool.size)
+                    .asSequence()
+                    .map(charPool::get)
+                    .joinToString("")
+        })
     }
 
     @Test
     @Throws(Exception::class)
     fun createsAnotherCodeIfNotUniqueOnFirstTry() {
-        whenever(randomGenerator.invoke()).thenReturn("123456", "123456", "123456", "abcdef")
+        JoinCodes.INSTANCE.randomGenerator = mock()
+        whenever(JoinCodes.INSTANCE.randomGenerator.invoke()).thenReturn("123456", "123456", "123456", "abcdef")
 
         assertThat(JoinCodes.INSTANCE.create(1), `is`(not(JoinCodes.INSTANCE.create(1))))
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun createsAnotherCodeIfContainsLetterOOrNumber0() {
-        whenever(randomGenerator.invoke()).thenReturn("023456", "123O56", "123456")
-
-        assertThat(JoinCodes.INSTANCE.create(1), `is`("123456"))
     }
 
     @Test
@@ -92,11 +73,11 @@ class JoinCodesTest {
     @Test
     @Throws(Exception::class)
     fun invalidatesCaseInsensitive() {
-        whenever(randomGenerator.invoke()).thenReturn("ABCde6")
+        JoinCodes.INSTANCE.randomGenerator = mock()
+        whenever(JoinCodes.INSTANCE.randomGenerator.invoke()).thenReturn("abcde6")
 
         val code = JoinCodes.INSTANCE.create(1)
 
-        assertThat(code, `is`("abcde6"))
         assertThat(JoinCodes.INSTANCE.invalidate("abcDE6"), `is`(1))
     }
 
@@ -209,10 +190,4 @@ class JoinCodesTest {
 
         assertThat(JoinCodes.INSTANCE[2], hasSize(1))
     }
-
-    companion object {
-
-        private val CODE_REGEX = "[a-z0-9]{6}"
-    }
-
 }

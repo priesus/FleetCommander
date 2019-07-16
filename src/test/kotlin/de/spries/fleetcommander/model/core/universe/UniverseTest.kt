@@ -33,6 +33,9 @@ class UniverseTest {
         uninhabitedPlanet = mock()
         distantPlanet = mock()
         universe = Universe(listOf(johnsHomePlanet, jacksHomePlanet, uninhabitedPlanet, distantPlanet))
+
+        whenever(johnsHomePlanet.isHomePlanet()).thenReturn(true)
+        whenever(jacksHomePlanet.isHomePlanet()).thenReturn(true)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -42,13 +45,13 @@ class UniverseTest {
 
     @Test
     fun newUniverseHasPlanets() {
-        assertThat(universe.planets, `is`(not(emptyList())))
+        assertThat(universe.getPlanets(), `is`(not(emptyList())))
     }
 
     @Test
     @Throws(Exception::class)
     fun universeHasHomePlanets() {
-        val homePlanets = universe.homePlanets
+        val homePlanets = universe.getHomePlanets()
         assertThat(homePlanets, hasItem(johnsHomePlanet))
         assertThat(homePlanets, hasItem(jacksHomePlanet))
         assertThat(homePlanets, hasSize(2))
@@ -57,14 +60,14 @@ class UniverseTest {
     @Test
     @Throws(Exception::class)
     fun universeHasNoTravellingShips() {
-        assertThat<Collection<ShipFormation>>(universe.travellingShipFormations, hasSize(0))
+        assertThat<Collection<ShipFormation>>(universe.getTravellingShipFormations(), hasSize(0))
     }
 
     @Test
     @Throws(Exception::class)
     fun sendingShipsAddsTravellingShipsToUniverse() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
-        val shipFormations = universe.travellingShipFormations
+        val shipFormations = universe.getTravellingShipFormations()
         assertThat<Collection<ShipFormation>>(shipFormations, hasSize(1))
 
         assertThat<Collection<ShipFormation>>(shipFormations, hasItem(ShipFormation(1, johnsHomePlanet, uninhabitedPlanet, john)))
@@ -82,7 +85,7 @@ class UniverseTest {
     fun sendingShipsToSameDestinationAgainIncreasesShipsTravelling() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.sendShips(2, johnsHomePlanet, uninhabitedPlanet, john)
-        val shipFormations = universe.travellingShipFormations
+        val shipFormations = universe.getTravellingShipFormations()
         assertThat<Collection<ShipFormation>>(shipFormations, hasSize(1))
 
         assertThat<Collection<ShipFormation>>(shipFormations, hasItem(ShipFormation(3, johnsHomePlanet, uninhabitedPlanet, john)))
@@ -93,7 +96,7 @@ class UniverseTest {
     fun sendingShipsToDifferentDestinationAddsAnotherShipFormation() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.sendShips(1, johnsHomePlanet, distantPlanet, john)
-        val shipFormations = universe.travellingShipFormations
+        val shipFormations = universe.getTravellingShipFormations()
         assertThat<Collection<ShipFormation>>(shipFormations, hasSize(2))
     }
 
@@ -103,7 +106,7 @@ class UniverseTest {
         val shipsBefore = johnsHomePlanet.getShipCount()
         universe.sendShips(1, johnsHomePlanet, johnsHomePlanet, john)
         assertThat(johnsHomePlanet.getShipCount(), `is`(shipsBefore))
-        assertThat<Collection<ShipFormation>>(universe.travellingShipFormations, `is`(empty()))
+        assertThat<Collection<ShipFormation>>(universe.getTravellingShipFormations(), `is`(empty()))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -125,10 +128,10 @@ class UniverseTest {
         universe.sendShips(1, johnsHomePlanet, distantPlanet, john)
 
         universe.runShipTravellingCycle()
-        assertThat<Collection<ShipFormation>>(universe.travellingShipFormations, hasSize(1))
+        assertThat<Collection<ShipFormation>>(universe.getTravellingShipFormations(), hasSize(1))
 
         universe.runShipTravellingCycle()
-        assertThat<Collection<ShipFormation>>(universe.travellingShipFormations, hasSize(0))
+        assertThat<Collection<ShipFormation>>(universe.getTravellingShipFormations(), hasSize(0))
     }
 
     @Test
@@ -167,7 +170,7 @@ class UniverseTest {
 
         universe.sendShips(1, 1, 2, john)
 
-        val shipFormations = universe.travellingShipFormations
+        val shipFormations = universe.getTravellingShipFormations()
         assertThat<Collection<ShipFormation>>(shipFormations, hasItem(ShipFormation(1, johnsHomePlanet, uninhabitedPlanet, john)))
     }
 
@@ -213,7 +216,7 @@ class UniverseTest {
         universe.sendShips(1, jacksHomePlanet, uninhabitedPlanet, jack)
         universe.handleDefeatedPlayer(john)
 
-        val shipFormations = universe.travellingShipFormations
+        val shipFormations = universe.getTravellingShipFormations()
         assertThat<Collection<ShipFormation>>(shipFormations, hasSize(1))
         assertThat<Collection<ShipFormation>>(shipFormations, hasItem(ShipFormation(1, jacksHomePlanet, uninhabitedPlanet, jack)))
     }

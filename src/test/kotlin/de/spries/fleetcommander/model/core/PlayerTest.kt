@@ -20,7 +20,7 @@ class PlayerTest {
 
     @Test
     fun newPlayerHasName() {
-        assertThat(john.name, `is`("John"))
+        assertThat(john.getName(), `is`("John"))
     }
 
     @Test
@@ -32,17 +32,17 @@ class PlayerTest {
     @Test
     @Throws(Exception::class)
     fun newPlayerHasNegativeId() {
-        assertThat(john.id, `is`(lessThan(0)))
+        assertThat(john.getId(), `is`(lessThan(0)))
     }
 
     @Test
     fun newPlayerHasCredits() {
-        assertThat(john.credits, `is`(Player.STARTING_CREDITS))
+        assertThat(john.getCredits(), `is`(Player.STARTING_CREDITS))
     }
 
     @Test
     fun newPlayerIsPlaying() {
-        assertThat(john.status, `is`(Status.PLAYING))
+        assertThat(john.getStatus(), `is`(Status.PLAYING))
         assertThat(john.isActive(), `is`(true))
         assertThat(john.isReady(), `is`(false))
     }
@@ -51,7 +51,7 @@ class PlayerTest {
     @Throws(Exception::class)
     fun readyPlayerIsReady() {
         john.setReady()
-        assertThat(john.status, `is`(Status.READY))
+        assertThat(john.getStatus(), `is`(Status.READY))
         assertThat(john.isActive(), `is`(true))
         assertThat(john.isReady(), `is`(true))
     }
@@ -68,7 +68,7 @@ class PlayerTest {
     fun readyPlayerIschangedToPlaying() {
         john.setReady()
         john.setPlaying()
-        assertThat(john.status, `is`(Status.PLAYING))
+        assertThat(john.getStatus(), `is`(Status.PLAYING))
         assertThat(john.isActive(), `is`(true))
         assertThat(john.isReady(), `is`(false))
     }
@@ -91,7 +91,7 @@ class PlayerTest {
     @Throws(Exception::class)
     fun defeatedPlayerIsDefeated() {
         john.handleDefeat()
-        assertThat(john.status, `is`(Status.DEFEATED))
+        assertThat(john.getStatus(), `is`(Status.DEFEATED))
         assertThat(john.isActive(), `is`(false))
     }
 
@@ -99,7 +99,7 @@ class PlayerTest {
     @Throws(Exception::class)
     fun quittingPlayerIsntActiveAnymore() {
         john.handleQuit()
-        assertThat(john.status, `is`(Status.QUIT))
+        assertThat(john.getStatus(), `is`(Status.QUIT))
         assertThat(john.isActive(), `is`(false))
     }
 
@@ -112,10 +112,10 @@ class PlayerTest {
 
     @Test
     @Throws(Exception::class)
-    fun playerCanAffordAFactoryIfEnougnMoney() {
+    fun playerCanAffordAFactoryIfEnoughMoney() {
         assertThat(john.canAffordFactory(), `is`(true))
 
-        john.credits = FactorySite.FACTORY_COST
+        john.setCredits(FactorySite.FACTORY_COST)
         assertThat(john.canAffordFactory(), `is`(true))
 
         john.reduceCredits(1)
@@ -126,11 +126,11 @@ class PlayerTest {
     @Throws(Exception::class)
     fun playersAreStillEqualWithDifferentId() {
         val john2 = Player("John")
-        john.id = 200
-        john2.id = 200
+        john.assignId(200)
+        john2.assignId(200)
         assertThat(john, `is`(john2))
 
-        john2.id = 201
+        john2.assignId(201)
         assertThat(john, `is`(john2))
     }
 
@@ -138,12 +138,12 @@ class PlayerTest {
     @Throws(Exception::class)
     fun playersHaveSameHashCodeEqualWithDifferentId() {
         val john2 = Player("John")
-        john.id = 200
-        john2.id = 200
+        john.assignId(200)
+        john2.assignId(200)
         assertThat(john, `is`(john2))
         assertThat(john.hashCode(), `is`(john2.hashCode()))
 
-        john2.id = 201
+        john2.assignId(201)
         assertThat(john.hashCode(), `is`(john2.hashCode()))
     }
 
@@ -175,27 +175,27 @@ class PlayerTest {
     @Throws(Exception::class)
     fun buyingStuffReducesPlayersCredits() {
         john.reduceCredits(HALF_STARTING_BALANCE)
-        assertThat(john.credits, `is`(HALF_STARTING_BALANCE))
+        assertThat(john.getCredits(), `is`(HALF_STARTING_BALANCE))
 
         john.reduceCredits(HALF_STARTING_BALANCE)
-        assertThat(john.credits, `is`(0))
+        assertThat(john.getCredits(), `is`(0))
     }
 
     @Test
     @Throws(Exception::class)
     fun addingCreditsIncreasesBalance() {
         john.addCredits(1)
-        assertThat(john.credits, `is`(Player.STARTING_CREDITS + 1))
+        assertThat(john.getCredits(), `is`(Player.STARTING_CREDITS + 1))
 
         john.addCredits(10)
-        assertThat(john.credits, `is`(Player.STARTING_CREDITS + 11))
+        assertThat(john.getCredits(), `is`(Player.STARTING_CREDITS + 11))
     }
 
     @Test
     @Throws(Exception::class)
     fun playerCretidsAreCapped() {
         john.addCredits(Player.MAX_CREDITS)
-        assertThat(john.credits, `is`(Player.MAX_CREDITS))
+        assertThat(john.getCredits(), `is`(Player.MAX_CREDITS))
     }
 
     companion object {

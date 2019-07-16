@@ -10,7 +10,7 @@ enum class JoinCodes {
     INSTANCE;
 
     var randomGenerator: (() -> (String)) = ({
-        val charPool: List<Char> = ('a'..'z') + ('0'..'9')
+        val charPool: List<Char> = (('a'..'z') + ('0'..'9')).filterNot { it=='0' || it=='o' }
         ThreadLocalRandom.current()
                 .ints(6, 0, charPool.size)
                 .asSequence()
@@ -31,10 +31,10 @@ enum class JoinCodes {
                     + " active codes for this game")
         }
 
-        var code: String?
-        do {
+        var code = randomGenerator.invoke()
+        while (gameCodes.contains(code)) {
             code = randomGenerator.invoke()
-        } while (gameCodes.contains(code) || code!!.contains("0") || code.contains("o"))
+        }
 
         gameIdPerCode[code] = gameId
         gameCodes.add(code)

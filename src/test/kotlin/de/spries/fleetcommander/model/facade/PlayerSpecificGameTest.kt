@@ -34,16 +34,16 @@ class PlayerSpecificGameTest {
         whenever(otherPlayer.isHumanPlayer()).thenReturn(true)
         whenever(computerPlayer.isHumanPlayer()).thenReturn(false)
 
-        doReturn("Myself").`when`(self).name
+        doReturn("Myself").`when`(self).getName()
 
-        doReturn(listOf(self, otherPlayer)).`when`(originalGame).players
+        doReturn(listOf(self, otherPlayer)).`when`(originalGame).getPlayers()
         ownGame = PlayerSpecificGame(originalGame, self)
     }
 
     @Test
     fun forwardsCallToGetId() {
         ownGame.getId()
-        verify(originalGame).id
+        verify(originalGame).getId()
     }
 
     @Test
@@ -51,13 +51,13 @@ class PlayerSpecificGameTest {
     fun addsComputerPlayerWithName() {
         ownGame.addComputerPlayer()
 
-        doReturn(listOf(self, otherPlayer, computerPlayer)).`when`(originalGame).players
+        doReturn(listOf(self, otherPlayer, computerPlayer)).`when`(originalGame).getPlayers()
         ownGame.addComputerPlayer()
 
         val argument = ArgumentCaptor.forClass(Player::class.java)
         verify(originalGame, times(2)).addPlayer(argument.capture())
-        assertThat(argument.allValues[0].name, `is`("Computer 1"))
-        assertThat(argument.allValues[1].name, `is`("Computer 2"))
+        assertThat(argument.allValues[0].getName(), `is`("Computer 1"))
+        assertThat(argument.allValues[1].getName(), `is`("Computer 2"))
     }
 
     @Test
@@ -67,7 +67,7 @@ class PlayerSpecificGameTest {
 
         val argument = ArgumentCaptor.forClass(Player::class.java)
         verify(originalGame).addPlayer(argument.capture())
-        assertThat(argument.value.name, `is`("Player 2"))
+        assertThat(argument.value.getName(), `is`("Player 2"))
     }
 
     @Test
@@ -79,26 +79,26 @@ class PlayerSpecificGameTest {
     @Test
     fun forwardsCallToGetStatus() {
         ownGame.getStatus()
-        verify(originalGame).status
+        verify(originalGame).getStatus()
     }
 
     @Test
     fun forwardsCallToGetTurnNumber() {
         ownGame.getTurnNumber()
-        verify(originalGame).turnNumber
+        verify(originalGame).getTurnNumber()
     }
 
     @Test
     @Throws(Exception::class)
     fun forwardsCallToGetPreviousTurnEvents() {
         ownGame.getPreviousTurnEvents()
-        verify(originalGame).previousTurnEvents
+        verify(originalGame).getPreviousTurnEvents()
     }
 
     @Test
     @Throws(Exception::class)
     fun returnsNullTurnEventsIfOriginalGameHasNoEventsYet() {
-        doReturn(null).`when`(originalGame).previousTurnEvents
+        doReturn(null).`when`(originalGame).getPreviousTurnEvents()
         assertThat(ownGame.getPreviousTurnEvents(), `is`(nullValue()))
     }
 

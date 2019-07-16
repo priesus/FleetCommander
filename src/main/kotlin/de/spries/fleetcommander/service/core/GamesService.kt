@@ -24,8 +24,8 @@ class GamesService {
         game.addPlayer(p)
 
         val gameId = GameStore.INSTANCE.create(game)
-        game.id = gameId
-        val gamePlayer = GamePlayer(gameId, p.id)
+        game.assignId(gameId)
+        val gamePlayer = GamePlayer(gameId, p.getId())
         val authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer)
 
         log.debug("{}: Created for {}", gamePlayer, playerName)
@@ -48,7 +48,7 @@ class GamesService {
         val game = GameStore.INSTANCE[gameId] ?: throw IllegalActionException("The game doesn't exist on the server")
         val player = Player(playerName)
         game.addPlayer(player)
-        val gamePlayer = GamePlayer(gameId, player.id)
+        val gamePlayer = GamePlayer(gameId, player.getId())
         val authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer)
 
         log.debug("{}: Joined by {}", gamePlayer, playerName)

@@ -57,22 +57,22 @@ class StartedGameTest {
     @Test
     @Throws(Exception::class)
     fun statusIsRunningAfterGameStarted() {
-        assertThat(startedGame.status, `is`(Status.RUNNING))
+        assertThat(startedGame.getStatus(), `is`(Status.RUNNING))
     }
 
     @Test
     @Throws(Exception::class)
     fun turnNumberIsOneInitially() {
-        assertThat(startedGame.turnNumber, `is`(1))
+        assertThat(startedGame.getTurnNumber(), `is`(1))
     }
 
     @Test
     @Throws(Exception::class)
     fun turnNumberIncreasesWithEndedTurns() {
         startedGame.endTurn()
-        assertThat(startedGame.turnNumber, `is`(2))
+        assertThat(startedGame.getTurnNumber(), `is`(2))
         startedGame.endTurn()
-        assertThat(startedGame.turnNumber, `is`(3))
+        assertThat(startedGame.getTurnNumber(), `is`(3))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -84,7 +84,7 @@ class StartedGameTest {
     @Test
     @Throws(Exception::class)
     fun gameHasAUniverse() {
-        assertThat(startedGame.universe, `is`(universe))
+        assertThat(startedGame.getUniverse(), `is`(universe))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -257,7 +257,7 @@ class StartedGameTest {
         doReturn(false).`when`(computerPlayer2).isActive()
         startedGame.endTurn()
 
-        assertThat(startedGame.status, `is`(Status.OVER))
+        assertThat(startedGame.getStatus(), `is`(Status.OVER))
     }
 
     @Test
@@ -269,7 +269,7 @@ class StartedGameTest {
         doReturn(true).`when`(computerPlayer2).isActive()
         startedGame.endTurn()
 
-        assertThat(startedGame.status, `is`(Status.OVER))
+        assertThat(startedGame.getStatus(), `is`(Status.OVER))
     }
 
     @Test
@@ -292,7 +292,7 @@ class StartedGameTest {
         doReturn(true).`when`(john).isActive()
         startedGame.quit(john)
         verify(john).handleDefeat()
-        assertThat<List<Player>>(startedGame.players, hasItem(john))
+        assertThat<List<Player>>(startedGame.getPlayers(), hasItem(john))
     }
 
     @Test
@@ -333,7 +333,7 @@ class StartedGameTest {
 
         doReturn(false).`when`(jack).isActive()
         startedGame.quit(jack)
-        assertThat(startedGame.status, `is`(Status.OVER))
+        assertThat(startedGame.getStatus(), `is`(Status.OVER))
     }
 
     @Test
@@ -344,7 +344,7 @@ class StartedGameTest {
         doReturn(true).`when`(computerPlayer).isActive()
         doReturn(true).`when`(computerPlayer2).isActive()
         startedGame.quit(john)
-        assertThat(startedGame.status, `is`(Status.RUNNING))
+        assertThat(startedGame.getStatus(), `is`(Status.RUNNING))
     }
 
 }

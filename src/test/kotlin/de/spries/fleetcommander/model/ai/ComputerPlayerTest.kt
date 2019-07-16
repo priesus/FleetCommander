@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.ai
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import de.spries.fleetcommander.model.ai.behavior.BuildingStrategy
@@ -13,8 +14,6 @@ import org.hamcrest.Matchers.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers.anyInt
-import org.mockito.Mockito
 import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.verify
 
@@ -36,6 +35,7 @@ class ComputerPlayerTest {
 
         game = mock()
         universe = mock()
+        whenever(game.getUniverse()).thenReturn(universe)
     }
 
     @Test
@@ -47,28 +47,28 @@ class ComputerPlayerTest {
     @Test
     @Throws(Exception::class)
     fun isReadyInitially() {
-        assertThat(player.status, `is`(Status.READY))
+        assertThat(player.getStatus(), `is`(Status.READY))
     }
 
     @Test
     @Throws(Exception::class)
     fun callsBuildingStrategy() {
         player.notifyNewTurn(game)
-        verify(buildingStrategy).buildFactories(Mockito.any(PlayerSpecificUniverse::class.java))
+        verify(buildingStrategy).buildFactories(any())
     }
 
     @Test
     @Throws(Exception::class)
     fun callsFleetStrategy() {
         player.notifyNewTurn(game)
-        verify(fleetStrategy).sendShips(Mockito.any(PlayerSpecificUniverse::class.java))
+        verify(fleetStrategy).sendShips(any())
     }
 
     @Test
     @Throws(Exception::class)
     fun callsProductionStrategy() {
         player.notifyNewTurn(game)
-        verify(prodStrategy).updateProductionFocus(Mockito.any(PlayerSpecificUniverse::class.java), anyInt())
+        verify(prodStrategy).updateProductionFocus(any(), any())
     }
 
     @Test
@@ -88,7 +88,7 @@ class ComputerPlayerTest {
     @Test
     @Throws(Exception::class)
     fun endsTurnIfFleetStrategyThrowsException() {
-        whenever(fleetStrategy.sendShips(Mockito.any(PlayerSpecificUniverse::class.java))).thenThrow(RuntimeException())
+        whenever(fleetStrategy.sendShips(any())).thenThrow(RuntimeException())
         player.notifyNewTurn(game)
         verify(game).endTurn(player)
     }
@@ -97,7 +97,7 @@ class ComputerPlayerTest {
     @Throws(Exception::class)
     fun endsTurnIfBuildingStrategyThrowsException() {
         doThrow(RuntimeException::class.java).`when`(buildingStrategy)
-                .buildFactories(Mockito.any(PlayerSpecificUniverse::class.java))
+                .buildFactories(any())
         player.notifyNewTurn(game)
         verify(game).endTurn(player)
     }

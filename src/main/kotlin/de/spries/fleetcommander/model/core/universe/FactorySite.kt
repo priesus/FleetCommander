@@ -3,15 +3,20 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
 open class FactorySite(private val planetClass: PlanetClass) {
-    var factoryCount = 0
-        private set
-    var shipProductionFocus = MAX_PRODUCTION_FOCUS / 2
+    private var factoryCount = 0
+    private var shipProductionFocus = MAX_PRODUCTION_FOCUS / 2
         set(prodFocus) {
             if (prodFocus < 0 || prodFocus > MAX_PRODUCTION_FOCUS) {
                 throw IllegalActionException("Production focus of factory sites must be between 0 and $MAX_PRODUCTION_FOCUS")
             }
             field = prodFocus
         }
+
+    fun getFactoryCount() = factoryCount
+    fun getShipProductionFocus() = shipProductionFocus
+    fun updateShipProductionFocus(shipProductionFocus: Int) {
+        this.shipProductionFocus = shipProductionFocus
+    }
 
     fun factorySlotCount() = FACTORY_SLOTS
 

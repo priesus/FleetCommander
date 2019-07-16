@@ -3,27 +3,23 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null)
+open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, private val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null, factorySite: FactorySite=FactorySite(planetClass))
     : HasCoordinates(x, y) {
 
     var id: Int = 0
-    var isHomePlanet = false
-        private set
-    var inhabitant: Player? = null
-        private set
+    private var isHomePlanet = false
+    private var inhabitant: Player? = null
     private var shipCount = 0f
     private val incomingShipsPerPlayer = mutableMapOf<Player, Int>()
     private val knownAsEnemyPlanetBy = mutableSetOf<Player>()
-    var isUnderAttack = false
-        private set
-    var isJustInhabited = false
-        private set
-
-    val factorySite: FactorySite
+    private var isUnderAttack = false
+    private var isJustInhabited = false
+    private val factorySite: FactorySite
 
     private var turnEventBus: TurnEventBus? = null
 
     constructor(x: Int = 0, y: Int = 0, inhabitant: Player) : this(x, y, PlanetClass.B, inhabitant)
+    constructor(x: Int = 0, y: Int = 0, inhabitant: Player, factorySite: FactorySite) : this(x, y, PlanetClass.B, inhabitant, factorySite)
 
     init {
         if (inhabitant != null) {
@@ -31,8 +27,15 @@ open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, val planetCl
             this.inhabitant = inhabitant
             isHomePlanet = true
         }
-        factorySite = FactorySite(planetClass)
+        this.factorySite=factorySite
     }
+
+    fun getPlanetClass() = planetClass
+    fun isHomePlanet() = isHomePlanet
+    fun inhabitant() = inhabitant
+    fun isUnderAttack() = isUnderAttack
+    fun isJustInhabited() = isJustInhabited
+    fun getFactorySite() = factorySite
 
     fun isHomePlanetOf(player: Player): Boolean {
         return isHomePlanet && player == inhabitant
@@ -70,14 +73,14 @@ open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, val planetCl
         if (!factorySite.hasAvailableSlots()) {
             return false
         }
-        return player.credits >= FactorySite.FACTORY_COST
+        return player.getCredits() >= FactorySite.FACTORY_COST
     }
 
     fun setProductionFocus(focus: Int, player: Player) {
         if (player != inhabitant) {
             throw IllegalActionException("You can only change your own planets' production focus")
         }
-        factorySite.shipProductionFocus = focus
+        factorySite.updateShipProductionFocus(focus)
     }
 
     fun sendShipsAway(shipsToSend: Int, player: Player) {

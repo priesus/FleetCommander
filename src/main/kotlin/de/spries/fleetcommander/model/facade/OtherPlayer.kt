@@ -4,9 +4,9 @@ import de.spries.fleetcommander.model.core.Player
 
 open class OtherPlayer(protected var originalPlayer: Player) {
 
-    fun getName() = originalPlayer.name
+    fun getName() = originalPlayer.getName()
 
-    fun getStatus() = originalPlayer.status
+    fun getStatus() = originalPlayer.getStatus()
 
     fun isHumanPlayer() = originalPlayer.isHumanPlayer()
 }

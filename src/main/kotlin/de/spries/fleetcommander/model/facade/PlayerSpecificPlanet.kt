@@ -4,16 +4,16 @@ import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.universe.HasCoordinates
 import de.spries.fleetcommander.model.core.universe.Planet
 
-data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player)
+open class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player)
     : HasCoordinates(originalPlanet.x, originalPlanet.y) {
 
     fun getId() = originalPlanet.id
 
-    fun getPlanetClass() = if (isInhabitedByMe()) originalPlanet.planetClass.name else "?"
+    fun getPlanetClass() = if (isInhabitedByMe()) originalPlanet.getPlanetClass().name else "?"
 
     fun isMyHomePlanet() = originalPlanet.isHomePlanetOf(viewingPlayer)
 
-    fun isHomePlanet() = originalPlanet.isHomePlanetOf(viewingPlayer) || originalPlanet.isHomePlanet && isKnownAsEnemyPlanet()
+    fun isHomePlanet() = originalPlanet.isHomePlanetOf(viewingPlayer) || originalPlanet.isHomePlanet() && isKnownAsEnemyPlanet()
 
     fun isInhabitedByMe() = originalPlanet.isInhabitedBy(viewingPlayer)
 
@@ -22,11 +22,11 @@ data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val 
     } else originalPlanet.isKnownAsEnemyPlanet(viewingPlayer)
 
     fun isUnderAttack() = if (isInhabitedByMe()) {
-        originalPlanet.isUnderAttack
+        originalPlanet.isUnderAttack()
     } else false
 
     fun isJustInhabited() = if (isInhabitedByMe()) {
-        originalPlanet.isJustInhabited
+        originalPlanet.isJustInhabited()
     } else false
 
     fun getShipCount() = if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
@@ -36,7 +36,7 @@ data class PlayerSpecificPlanet(private val originalPlanet: Planet, private val 
     fun getIncomingShipCount() = originalPlanet.getIncomingShipCount(viewingPlayer)
 
     fun getFactorySite() = if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
-        originalPlanet.factorySite
+        originalPlanet.getFactorySite()
     } else null
 
     fun canBuildFactory(): Boolean {

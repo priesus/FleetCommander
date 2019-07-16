@@ -42,28 +42,16 @@ class PlayerSpecificPlanetTest {
     }
 
     @Test
-    fun forwardsCallToGetX() {
-        otherPlayersPlanet.x
-        verify(originalPlanet).x
-    }
-
-    @Test
-    fun forwardsCallToGetY() {
-        otherPlayersPlanet.y
-        verify(originalPlanet).y
-    }
-
-    @Test
     fun forwardsCallToPlanetClassForSelf() {
-        `when`(originalPlanet.planetClass).thenReturn(PlanetClass.P)
+        `when`(originalPlanet.getPlanetClass()).thenReturn(PlanetClass.P)
         ownPlanet.getPlanetClass()
-        verify(originalPlanet).planetClass
+        verify(originalPlanet).getPlanetClass()
     }
 
     @Test
     fun doesNotReturnPlanetClassForOtherPlayers() {
         assertThat(otherPlayersPlanet.getPlanetClass(), `is`("?"))
-        verify(originalPlanet, never()).planetClass
+        verify(originalPlanet, never()).getPlanetClass()
     }
 
     @Test
@@ -81,14 +69,14 @@ class PlayerSpecificPlanetTest {
     @Test
     fun isNoHomePlanetWhenNotHomePlanetAtAll() {
         `when`(originalPlanet.isHomePlanetOf(self)).thenReturn(false)
-        `when`(originalPlanet.isHomePlanet).thenReturn(false)
+        `when`(originalPlanet.isHomePlanet()).thenReturn(false)
         assertThat(ownPlanet.isHomePlanet(), `is`(false))
     }
 
     @Test
     fun isHomePlanetWhenOtherPlayersHomePlanetAndVisited() {
         `when`(originalPlanet.isHomePlanetOf(self)).thenReturn(false)
-        `when`(originalPlanet.isHomePlanet).thenReturn(true)
+        `when`(originalPlanet.isHomePlanet()).thenReturn(true)
         `when`(originalPlanet.isKnownAsEnemyPlanet(self)).thenReturn(true)
         assertThat(ownPlanet.isHomePlanet(), `is`(true))
     }
@@ -96,7 +84,7 @@ class PlayerSpecificPlanetTest {
     @Test
     fun isNoHomePlanetWhenOtherPlayersHomePlanetAndNotVisited() {
         `when`(originalPlanet.isHomePlanetOf(self)).thenReturn(false)
-        `when`(originalPlanet.isHomePlanet).thenReturn(true)
+        `when`(originalPlanet.isHomePlanet()).thenReturn(true)
         `when`(originalPlanet.isKnownAsEnemyPlanet(self)).thenReturn(false)
         assertThat(ownPlanet.isHomePlanet(), `is`(false))
     }
@@ -116,25 +104,25 @@ class PlayerSpecificPlanetTest {
     @Test
     fun forwardsCallToIsUnderAttackForSelf() {
         ownPlanet.isUnderAttack()
-        verify(originalPlanet).isUnderAttack
+        verify(originalPlanet).isUnderAttack()
     }
 
     @Test
     fun doesNotReturnIsUnderAttackForOtherPlayers() {
         assertThat(otherPlayersPlanet.isUnderAttack(), `is`(false))
-        verify(originalPlanet, never()).isUnderAttack
+        verify(originalPlanet, never()).isUnderAttack()
     }
 
     @Test
     fun forwardsCallToIsJustInhabitedForSelf() {
         ownPlanet.isJustInhabited()
-        verify(originalPlanet).isJustInhabited
+        verify(originalPlanet).isJustInhabited()
     }
 
     @Test
     fun doesNotReturnIsJustInhabitedForOtherPlayers() {
         assertThat(otherPlayersPlanet.isJustInhabited(), `is`(false))
-        verify(originalPlanet, never()).isJustInhabited
+        verify(originalPlanet, never()).isJustInhabited()
     }
 
     @Test
@@ -167,13 +155,13 @@ class PlayerSpecificPlanetTest {
     @Test
     fun forwardsCallToGetFactorySiteForSelf() {
         ownPlanet.getFactorySite()
-        verify(originalPlanet).factorySite
+        verify(originalPlanet).getFactorySite()
     }
 
     @Test
     fun doesNotReturnFactorySiteForOtherPlayers() {
         assertThat(otherPlayersPlanet.getFactorySite(), `is`(nullValue()))
-        verify(originalPlanet, never()).factorySite
+        verify(originalPlanet, never()).getFactorySite()
     }
 
     @Test

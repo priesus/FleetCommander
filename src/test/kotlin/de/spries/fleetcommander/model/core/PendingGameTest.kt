@@ -48,13 +48,13 @@ class PendingGameTest {
     @Test
     @Throws(Exception::class)
     fun initialStatusIsPending() {
-        assertThat(game.status, `is`(Status.PENDING))
+        assertThat(game.getStatus(), `is`(Status.PENDING))
     }
 
     @Test
     @Throws(Exception::class)
     fun initialTurnNumberIsZero() {
-        assertThat(game.turnNumber, `is`(0))
+        assertThat(game.getTurnNumber(), `is`(0))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -67,7 +67,7 @@ class PendingGameTest {
     @Throws(Exception::class)
     fun playerIsAddedToPlayersList() {
         game.addPlayer(jack)
-        assertThat<List<Player>>(game.players, hasItem(jack))
+        assertThat<List<Player>>(game.getPlayers(), hasItem(jack))
     }
 
     @Test
@@ -108,16 +108,16 @@ class PendingGameTest {
     @Test
     @Throws(Exception::class)
     fun returnsPlayerWithSameId() {
-        doReturn(1).`when`(jack).id
-        doReturn(12).`when`(john).id
+        doReturn(1).`when`(jack).getId()
+        doReturn(12).`when`(john).getId()
         assertThat(gameWithPlayers.getPlayerWithId(12), `is`(john))
     }
 
     @Test
     @Throws(Exception::class)
     fun returnsNullForNonexistentPlayerId() {
-        doReturn(1).`when`(jack).id
-        doReturn(12).`when`(john).id
+        doReturn(1).`when`(jack).getId()
+        doReturn(12).`when`(john).getId()
         assertThat(gameWithPlayers.getPlayerWithId(123), `is`(nullValue()))
     }
 
@@ -134,9 +134,9 @@ class PendingGameTest {
         g.addPlayer(p2)
         g.addPlayer(p3)
 
-        verify(p1).id = 1
-        verify(p2).id = 2
-        verify(p3).id = 3
+        verify(p1).assignId(1)
+        verify(p2).assignId( 2)
+        verify(p3).assignId( 3)
     }
 
     @Test
@@ -154,7 +154,7 @@ class PendingGameTest {
     @Throws(Exception::class)
     fun quittingPlayerIsRemovedFromPendingGame() {
         gameWithPlayers.quit(john)
-        assertThat<List<Player>>(gameWithPlayers.players, not(hasItem(john)))
+        assertThat<List<Player>>(gameWithPlayers.getPlayers(), not(hasItem(john)))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -166,7 +166,7 @@ class PendingGameTest {
     @Test
     @Throws(Exception::class)
     fun gameHasNoUniverse() {
-        assertThat(game.universe, `is`(nullValue()))
+        assertThat(game.getUniverse(), `is`(nullValue()))
     }
 
     @Test(expected = IllegalActionException::class)
@@ -179,7 +179,7 @@ class PendingGameTest {
     @Throws(Exception::class)
     fun gameDoesntStartBeforeAllPlayersAreReady() {
         gameWithPlayers.start(john)
-        assertThat(gameWithPlayers.status, `is`(Status.PENDING))
+        assertThat(gameWithPlayers.getStatus(), `is`(Status.PENDING))
     }
 
     @Test
@@ -190,7 +190,7 @@ class PendingGameTest {
         doReturn(true).`when`(computer).isReady()
         gameWithPlayers.start(jack)
 
-        assertThat(gameWithPlayers.status, `is`(Status.RUNNING))
+        assertThat(gameWithPlayers.getStatus(), `is`(Status.RUNNING))
     }
 
 }

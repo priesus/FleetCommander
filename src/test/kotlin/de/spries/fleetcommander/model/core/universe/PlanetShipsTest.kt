@@ -148,11 +148,11 @@ class PlanetShipsTest {
     fun attackingWithSomeShipsReducesEnemyShips() {
         jacksHomePlanet.landShips(1, john)
         assertThat(jacksHomePlanet.getShipCount(), `is`(5))
-        assertThat(jacksHomePlanet.inhabitant, `is`(jack))
+        assertThat(jacksHomePlanet.inhabitant(), `is`(jack))
 
         jacksHomePlanet.landShips(2, john)
         assertThat(jacksHomePlanet.getShipCount(), `is`(3))
-        assertThat(jacksHomePlanet.inhabitant, `is`(jack))
+        assertThat(jacksHomePlanet.inhabitant(), `is`(jack))
     }
 
     @Test
@@ -160,7 +160,7 @@ class PlanetShipsTest {
     fun attackingWithEqualNumberOfShipsDestroysAllEnemyShips() {
         jacksHomePlanet.landShips(6, john)
         assertThat(jacksHomePlanet.getShipCount(), `is`(0))
-        assertThat(jacksHomePlanet.inhabitant, `is`(jack))
+        assertThat(jacksHomePlanet.inhabitant(), `is`(jack))
     }
 
     @Test
@@ -168,15 +168,15 @@ class PlanetShipsTest {
     fun attackingWithMoreShipsInhabitsEnemyPlanet() {
         jacksHomePlanet.landShips(7, john)
         assertThat(jacksHomePlanet.getShipCount(), `is`(1))
-        assertThat(jacksHomePlanet.inhabitant, `is`(john))
+        assertThat(jacksHomePlanet.inhabitant(), `is`(john))
     }
 
     @Test
     @Throws(Exception::class)
     fun invadingEnemyHomePlanetConvertsIntoRegularPlanet() {
-        assertThat(jacksHomePlanet.isHomePlanet, `is`(true))
+        assertThat(jacksHomePlanet.isHomePlanet(), `is`(true))
         jacksHomePlanet.landShips(7, john)
-        assertThat(jacksHomePlanet.isHomePlanet, `is`(false))
+        assertThat(jacksHomePlanet.isHomePlanet(), `is`(false))
     }
 
     @Test
@@ -210,7 +210,7 @@ class PlanetShipsTest {
     @Throws(Exception::class)
     fun successfullyInvadedPlanetBecomesEnemyPlanetForInvadedPlayer() {
         jacksPlanet.landShips(5, john)
-        assertThat(jacksPlanet.inhabitant, `is`(john))
+        assertThat(jacksPlanet.inhabitant(), `is`(john))
         assertThat(jacksPlanet.isKnownAsEnemyPlanet(jack), `is`(true))
     }
 
@@ -252,14 +252,14 @@ class PlanetShipsTest {
     @Test
     @Throws(Exception::class)
     fun planetIsNotUnderAttackInitially() {
-        assertThat(uninhabitedPlanet.isUnderAttack, `is`(false))
+        assertThat(uninhabitedPlanet.isUnderAttack(), `is`(false))
     }
 
     @Test
     @Throws(Exception::class)
     fun planetWasNotAttackedWhenItWasFirstInhabited() {
         uninhabitedPlanet.landShips(1, john)
-        assertThat(uninhabitedPlanet.isUnderAttack, `is`(false))
+        assertThat(uninhabitedPlanet.isUnderAttack(), `is`(false))
     }
 
     @Test
@@ -267,7 +267,7 @@ class PlanetShipsTest {
     fun planetWasNotAttackedWhenSuccessfullyInvaded() {
         uninhabitedPlanet.landShips(1, john)
         uninhabitedPlanet.landShips(2, jack)
-        assertThat(uninhabitedPlanet.isUnderAttack, `is`(false))
+        assertThat(uninhabitedPlanet.isUnderAttack(), `is`(false))
     }
 
     @Test
@@ -275,7 +275,7 @@ class PlanetShipsTest {
     fun planetWasAttackedWhenUnsuccessfullyInvaded() {
         uninhabitedPlanet.landShips(2, john)
         uninhabitedPlanet.landShips(1, jack)
-        assertThat(uninhabitedPlanet.isUnderAttack, `is`(true))
+        assertThat(uninhabitedPlanet.isUnderAttack(), `is`(true))
     }
 
     @Test
@@ -284,20 +284,20 @@ class PlanetShipsTest {
         uninhabitedPlanet.landShips(2, john)
         uninhabitedPlanet.landShips(1, jack)
         uninhabitedPlanet.resetMarkers()
-        assertThat(uninhabitedPlanet.isUnderAttack, `is`(false))
+        assertThat(uninhabitedPlanet.isUnderAttack(), `is`(false))
     }
 
     @Test
     @Throws(Exception::class)
     fun planetIsNotJustInhabitedInitially() {
-        assertThat(uninhabitedPlanet.isJustInhabited, `is`(false))
+        assertThat(uninhabitedPlanet.isJustInhabited(), `is`(false))
     }
 
     @Test
     @Throws(Exception::class)
     fun planetIsJustInhabitedWhenItWasFirstInhabited() {
         uninhabitedPlanet.landShips(1, john)
-        assertThat(uninhabitedPlanet.isJustInhabited, `is`(true))
+        assertThat(uninhabitedPlanet.isJustInhabited(), `is`(true))
     }
 
     @Test
@@ -305,7 +305,7 @@ class PlanetShipsTest {
     fun planetIsJustInhabitedWhenSuccessfullyInvaded() {
         uninhabitedPlanet.landShips(1, john)
         uninhabitedPlanet.landShips(2, jack)
-        assertThat(uninhabitedPlanet.isJustInhabited, `is`(true))
+        assertThat(uninhabitedPlanet.isJustInhabited(), `is`(true))
     }
 
     @Test
@@ -314,7 +314,7 @@ class PlanetShipsTest {
         uninhabitedPlanet.landShips(2, john)
         uninhabitedPlanet.resetMarkers()
         uninhabitedPlanet.landShips(1, jack)
-        assertThat(uninhabitedPlanet.isJustInhabited, `is`(false))
+        assertThat(uninhabitedPlanet.isJustInhabited(), `is`(false))
     }
 
     @Test
@@ -322,6 +322,6 @@ class PlanetShipsTest {
     fun planetIsNotJustInhabitedAfterResetMarkers() {
         uninhabitedPlanet.landShips(1, john)
         uninhabitedPlanet.resetMarkers()
-        assertThat(uninhabitedPlanet.isJustInhabited, `is`(false))
+        assertThat(uninhabitedPlanet.isJustInhabited(), `is`(false))
     }
 }

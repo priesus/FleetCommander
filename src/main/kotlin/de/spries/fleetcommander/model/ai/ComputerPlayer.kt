@@ -26,16 +26,16 @@ open class ComputerPlayer(name: String, private val buildingStrategy: BuildingSt
             playTurn(PlayerSpecificGame(game, this))
         } catch (e: Exception) {
             // Just end the turn (still it shouldn't happen)
-            log.warn("Game ${game.id}: Computer player '$name' caused an exception", e)
+            log.warn("Game ${game.getId()}: Computer player '${getName()}' caused an exception", e)
         }
 
         game.endTurn(this)
     }
 
     private fun playTurn(game: PlayerSpecificGame) {
-        val universe = game.getUniverse()
-        fleetStrategy.sendShips(universe!!)
+        val universe = game.getUniverse()!!
+        fleetStrategy.sendShips(universe)
         buildingStrategy.buildFactories(universe)
-        productionStrategy.updateProductionFocus(universe, credits)
+        productionStrategy.updateProductionFocus(universe, getCredits())
     }
 }

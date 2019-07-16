@@ -15,7 +15,7 @@ class UniverseFactoryTest {
     @Throws(Exception::class)
     fun generatedUniverseHasMorePlanetsThanPlayers() {
         val universe = UniverseFactory.generate(JOHN_ONLY)
-        assertThat(universe.planets.size, greaterThan(JOHN_ONLY.size))
+        assertThat(universe.getPlanets().size, greaterThan(JOHN_ONLY.size))
     }
 
     @Test
@@ -36,9 +36,9 @@ class UniverseFactoryTest {
     @Throws(Exception::class)
     fun everyPlanetHasAUniqueId() {
         val universe = UniverseFactory.generate(JOHN_ONLY)
-        val planetIds = universe.planets.map { p -> p.id }
+        val planetIds = universe.getPlanets().map { p -> p.id }
 
-        assertThat(planetIds.size, `is`(universe.planets.size))
+        assertThat(planetIds.size, `is`(universe.getPlanets().size))
     }
 
     companion object {

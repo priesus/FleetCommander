@@ -20,7 +20,7 @@ class OwnPlayerTest {
     @Test
     fun forwardsCallToGetNameForOtherPlayers() {
         viewingPlayer.getCredits()
-        verify(originalPlayer).credits
+        verify(originalPlayer).getCredits()
     }
 
     @Test
