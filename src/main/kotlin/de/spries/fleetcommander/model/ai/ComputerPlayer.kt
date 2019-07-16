@@ -8,7 +8,7 @@ import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame
 import mu.KotlinLogging
 
-open class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy)
+class ComputerPlayer(name: String, private val buildingStrategy: BuildingStrategy, private val fleetStrategy: FleetStrategy, private val productionStrategy: ProductionStrategy)
     : Player(name) {
 
     private val log = KotlinLogging.logger {}

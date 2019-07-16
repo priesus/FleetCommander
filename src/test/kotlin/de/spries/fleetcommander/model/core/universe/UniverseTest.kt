@@ -49,7 +49,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun universeHasHomePlanets() {
         val homePlanets = universe.getHomePlanets()
         assertThat(homePlanets, hasItem(johnsHomePlanet))
@@ -58,13 +57,11 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun universeHasNoTravellingShips() {
         assertThat<Collection<ShipFormation>>(universe.getTravellingShipFormations(), hasSize(0))
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendingShipsAddsTravellingShipsToUniverse() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         val shipFormations = universe.getTravellingShipFormations()
@@ -74,14 +71,12 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendingShipsAddsIncomingShipsToDestinatonPlanet() {
         universe.sendShips(3, johnsHomePlanet, uninhabitedPlanet, john)
         verify(uninhabitedPlanet).addIncomingShips(3, john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendingShipsToSameDestinationAgainIncreasesShipsTravelling() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.sendShips(2, johnsHomePlanet, uninhabitedPlanet, john)
@@ -92,7 +87,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendingShipsToDifferentDestinationAddsAnotherShipFormation() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.sendShips(1, johnsHomePlanet, distantPlanet, john)
@@ -101,7 +95,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendingShipsToSamePlanetDoesntAffectUniverseOrPlanetShipCount() {
         val shipsBefore = johnsHomePlanet.getShipCount()
         universe.sendShips(1, johnsHomePlanet, johnsHomePlanet, john)
@@ -110,19 +103,16 @@ class UniverseTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun originMustBeInsideUniverse() {
         universe.sendShips(1, mock(), uninhabitedPlanet, john)
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun destinationMustBeInsideUniverse() {
         universe.sendShips(1, johnsHomePlanet, mock(), john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun travellingToDistantPlanetTakesMultipleCycles() {
         whenever(johnsHomePlanet.distanceTo(distantPlanet)).thenReturn(15.0)
         universe.sendShips(1, johnsHomePlanet, distantPlanet, john)
@@ -135,7 +125,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun shipsLandOnTargetPlanet() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.runShipTravellingCycle()
@@ -143,7 +132,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun runsFactoryProductionCycleOnEveryPlanet() {
         universe.runFactoryProductionCycle()
         verify(johnsHomePlanet).runProductionCycle()
@@ -153,7 +141,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun resetsPreviousTurnMarkersOnEveryPlanet() {
         universe.resetPreviousTurnMarkers()
         verify(johnsHomePlanet).resetMarkers()
@@ -163,7 +150,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun planetsAreIdentifiedByIdForTravellingShips() {
         whenever(johnsHomePlanet.id).thenReturn(1)
         whenever(uninhabitedPlanet.id).thenReturn(2)
@@ -175,19 +161,16 @@ class UniverseTest {
     }
 
     @Test(expected = NoSuchElementException::class)
-    @Throws(Exception::class)
     fun originPlanetIsInvalidId() {
         universe.sendShips(1, INEXISTENT_PLANET, uninhabitedPlanet.id, john)
     }
 
     @Test(expected = NoSuchElementException::class)
-    @Throws(Exception::class)
     fun destinationPlanetIsInvalidId() {
         universe.sendShips(1, johnsHomePlanet.id, INEXISTENT_PLANET, john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun setsEventBusForAllContainedPlanets() {
         val eventBus = mock<TurnEventBus>()
         universe.setEventBus(eventBus)
@@ -199,7 +182,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun forwardsHandleDefeatedPlayerToAllPlanets() {
         universe.handleDefeatedPlayer(john)
 
@@ -210,7 +192,6 @@ class UniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun removesDefeatedPlayersTravellingShips() {
         universe.sendShips(1, johnsHomePlanet, uninhabitedPlanet, john)
         universe.sendShips(1, jacksHomePlanet, uninhabitedPlanet, jack)

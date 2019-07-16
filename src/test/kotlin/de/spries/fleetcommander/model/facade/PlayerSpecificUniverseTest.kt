@@ -89,7 +89,6 @@ class PlayerSpecificUniverseTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsOnlyOwnTravellingShips() {
         assertThat(ownUniverseView.getTravellingShipFormations(), hasSize(1))
         assertThat(ownUniverseView.getTravellingShipFormations(), hasItem(myShips))

@@ -3,7 +3,7 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-open class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, private val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null, factorySite: FactorySite = FactorySite(planetClass))
+class Planet @JvmOverloads constructor(x: Int = 0, y: Int = 0, private val planetClass: PlanetClass = PlanetClass.B, inhabitant: Player? = null, factorySite: FactorySite = FactorySite(planetClass))
     : HasCoordinates(x, y) {
 
     var id: Int = 0

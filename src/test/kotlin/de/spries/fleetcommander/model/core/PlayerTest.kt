@@ -24,13 +24,11 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun isHumanPlayer() {
         assertThat(john.isHumanPlayer(), `is`(true))
     }
 
     @Test
-    @Throws(Exception::class)
     fun newPlayerHasNegativeId() {
         assertThat(john.getId(), `is`(lessThan(0)))
     }
@@ -48,7 +46,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun readyPlayerIsReady() {
         john.setReady()
         assertThat(john.getStatus(), `is`(Status.READY))
@@ -57,14 +54,12 @@ class PlayerTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetReadyTwice() {
         john.setReady()
         john.setReady()
     }
 
     @Test
-    @Throws(Exception::class)
     fun readyPlayerIschangedToPlaying() {
         john.setReady()
         john.setPlaying()
@@ -74,21 +69,18 @@ class PlayerTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetPlayingForDefeatedPlayer() {
         john.handleDefeat()
         john.setPlaying()
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetPlayingForQuitPlayer() {
         john.handleQuit()
         john.setPlaying()
     }
 
     @Test
-    @Throws(Exception::class)
     fun defeatedPlayerIsDefeated() {
         john.handleDefeat()
         assertThat(john.getStatus(), `is`(Status.DEFEATED))
@@ -96,7 +88,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingPlayerIsntActiveAnymore() {
         john.handleQuit()
         assertThat(john.getStatus(), `is`(Status.QUIT))
@@ -104,14 +95,12 @@ class PlayerTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotQuitTwice() {
         john.handleQuit()
         john.handleQuit()
     }
 
     @Test
-    @Throws(Exception::class)
     fun playerCanAffordAFactoryIfEnoughMoney() {
         assertThat(john.canAffordFactory(), `is`(true))
 
@@ -123,7 +112,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun playersAreStillEqualWithDifferentId() {
         val john2 = Player("John")
         john.assignId(200)
@@ -135,7 +123,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun playersHaveSameHashCodeEqualWithDifferentId() {
         val john2 = Player("John")
         john.assignId(200)
@@ -166,13 +153,11 @@ class PlayerTest {
     }
 
     @Test(expected = InsufficientCreditsException::class)
-    @Throws(Exception::class)
     fun playerCannotBuyStuffHeCannotAfford() {
         john.reduceCredits(Player.STARTING_CREDITS + 1)
     }
 
     @Test
-    @Throws(Exception::class)
     fun buyingStuffReducesPlayersCredits() {
         john.reduceCredits(HALF_STARTING_BALANCE)
         assertThat(john.getCredits(), `is`(HALF_STARTING_BALANCE))
@@ -182,7 +167,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun addingCreditsIncreasesBalance() {
         john.addCredits(1)
         assertThat(john.getCredits(), `is`(Player.STARTING_CREDITS + 1))
@@ -192,7 +176,6 @@ class PlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun playerCretidsAreCapped() {
         john.addCredits(Player.MAX_CREDITS)
         assertThat(john.getCredits(), `is`(Player.MAX_CREDITS))

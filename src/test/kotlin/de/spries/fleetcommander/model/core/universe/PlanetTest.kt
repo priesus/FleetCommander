@@ -37,14 +37,12 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun planetsWithInhabitantAreInhabited() {
         assertThat(uninhabitedPlanet.isInhabited(), `is`(false))
         assertThat(johnsHomePlanet.isInhabited(), `is`(true))
     }
 
     @Test
-    @Throws(Exception::class)
     fun distanceIsCalculatedThroughPythagoras() {
         val p1 = Planet(0, 0)
         val p2 = Planet(10, 10)
@@ -57,7 +55,6 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun homePlanetIsIdentifiable() {
         assertThat(johnsHomePlanet.isHomePlanetOf(john), `is`(true))
         assertThat(johnsHomePlanet.isHomePlanetOf(jack), `is`(false))
@@ -67,42 +64,36 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun homePlanetIsOwnedByInhabitingPlayerOnly() {
         assertThat(johnsHomePlanet.isInhabitedBy(john), `is`(true))
         assertThat(johnsHomePlanet.isInhabitedBy(jack), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun inhabitantIsRemovedWhenPlayerIsDefeated() {
         johnsHomePlanet.handleDefeatedPlayer(john)
         assertThat(johnsHomePlanet.inhabitant(), `is`(nullValue()))
     }
 
     @Test
-    @Throws(Exception::class)
     fun defeatedPlayerHasNoEffectOnOtherPlayersPlanetInhabitant() {
         johnsHomePlanet.handleDefeatedPlayer(jack)
         assertThat(johnsHomePlanet.inhabitant(), `is`(john))
     }
 
     @Test
-    @Throws(Exception::class)
     fun shipsAreRemovedForDefeatedPlayer() {
         johnsHomePlanet.handleDefeatedPlayer(john)
         assertThat(johnsHomePlanet.getShipCount(), `is`(0))
     }
 
     @Test
-    @Throws(Exception::class)
     fun shipsAreNotAffectedForOtherDefeatedPlayers() {
         johnsHomePlanet.handleDefeatedPlayer(jack)
         assertThat(johnsHomePlanet.getShipCount(), `is`(6))
     }
 
     @Test
-    @Throws(Exception::class)
     fun enemyMarkerIsRemovedForDefeatedPlayers() {
         johnsHomePlanet.landShips(1, jack)
         johnsHomePlanet.handleDefeatedPlayer(jack)
@@ -110,7 +101,6 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun enemyMarkerIsNotAffectedForOtherDefeatedPlayers() {
         johnsHomePlanet.landShips(1, jim)
         johnsHomePlanet.handleDefeatedPlayer(jack)
@@ -118,7 +108,6 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun incomingShipsAreRemovedForDefeatedPlayers() {
         johnsHomePlanet.addIncomingShips(1, jack)
         johnsHomePlanet.handleDefeatedPlayer(jack)
@@ -126,7 +115,6 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun incomingShipsAreNotAffectedForOtherDefeatedPlayers() {
         johnsHomePlanet.addIncomingShips(1, jim)
         johnsHomePlanet.handleDefeatedPlayer(jack)
@@ -134,7 +122,6 @@ class PlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun homePlanetIsNeutralizedForDefeatedPlayers() {
         johnsHomePlanet.handleDefeatedPlayer(john)
         assertThat(johnsHomePlanet.isHomePlanet(), `is`(false))

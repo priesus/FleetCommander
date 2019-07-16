@@ -35,7 +35,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun factoryCycleInreasesNumberOfShips() {
         val shipsBefore = johnsHomePlanet.getShipCount()
         doReturn(5f).`when`(johnsFactorySite).getProducedShipsPerTurn()
@@ -45,7 +44,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun factoryCycleDoesNotInreaseNumberOfShipsAfterPlayerWasDefeated() {
         doReturn(5f).`when`(johnsFactorySite).getProducedShipsPerTurn()
         johnsHomePlanet.handleDefeatedPlayer(john)
@@ -55,7 +53,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun lowShipProductionRequiresMultipleCyclesToProduceOneShip() {
         val shipsBefore = johnsHomePlanet.getShipCount()
         doReturn(0.35f).`when`(johnsFactorySite).getProducedShipsPerTurn()
@@ -71,19 +68,16 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun buildFactoryOnUninhabitedPlanetThrowsException() {
         uninhabitedPlanet.buildFactory(john)
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun buildFactoryOnOtherPlayersPlanetThrowsException() {
         johnsHomePlanet.buildFactory(jack)
     }
 
     @Test
-    @Throws(Exception::class)
     fun buildingFactoryReducesPlayerCredits() {
         doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
@@ -93,7 +87,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun noCreditsRemovedWhenNoFactorySlotsAvailable() {
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(false)
         whenever(johnsFactorySite.buildFactory()).thenThrow(IllegalActionException("error"))
@@ -109,7 +102,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotBuildFactoryWithInsufficientCredits_() {
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
         whenever(john.reduceCredits(any())).thenThrow(InsufficientCreditsException("error"))
@@ -125,7 +117,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotBuildFactoryWithInsufficientCredits() {
         doReturn(INSUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
@@ -135,7 +126,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotBuildFactoryWithoutAvailableSlots() {
         doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(false)
@@ -145,7 +135,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotBuildFactoryOnOtherPlayersPlanet() {
         doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
@@ -153,7 +142,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotBuildFactoryOnUninhabitedPlanet() {
         doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
@@ -161,7 +149,6 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canBuildFactory() {
         doReturn(SUFFICIENT_CREDITS).`when`(john).getCredits()
         whenever(johnsFactorySite.hasAvailableSlots()).thenReturn(true)
@@ -169,14 +156,12 @@ class PlanetFactoryBuildingTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canSetProductionFocusIfInhabitant() {
         johnsHomePlanet.setProductionFocus(1, john)
         verify(johnsFactorySite).updateShipProductionFocus(1)
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetProductionFocusIfNotInhabitant() {
         johnsHomePlanet.setProductionFocus(1, jack)
     }

@@ -51,7 +51,6 @@ class PlayerSpecificTurnEventsTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun forwardsCallToHasEvents() {
         ownEvents.hasEvents()
         verify(originalEvents).hasEvents(self)

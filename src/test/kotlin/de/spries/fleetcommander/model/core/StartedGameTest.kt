@@ -28,7 +28,6 @@ class StartedGameTest {
     private lateinit var someHomePlanet: Planet
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         john = mock()
         jack = mock()
@@ -55,19 +54,16 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun statusIsRunningAfterGameStarted() {
         assertThat(startedGame.getStatus(), `is`(Status.RUNNING))
     }
 
     @Test
-    @Throws(Exception::class)
     fun turnNumberIsOneInitially() {
         assertThat(startedGame.getTurnNumber(), `is`(1))
     }
 
     @Test
-    @Throws(Exception::class)
     fun turnNumberIncreasesWithEndedTurns() {
         startedGame.endTurn()
         assertThat(startedGame.getTurnNumber(), `is`(2))
@@ -76,32 +72,27 @@ class StartedGameTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotStartGameTwice() {
         startedGame.start(john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameHasAUniverse() {
         assertThat(startedGame.getUniverse(), `is`(universe))
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotAddPlayersAfterGameHasStarted() {
         startedGame.addPlayer(otherPlayer)
     }
 
     @Test
-    @Throws(Exception::class)
     fun endingTurnRunsFactoryCycle() {
         startedGame.endTurn()
         verify(universe).runFactoryProductionCycle()
     }
 
     @Test
-    @Throws(Exception::class)
     fun endingTurnResetsPreviousTurnMarkersBeforeShipsTravel() {
         startedGame.endTurn()
         val inOrder = inOrder(universe)
@@ -110,7 +101,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun endingTurnRunsProductionCycleBeforeShipsTravel() {
         startedGame.endTurn()
         val inOrder = inOrder(universe)
@@ -119,20 +109,17 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun endingTurnRunsShipTravellingCycle() {
         startedGame.endTurn()
         verify(universe).runShipTravellingCycle()
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun playerThatDoesntParticipateCannotEndTurn() {
         startedGame.endTurn(otherPlayer)
     }
 
     @Test
-    @Throws(Exception::class)
     fun turnDoesntEndBeforeAllPlayersHaveEndedTheirTurn() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -144,14 +131,12 @@ class StartedGameTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun defeatedPlayersCannotEndTurn() {
         doReturn(false).`when`(john).isActive()
         startedGame.endTurn(john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun turnEndsAfterAllPlayersHaveEndedTheirTurn() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -164,7 +149,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun turnEndsAfterAllActivePlayersHaveEndedTheirTurn() {
         doReturn(true).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -178,7 +162,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun activePlayersAreNotifiedOfTurnEnd() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -193,7 +176,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun readyPlayersAreChangedToPlayingAtTurnEnd() {
         doReturn(true).`when`(john).isReady()
         doReturn(true).`when`(jack).isReady()
@@ -208,7 +190,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun defeatedPlayersAreNotNotifiedOfTurnEnd() {
         doReturn(true).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -223,7 +204,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun setsNewDefeatedPlayersInactive() {
         doReturn(true).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -236,7 +216,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun notifiesUniverseForDefeatedPlayers() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -249,7 +228,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameOverWhenLastPlayerIsHuman() {
         doReturn(true).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -261,7 +239,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameOverWhenNoHumanPlayersLeft() {
         doReturn(false).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -273,7 +250,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun noPlayersNotifiedAfterGameEnd() {
         doReturn(true).`when`(john).isActive()
         doReturn(false).`when`(jack).isActive()
@@ -287,7 +263,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingPlayerBecomesInactive() {
         doReturn(true).`when`(john).isActive()
         startedGame.quit(john)
@@ -296,7 +271,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingPlayerIsTreatedAsDefeated() {
         doReturn(true).`when`(john).isActive()
         startedGame.quit(john)
@@ -304,7 +278,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingEndsTurnIfPlayerWasOnlyPlayerStillPlaying() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -323,7 +296,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingEndsGameIfLastHumanPlayerLeft() {
         doReturn(true).`when`(computerPlayer).isActive()
         doReturn(true).`when`(computerPlayer2).isActive()
@@ -337,7 +309,6 @@ class StartedGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingDoesntEndGameIfActiveHumanPlayersLeft() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()

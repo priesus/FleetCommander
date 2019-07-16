@@ -29,7 +29,6 @@ class GameStoreTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun creatingGameAddsGameToList() {
         val game = mock<Game>()
 
@@ -48,7 +47,6 @@ class GameStoreTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun deletingGameRemovesGameFromList() {
         val game = mock<Game>()
         val gameId = GameStore.INSTANCE.create(game)
@@ -58,7 +56,6 @@ class GameStoreTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun creatingGamesInParallelStillCreatesSequentialIDs() {
         val games = ArrayList<Game>()
         for (i in 0..99) {

@@ -3,7 +3,7 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-open class Universe(private val planets: List<Planet>) {
+class Universe(private val planets: List<Planet>) {
 
     private val travellingShipFormations: MutableCollection<ShipFormation> = mutableListOf()
 

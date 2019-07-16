@@ -7,7 +7,7 @@ import de.spries.fleetcommander.model.ai.behavior.SearchEnemyHomePlanetFleetStra
 import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player
 
-open class PlayerSpecificGame(private val originalGame: Game, private val viewingPlayer: Player) {
+class PlayerSpecificGame(private val originalGame: Game, private val viewingPlayer: Player) {
 
     fun getId() = originalGame.getId()
 

@@ -21,7 +21,6 @@ class DefaultBuildingStrategyTest {
     private lateinit var distantPlanet: PlayerSpecificPlanet
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         buildingStrategy = DefaultBuildingStrategy()
         universe = mock()
@@ -43,7 +42,6 @@ class DefaultBuildingStrategyTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun buildsNoFactoriesWhenPlayerCannotBuild() {
         whenever(homePlanet.canBuildFactory()).thenReturn(false)
         buildingStrategy.buildFactories(universe)
@@ -51,7 +49,6 @@ class DefaultBuildingStrategyTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun buildsFactoriesWhenPlayerCanBuild() {
         whenever(homePlanet.canBuildFactory()).thenReturn(true).thenReturn(true).thenReturn(false)
         buildingStrategy.buildFactories(universe)

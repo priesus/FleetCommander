@@ -12,7 +12,6 @@ class FactorySiteTest {
     private lateinit var maxedOutFactorySite: FactorySite
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         factorySite = FactorySite(PlanetClass.B)
         maxedOutFactorySite = FactorySite(PlanetClass.B)
@@ -22,13 +21,11 @@ class FactorySiteTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotBuildMoreFactoriesThanSlotsAvailable() {
         maxedOutFactorySite.buildFactory()
     }
 
     @Test
-    @Throws(Exception::class)
     fun maxedOutFactorySiteHasNoMoreSlotsAvailable() {
         for (i in 0..5) {
             assertThat(factorySite.hasAvailableSlots(), `is`(true))
@@ -39,7 +36,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun buildingFactoriesDecreasesAvailableSlots() {
         for (i in 6 downTo 1) {
             assertThat(factorySite.getAvailableSlots(), `is`(i))
@@ -50,13 +46,11 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun emptyFactorySiteHasNoFactories() {
         assertThat(factorySite.getFactoryCount(), `is`(0))
     }
 
     @Test
-    @Throws(Exception::class)
     fun factoryCountIncreasesWithEachBuiltFactory() {
         for (i in 0..5) {
             factorySite.buildFactory()
@@ -65,39 +59,33 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun emptyFactorySiteProducesNoCredits() {
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(0))
     }
 
     @Test
-    @Throws(Exception::class)
     fun emptyFactorySiteProducesNoShips() {
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(0f))
     }
 
     @Test
-    @Throws(Exception::class)
     fun factoryIncreasesCreditsProduction() {
         factorySite.buildFactory()
         assertThat(factorySite.getProducedCreditsPerTurn(), `is`(greaterThan(0)))
     }
 
     @Test
-    @Throws(Exception::class)
     fun factoryIncreasesShipProduction() {
         factorySite.buildFactory()
         assertThat(factorySite.getProducedShipsPerTurn(), `is`(greaterThan(0f)))
     }
 
     @Test
-    @Throws(Exception::class)
     fun initialProductionFocusIsBalanced50Percent() {
         assertThat(factorySite.getShipProductionFocus(), `is`(10))
     }
 
     @Test
-    @Throws(Exception::class)
     fun fullProductionFocusOnShipsProducesShipsOnly() {
         factorySite.buildFactory()
         factorySite.updateShipProductionFocus(20)
@@ -106,7 +94,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun fullProductionFocusOnCreditsProducesCreditsOnly() {
         factorySite.buildFactory()
         factorySite.updateShipProductionFocus(0)
@@ -115,7 +102,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun balancedProductionFocusProducesBothShipsAndCredits() {
         factorySite.buildFactory()
         factorySite.updateShipProductionFocus(10)
@@ -124,7 +110,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun differentPlanetClassProducesDifferentResources() {
         val factorySite = FactorySite(PlanetClass.P)
         factorySite.buildFactory()
@@ -134,7 +119,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun shipProductionFocusProducesMoreShipsThanCredits() {
         factorySite.buildFactory()
         factorySite.updateShipProductionFocus(15)
@@ -143,7 +127,6 @@ class FactorySiteTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun creditProductionFocusProducesMoreCreditsThanShips() {
         factorySite.buildFactory()
         factorySite.updateShipProductionFocus(5)
@@ -152,13 +135,11 @@ class FactorySiteTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetNegativeProductionFocus() {
         factorySite.updateShipProductionFocus(-1)
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotSetProductionFocusGreaterThan20() {
         factorySite.updateShipProductionFocus(21)
     }

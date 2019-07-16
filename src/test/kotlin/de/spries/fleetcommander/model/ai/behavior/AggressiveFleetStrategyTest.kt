@@ -18,7 +18,6 @@ class AggressiveFleetStrategyTest {
     private lateinit var distantPlanet: PlayerSpecificPlanet
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         fleetStrategy = AggressiveFleetStrategy()
         universe = mock()
@@ -104,7 +103,6 @@ class AggressiveFleetStrategyTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun sendsAllShipsToEnemyPlanetIfOneIsKnown() {
         doReturn(2).`when`(homePlanet).getShipCount()
         doReturn(3).`when`(closePlanet).getShipCount()

@@ -2,7 +2,7 @@ package de.spries.fleetcommander.model.ai.behavior
 
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 
-open class DefaultBuildingStrategy : BuildingStrategy {
+class DefaultBuildingStrategy : BuildingStrategy {
 
     override fun buildFactories(universe: PlayerSpecificUniverse) {
         val allPlanets = universe.getPlanets()

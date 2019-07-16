@@ -104,14 +104,12 @@ class ShipFormationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun shipsHaventArrivedBeforeTravelling() {
         val sf = ShipFormation(1, originPlanet, closePlanet, JOHN)
         assertThat(sf.hasArrived(), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun shortTripLandsAfter1Cycle() {
         val sf = ShipFormation(1, originPlanet, closePlanet, JOHN)
         sf.travel()
@@ -120,7 +118,6 @@ class ShipFormationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun longerTripEndsAfter2Cycles() {
         val sf = ShipFormation(1, originPlanet, moreDistantPlanet, JOHN)
 
@@ -134,7 +131,6 @@ class ShipFormationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun longTripEndsAfter3Cycles() {
         val sf = ShipFormation(1, originPlanet, distantPlanet, JOHN)
 
@@ -153,7 +149,6 @@ class ShipFormationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun distanceTravelledIncreasesWithEachCycle() {
         val sf = ShipFormation(1, originPlanet, moreDistantPlanet, JOHN)
 
@@ -164,7 +159,6 @@ class ShipFormationTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun formationPositionMovesTowardsDestination() {
         doReturn(0).`when`(originPlanet).x
         doReturn(0).`when`(originPlanet).y

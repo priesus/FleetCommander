@@ -3,7 +3,7 @@ package de.spries.fleetcommander.model.facade
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.TurnEvents
 
-open class PlayerSpecificTurnEvents(private val originalEvents: TurnEvents, private val viewingPlayer: Player) {
+class PlayerSpecificTurnEvents(private val originalEvents: TurnEvents, private val viewingPlayer: Player) {
 
     fun getConqueredEnemyPlanets() = originalEvents.getConqueredEnemyPlanets(viewingPlayer)
 

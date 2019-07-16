@@ -5,7 +5,7 @@ import de.spries.fleetcommander.model.core.universe.ShipFormation
 import de.spries.fleetcommander.model.core.universe.Universe
 
 
-open class PlayerSpecificUniverse(private val originalUniverse: Universe, private val viewingPlayer: Player) {
+class PlayerSpecificUniverse(private val originalUniverse: Universe, private val viewingPlayer: Player) {
 
     fun getPlanets(): List<PlayerSpecificPlanet> {
         return originalUniverse.getPlanets().map { PlayerSpecificPlanet(it, viewingPlayer) }

@@ -2,7 +2,7 @@ package de.spries.fleetcommander.model.core.universe
 
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-open class FactorySite(private val planetClass: PlanetClass) {
+class FactorySite(private val planetClass: PlanetClass) {
     private var factoryCount = 0
     private var shipProductionFocus = MAX_PRODUCTION_FOCUS / 2
         set(prodFocus) {

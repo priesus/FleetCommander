@@ -3,7 +3,7 @@ package de.spries.fleetcommander.model.ai.behavior
 import de.spries.fleetcommander.model.core.universe.FactorySite
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 
-open class DefaultProductionStrategy : ProductionStrategy {
+class DefaultProductionStrategy : ProductionStrategy {
 
     override fun updateProductionFocus(universe: PlayerSpecificUniverse, availablePlayerCredits: Int) {
         val allPlanets = universe.getPlanets()

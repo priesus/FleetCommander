@@ -2,7 +2,7 @@ package de.spries.fleetcommander.model.ai.behavior
 
 import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 
-open class AggressiveFleetStrategy : FleetStrategy {
+class AggressiveFleetStrategy : FleetStrategy {
 
     override fun sendShips(universe: PlayerSpecificUniverse) {
         val homePlanet = universe.getHomePlanet()!!

@@ -126,7 +126,6 @@ class PlayerSpecificPlanetTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun forwardsCallToCanBuildFactory() {
         ownPlanet.canBuildFactory()
         verify(originalPlanet).canBuildFactory(self)

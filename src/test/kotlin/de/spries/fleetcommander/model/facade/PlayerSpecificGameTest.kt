@@ -47,7 +47,6 @@ class PlayerSpecificGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun addsComputerPlayerWithName() {
         ownGame.addComputerPlayer()
 
@@ -63,7 +62,6 @@ class PlayerSpecificGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun addsHumanPlayerWithName() {
         ownGame.addHumanPlayer("Player 2")
 
@@ -93,14 +91,12 @@ class PlayerSpecificGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun forwardsCallToGetPreviousTurnEvents() {
         ownGame.getPreviousTurnEvents()
         verify(originalGame).getPreviousTurnEvents()
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsNullTurnEventsIfOriginalGameHasNoEventsYet() {
         doReturn(null).`when`(originalGame).getPreviousTurnEvents()
         assertThat(ownGame.getPreviousTurnEvents(), `is`(nullValue()))
@@ -119,13 +115,11 @@ class PlayerSpecificGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsOwnPlayer() {
         assertThat(ownGame.getMe().getName(), `is`("Myself"))
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsOtherPlayers() {
         assertThat(ownGame.getOtherPlayers(), hasSize(1))
     }

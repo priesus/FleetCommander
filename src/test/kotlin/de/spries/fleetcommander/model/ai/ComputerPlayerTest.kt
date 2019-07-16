@@ -38,33 +38,28 @@ class ComputerPlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun isntAHumanPlayer() {
         assertThat(player.isHumanPlayer(), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun isReadyInitially() {
         assertThat(player.getStatus(), `is`(Status.READY))
     }
 
     @Test
-    @Throws(Exception::class)
     fun callsBuildingStrategy() {
         player.notifyNewTurn(game)
         verify(buildingStrategy).buildFactories(any())
     }
 
     @Test
-    @Throws(Exception::class)
     fun callsFleetStrategy() {
         player.notifyNewTurn(game)
         verify(fleetStrategy).sendShips(any())
     }
 
     @Test
-    @Throws(Exception::class)
     fun callsProductionStrategy() {
         player.notifyNewTurn(game)
         verify(prodStrategy).updateProductionFocus(any(), any())
@@ -77,7 +72,7 @@ class ComputerPlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
+
     fun stillEndsTurnWhenPlayerHasNoMoreHomePlanet() {
         whenever(universe.getHomePlanetOf(player)).thenThrow(RuntimeException())
         player.notifyNewTurn(game)
@@ -85,7 +80,6 @@ class ComputerPlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun endsTurnIfFleetStrategyThrowsException() {
         whenever(fleetStrategy.sendShips(any())).thenThrow(RuntimeException())
         player.notifyNewTurn(game)
@@ -93,7 +87,6 @@ class ComputerPlayerTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun endsTurnIfBuildingStrategyThrowsException() {
         doThrow(RuntimeException::class.java).`when`(buildingStrategy)
                 .buildFactories(any())

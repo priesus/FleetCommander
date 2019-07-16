@@ -4,7 +4,7 @@ import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.universe.HasCoordinates
 import de.spries.fleetcommander.model.core.universe.Planet
 
-open class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player)
+class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewingPlayer: Player)
     : HasCoordinates(originalPlanet.x, originalPlanet.y) {
 
     fun getId() = originalPlanet.id

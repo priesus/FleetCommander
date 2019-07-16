@@ -4,7 +4,7 @@ import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.core.universe.Universe
 import de.spries.fleetcommander.model.core.universe.UniverseFactory
 
-open class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
+class Game(val universeGenerator: ((List<Player>) -> (Universe)) = { UniverseFactory.generate(it) }) {
 
     private var id: Int = 0
     private val players = mutableListOf<Player>()

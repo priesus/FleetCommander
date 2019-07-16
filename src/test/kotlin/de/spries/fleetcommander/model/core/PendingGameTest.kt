@@ -26,7 +26,6 @@ class PendingGameTest {
     private lateinit var otherPlayer: Player
 
     @Before
-    @Throws(Exception::class)
     fun setUp() {
         john = mock()
         jack = mock()
@@ -46,32 +45,27 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun initialStatusIsPending() {
         assertThat(game.getStatus(), `is`(Status.PENDING))
     }
 
     @Test
-    @Throws(Exception::class)
     fun initialTurnNumberIsZero() {
         assertThat(game.getTurnNumber(), `is`(0))
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun gameRequiresAtLeastTwoPlayersToStart() {
         game.start(john)
     }
 
     @Test
-    @Throws(Exception::class)
     fun playerIsAddedToPlayersList() {
         game.addPlayer(jack)
         assertThat<List<Player>>(game.getPlayers(), hasItem(jack))
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameHasAMaximumOf6Players() {
         for (i in 0..4) {
             game.addPlayer(mock())
@@ -86,7 +80,6 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun cannotAddPlayerTwice() {
         val g = Game()
         g.addPlayer(Player("John"))
@@ -100,13 +93,11 @@ class PendingGameTest {
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun cannotEndTurnBeforeGameHasStarted() {
         game.endTurn()
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsPlayerWithSameId() {
         doReturn(1).`when`(jack).getId()
         doReturn(12).`when`(john).getId()
@@ -114,7 +105,6 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsNullForNonexistentPlayerId() {
         doReturn(1).`when`(jack).getId()
         doReturn(12).`when`(john).getId()
@@ -122,7 +112,6 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun assignsIdToNewPlayers() {
         val g = Game()
 
@@ -140,7 +129,6 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun playersAreNotifiedOfGameStart() {
         doReturn(true).`when`(john).isActive()
         doReturn(true).`when`(jack).isActive()
@@ -151,39 +139,33 @@ class PendingGameTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun quittingPlayerIsRemovedFromPendingGame() {
         gameWithPlayers.quit(john)
         assertThat<List<Player>>(gameWithPlayers.getPlayers(), not(hasItem(john)))
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun nonParticipatingPlayerCannotQuitGame() {
         gameWithPlayers.quit(otherPlayer)
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameHasNoUniverse() {
         assertThat(game.getUniverse(), `is`(nullValue()))
     }
 
     @Test(expected = IllegalActionException::class)
-    @Throws(Exception::class)
     fun playerThatDoesntParticipateCannotStartGame() {
         gameWithPlayers.start(otherPlayer)
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameDoesntStartBeforeAllPlayersAreReady() {
         gameWithPlayers.start(john)
         assertThat(gameWithPlayers.getStatus(), `is`(Status.PENDING))
     }
 
     @Test
-    @Throws(Exception::class)
     fun gameStartsAfterAllPlayersAreReady() {
         doReturn(true).`when`(john).isReady()
         doReturn(true).`when`(jack).isReady()

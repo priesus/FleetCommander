@@ -30,7 +30,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun createsAnotherCodeIfNotUniqueOnFirstTry() {
         JoinCodes.INSTANCE.randomGenerator = mock()
         whenever(JoinCodes.INSTANCE.randomGenerator.invoke()).thenReturn("123456", "123456", "123456", "abcdef")
@@ -39,7 +38,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun invalidatingReturnsGameId() {
         val code1 = JoinCodes.INSTANCE.create(1)
         val code2 = JoinCodes.INSTANCE.create(2)
@@ -49,7 +47,6 @@ class JoinCodesTest {
     }
 
     @Test(expected = InvalidCodeException::class)
-    @Throws(Exception::class)
     fun canOnlyInvalidateOnce() {
         val code1 = JoinCodes.INSTANCE.create(1)
         JoinCodes.INSTANCE.invalidate(code1)
@@ -57,19 +54,16 @@ class JoinCodesTest {
     }
 
     @Test(expected = InvalidCodeException::class)
-    @Throws(Exception::class)
     fun cannotInvalidateInvalidCode() {
         JoinCodes.INSTANCE.invalidate("InvalidCode")
     }
 
     @Test(expected = InvalidCodeException::class)
-    @Throws(Exception::class)
     fun cannotInvalidateNullCode() {
         JoinCodes.INSTANCE.invalidate(null)
     }
 
     @Test
-    @Throws(Exception::class)
     fun invalidatesCaseInsensitive() {
         JoinCodes.INSTANCE.randomGenerator = mock()
         whenever(JoinCodes.INSTANCE.randomGenerator.invoke()).thenReturn("abcde6")
@@ -80,7 +74,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canCreate5CodesPerGameMax() {
         JoinCodes.INSTANCE.create(1)
         JoinCodes.INSTANCE.create(1)
@@ -97,7 +90,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun canCreateMoreCodesAfterSomeHaveBeenInvalidated() {
         JoinCodes.INSTANCE.create(1)
         val code1 = JoinCodes.INSTANCE.create(1)
@@ -122,7 +114,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsAllCodesForGame() {
         val code1 = JoinCodes.INSTANCE.create(1)
         val code2 = JoinCodes.INSTANCE.create(1)
@@ -139,7 +130,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun doesntReturnInvalidatedCodes() {
         JoinCodes.INSTANCE.create(1)
         val code1 = JoinCodes.INSTANCE.create(1)
@@ -151,7 +141,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsCodesForGameIdOnly() {
         val code1 = JoinCodes.INSTANCE.create(1)
         val code2 = JoinCodes.INSTANCE.create(2)
@@ -164,13 +153,11 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun returnsEmptyListForUnknownGameId() {
         assertThat(JoinCodes.INSTANCE[100], `is`(empty()))
     }
 
     @Test
-    @Throws(Exception::class)
     fun invalidateAllRemovesAllCodesForGame() {
         JoinCodes.INSTANCE.create(1)
         JoinCodes.INSTANCE.create(1)
@@ -180,7 +167,6 @@ class JoinCodesTest {
     }
 
     @Test
-    @Throws(Exception::class)
     fun invalidateAllDoesntRemoveCodesFromOtherGame() {
         JoinCodes.INSTANCE.create(1)
         JoinCodes.INSTANCE.create(2)

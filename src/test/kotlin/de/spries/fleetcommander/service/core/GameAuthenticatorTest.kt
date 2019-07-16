@@ -17,39 +17,33 @@ class GameAuthenticatorTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    @Throws(Exception::class)
     fun cannotCreateTokenForGameAgain() {
         GameAuthenticator.INSTANCE.createAuthToken(FIRST_GAME_FIRST_PLAYER)
     }
 
     @Test
-    @Throws(Exception::class)
     fun generatedTokenIsValid() {
         assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken), `is`(true))
     }
 
     @Test
-    @Throws(Exception::class)
     fun invalidTokenIsNotValidForGame() {
         assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, INVALID_TOKEN), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun generatedTokenIsNotValidForOtherGame() {
         val secondGameToken = GameAuthenticator.INSTANCE.createAuthToken(SECOND_GAME_FIRST_PLAYER)
         assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun generatedTokenIsNotValidForOtherPlayer() {
         val secondGameToken = GameAuthenticator.INSTANCE.createAuthToken(FIRST_GAME_SECOND_PLAYER)
         assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
     }
 
     @Test
-    @Throws(Exception::class)
     fun deletingTokenInvalidatesToken() {
         GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_FIRST_PLAYER)
         assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken),
@@ -57,7 +51,6 @@ class GameAuthenticatorTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    @Throws(Exception::class)
     fun cannotDeleteTokenForInexistentGameId() {
         GameAuthenticator.INSTANCE.deleteAuthToken(INEXISTENT_GAME_PLAYER)
     }

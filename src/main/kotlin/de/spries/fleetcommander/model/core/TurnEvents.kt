@@ -2,7 +2,7 @@ package de.spries.fleetcommander.model.core
 
 import de.spries.fleetcommander.model.core.universe.TurnEventBus
 
-open class TurnEvents(players: Collection<Player>) : TurnEventBus {
+class TurnEvents(players: Collection<Player>) : TurnEventBus {
 
     private val events: MutableMap<Player, PlayerTurnEvents> = mutableMapOf()
 
