@@ -23,8 +23,8 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 ### Working with the project ###
 * Clone the repository
 * **mvn verify** to run Unit & integration tests on the back-end
-* **mvn jetty:run** to start the web-app at (http://localhost:80)
-* **mvn package** will produce a deployable .war file
+* **mvn spring-boot:run** to start the web-app at (http://localhost:8080)
+* **mvn package** will produce an executable .jar file
 
 ## TODOs
 * Allow building research facilities instead of factories, that
