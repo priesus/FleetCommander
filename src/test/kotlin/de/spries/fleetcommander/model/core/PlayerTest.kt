@@ -183,7 +183,7 @@ class PlayerTest {
 
     companion object {
 
-        private val HALF_STARTING_BALANCE = Player.STARTING_CREDITS / 2
+        private const val HALF_STARTING_BALANCE = Player.STARTING_CREDITS / 2
     }
 
 }

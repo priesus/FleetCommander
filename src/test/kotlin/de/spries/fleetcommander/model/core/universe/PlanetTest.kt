@@ -32,8 +32,8 @@ class PlanetTest {
     @Test
     fun newPlanetHasCoordinates() {
         val planet = Planet(10, 20)
-        assertThat(planet.x, `is`<Number>(10))
-        assertThat(planet.y, `is`<Number>(20))
+        assertThat(planet.x, `is`(10))
+        assertThat(planet.y, `is`(20))
     }
 
     @Test

@@ -18,7 +18,7 @@ class FactorySite(private val planetClass: PlanetClass) {
         this.shipProductionFocus = shipProductionFocus
     }
 
-    fun factorySlotCount() = FACTORY_SLOTS
+    fun getFactorySlotCount() = FACTORY_SLOTS
 
     fun getProducedCreditsPerTurn(): Int {
         val creditsProductionFocus = MAX_PRODUCTION_FOCUS - this.shipProductionFocus

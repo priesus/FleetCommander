@@ -15,7 +15,7 @@ class FactorySiteTest {
     fun setUp() {
         factorySite = FactorySite(PlanetClass.B)
         maxedOutFactorySite = FactorySite(PlanetClass.B)
-        for (i in 0 until factorySite.factorySlotCount()) {
+        for (i in 0 until factorySite.getFactorySlotCount()) {
             maxedOutFactorySite.buildFactory()
         }
     }

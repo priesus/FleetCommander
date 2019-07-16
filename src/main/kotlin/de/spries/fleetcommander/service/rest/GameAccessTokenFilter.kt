@@ -29,8 +29,8 @@ class GameAccessTokenFilter : Filter {
 
             val gameId = Integer.parseInt(protectedPathMatcher.group("gameId"))
 
-            var playerId = 0
-            var token: String? = null
+            val playerId: Int
+            val token: String?
             try {
                 playerId = extractPlayerIdFromContext(req)
                 token = extractAuthTokenFromContext(req)
@@ -53,8 +53,8 @@ class GameAccessTokenFilter : Filter {
 
     companion object {
 
-        const val AUTH_HEADER = "Authorization"
-        const val AUTH_TOKEN_PREFIX = "Bearer "
+        private const val AUTH_HEADER = "Authorization"
+        private const val AUTH_TOKEN_PREFIX = "Bearer "
         private val PROTECTED_PATHS = Pattern.compile("^games/(?<gameId>\\d+)")
 
         private fun extractPlayerIdFromContext(requestCtx: HttpServletRequest): Int {
