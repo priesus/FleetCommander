@@ -1,0 +1,166 @@
+<div class="game-menu">
+	<button class="btn btn-default" data-ng-click="endTurn()" data-ng-hide="waitingForOtherPlayers" data-ng-disabled="blockingActionInProgress || game.status === 'OVER'"><span class="shortcut">E</span>nd turn #{{game.turnNumber}}</button>
+	<button class="btn btn-default" data-ng-click="quitGame()">Quit game</button>
+</div>
+<div class="game-status-bar" data-ng-class="{'friendly-foreground': game.me.status === 'PLAYING' || game.me.status === 'READY' , 'neutral': game.me.status === 'QUIT' || game.me.status === 'DEFEATED'}">
+	<span>{{game.me.name}}</span>
+	<span class="pull-right">Credits: {{game.me.credits}}</span>
+</div>
+<div class="ingame-screen">
+	<div class="blocking-overlay" data-ng-show="waitingForOtherPlayers"><i class="glyphicon glyphicon-refresh gly-spin"></i> Waiting for other players...</div>
+	<div class="planet"
+	     data-ng-repeat="planet in game.universe.planets track by planet.id"
+	     data-ng-class="{'friendly': planet.inhabited_by_me, 'enemy': planet.known_as_enemy_planet, 'neutral': !planet.inhabited_by_me&&!planet.known_as_enemy_planet}"
+	     data-ng-click="clickPlanetHandler($index)"
+	     style="top: {{planet.y / 100 * 334 - 7}}px; left: {{planet.x / 100 * 524 - 8}}px;">
+
+		<div class="object-icon" data-ng-class="{'under-attack': planet.under_attack, 'just-inhabited': planet.just_inhabited}">
+			<span class="glyphicon glyphicon-globe" data-ng-show="!destinationSelectionActive"></span>
+			<span class="glyphicon glyphicon-record" data-ng-show="destinationSelectionActive"></span>
+		</div>
+
+		<div class="object-annotation object-annotation-top-right" data-ng-if="planet.home_planet">
+			<span class="glyphicon glyphicon-home"></span>
+		</div>
+		<div class="object-annotation-xs object-annotation-top" data-ng-if="planet.factory_site">
+			<span class="glyphicon glyphicon-unchecked" data-ng-repeat="i in getNumber(planet.factory_site.factory_count) track by $index"></span>
+		</div>
+		<div class="object-annotation object-annotation-bottom-left" data-ng-if="planet.incoming_ship_count>0">
+			<span class="glyphicon glyphicon-share-alt"></span><br/>{{planet.incoming_ship_count}}
+		</div>
+		<div class="object-annotation object-annotation-bottom-right" data-ng-if="planet.ship_count>0">
+			{{planet.ship_count}}
+		</div>
+	</div>
+	<div class="travellingShip friendly-foreground"
+	     data-ng-repeat="ships in game.universe.travelling_ship_formations track by $index"
+	     data-ng-hide="ships.distance_travelled===0"
+	     style="top: {{ships.y / 100 * 334 - 7}}px; left: {{ships.x / 100 * 524 - 8}}px;">
+
+		<div class="object-icon">
+			<span class="glyphicon glyphicon-send"></span>
+		</div>
+
+		<div class="object-annotation object-annotation-bottom-right" data-ng-if="ships.shipCount>0">
+			{{ships.shipCount}}
+		</div>
+	</div>
+
+	<div class="outer" data-ng-show="showTurnEvents"><div class="middle">
+		<div class="ingame-menu inner form-horizontal">
+			<button data-ng-click="showTurnEvents=false" type="button" class="close"><span>&times;</span></button>
+
+			<div data-ng-show="game.turn_number === 1">
+				<h3>Your mission</h3>
+				<ul class="paragraph list-unstyled">
+					<li>Find and conquer all enemy home planets!</li>
+				</ul>
+			</div>
+
+			<div data-ng-show="game.status === 'OVER' && game.me.status === 'PLAYING'" class="friendly-foreground">
+				<h3>You win the game!</h3>
+				<ul class="paragraph list-unstyled">
+					<li>All of your enemies home planets have been conquered!</li>
+				</ul>
+			</div>
+
+			<div data-ng-show="game.me.status === 'DEFEATED'" class="enemy-foreground">
+				<h3>You lose!</h3>
+				<ul class="paragraph list-unstyled">
+					<li>Your home planet has been conquered by enemy ships.</li>
+				</ul>
+			</div>
+
+			<div data-ng-show="game.me.status === 'PLAYING' && game.turn_number > 1">
+				<h3>Recent events (Turn #{{game.turn_number - 1}})</h3>
+				<ul class="paragraph list-unstyled">
+					<li data-ng-show="!game.previous_turn_events.has_events">No enemy contact</li>
+					<li data-ng-show="game.previous_turn_events.conquered_enemy_planets > 0" class="friendly-foreground">You conquered {{game.previous_turn_events.conquered_enemy_planets}} enemy planets!</li>
+					<li data-ng-show="game.previous_turn_events.conquered_uninhabited_planets > 0" class="friendly-foreground">You inhabited {{game.previous_turn_events.conquered_uninhabited_planets}} uninhabited planets.</li>
+					<li data-ng-show="game.previous_turn_events.lost_ship_formations > 0" class="enemy-foreground">You lost contact to {{game.previous_turn_events.lost_ship_formations}} ship formations that invaded foreign planets!</li>
+					<li data-ng-show="game.previous_turn_events.defended_planets > 0" class="enemy-foreground">{{game.previous_turn_events.defended_planets}} enemy ship formations attacked your planets, but your fleet was able to stand their ground.</li>
+					<li data-ng-show="game.previous_turn_events.lost_planets > 0" class="enemy-foreground">Enemy ships conquered {{game.previous_turn_events.lost_planets}} of your planets!</li>
+				</ul>
+			</div>
+			<button data-ng-click="showTurnEvents=false"  class="btn btn-default">Ok</button>
+		</div>
+	</div></div>
+
+	<div class="outer" data-ng-show="showPlanetMenu"><div class="middle">
+		<div class="ingame-menu inner">
+			<button data-ng-click="showPlanetMenu=false" type="button" class="close"><span>&times;</span></button>
+
+			<div class="row vert-separated">
+				<div class="col-xs-6">
+					<div class="form-group">
+						<h4>Factories</h4>
+					</div>
+					<div class="form-group">
+						<div class="factory-slot" data-ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factory_site.factory_count) track by $index">
+							<img src="img/factory.svg" height="19px" width="19px">
+						</div>
+						<div class="factory-slot" data-ng-repeat="i in getNumber(game.universe.planets[selectedPlanetIndex].factory_site.available_slots) track by $index">
+							&nbsp;
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="prodFocus">Production/turn</label>
+						<div class="row">
+							<div class="col-xs-1"><span class="glyphicon glyphicon-usd"></span></div>
+							<div class="col-xs-8">
+								<input id="prodFocus" type="range" data-ng-model="productionFocus" data-ng-change="changeProductionFocusOnSelectedPlanet()"
+								       min="0" max="20">
+							</div>
+							<div class="col-xs-1"><span class="glyphicon glyphicon-send"></span></div>
+						</div>
+						<div>
+							Credits: {{game.universe.planets[selectedPlanetIndex].factory_site.produced_credits_per_turn}}
+							-
+							Ships: {{game.universe.planets[selectedPlanetIndex].factory_site.produced_ships_per_turn | number: 2}}
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<button data-ng-click="buildFactoryOnSelectedPlanet()" data-ng-disabled="game.universe.planets[selectedPlanetIndex].factory_site.available_slots===0 || !game.me.can_afford_factory" class="btn btn-default">
+								Build <span class="shortcut">F</span>actory
+							</button>
+						</div>
+						<div data-ng-class="{'error-msg': !game.me.can_afford_factory}">
+							{{game.me.credits}} / 100 credits
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<form name="sendShipsForm">
+						<div class="form-group">
+							<h4>Send ships to other planets</h4>
+						</div>
+						<div class="form-group row">
+							<div class="col-xs-1">1</div>
+							<div class="col-xs-8">
+								<input type="range" name="ships" data-ng-model="shipCount"
+								       min="1" max="{{game.universe.planets[selectedPlanetIndex].ship_count}}">
+							</div>
+							<div class="col-xs-1">{{game.universe.planets[selectedPlanetIndex].ship_count}}</div>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-default" data-ng-click="prepareSendShips()" data-ng-disabled="shipCount===0 || !sendShipsForm.$valid">
+								<span class="shortcut">S</span>end {{shipCount}} ships to...
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div></div>
+</div>
+
+<div class="other-players-status-bar" data-ng-show="game.other_players.length > 1 || game.other_players[0].human_player">
+	<ul class="list-inline">
+		<li data-ng-class="{'enemy-foreground': otherPlayer.status === 'PLAYING' || otherPlayer.status === 'READY' , 'neutral': otherPlayer.status === 'QUIT' || otherPlayer.status === 'DEFEATED'}"
+		    data-ng-repeat="otherPlayer in game.other_players track by otherPlayer.name">
+			<span data-ng-show="otherPlayer.status === 'PLAYING'" class="player-indicator"><i class="glyphicon glyphicon-refresh gly-spin"></i></span>
+			<span>{{otherPlayer.name}}</span>
+		</li>
+	</ul>
+</div>
