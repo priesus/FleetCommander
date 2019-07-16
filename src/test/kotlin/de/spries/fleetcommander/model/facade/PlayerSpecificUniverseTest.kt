@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.facade
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import de.spries.fleetcommander.model.core.Player
@@ -58,6 +59,7 @@ class PlayerSpecificUniverseTest {
 
     @Test
     fun returnsPlayerSpecificPlanet() {
+        whenever(originalUniverse.getPlanetForId(any())).thenReturn(mock())
         ownUniverseView.getPlanet(1)
         verify(originalUniverse).getPlanetForId(1)
     }

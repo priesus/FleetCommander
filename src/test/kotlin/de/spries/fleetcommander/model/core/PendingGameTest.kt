@@ -135,8 +135,8 @@ class PendingGameTest {
         g.addPlayer(p3)
 
         verify(p1).assignId(1)
-        verify(p2).assignId( 2)
-        verify(p3).assignId( 3)
+        verify(p2).assignId(2)
+        verify(p3).assignId(3)
     }
 
     @Test

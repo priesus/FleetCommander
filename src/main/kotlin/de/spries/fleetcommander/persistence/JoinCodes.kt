@@ -10,7 +10,7 @@ enum class JoinCodes {
     INSTANCE;
 
     var randomGenerator: (() -> (String)) = ({
-        val charPool: List<Char> = (('a'..'z') + ('0'..'9')).filterNot { it=='0' || it=='o' }
+        val charPool: List<Char> = (('a'..'z') + ('0'..'9')).filterNot { it == '0' || it == 'o' }
         ThreadLocalRandom.current()
                 .ints(6, 0, charPool.size)
                 .asSequence()

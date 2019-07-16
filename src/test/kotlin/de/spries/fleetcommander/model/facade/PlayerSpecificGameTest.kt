@@ -1,5 +1,6 @@
 package de.spries.fleetcommander.model.facade
 
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import de.spries.fleetcommander.model.core.Game
@@ -10,7 +11,6 @@ import org.hamcrest.Matchers.nullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -54,10 +54,12 @@ class PlayerSpecificGameTest {
         doReturn(listOf(self, otherPlayer, computerPlayer)).`when`(originalGame).getPlayers()
         ownGame.addComputerPlayer()
 
-        val argument = ArgumentCaptor.forClass(Player::class.java)
-        verify(originalGame, times(2)).addPlayer(argument.capture())
-        assertThat(argument.allValues[0].getName(), `is`("Computer 1"))
-        assertThat(argument.allValues[1].getName(), `is`("Computer 2"))
+        argumentCaptor<Player>().apply {
+            verify(originalGame, times(2)).addPlayer(capture())
+
+            assertThat(allValues[0].getName(), `is`("Computer 1"))
+            assertThat(allValues[1].getName(), `is`("Computer 2"))
+        }
     }
 
     @Test
@@ -65,9 +67,11 @@ class PlayerSpecificGameTest {
     fun addsHumanPlayerWithName() {
         ownGame.addHumanPlayer("Player 2")
 
-        val argument = ArgumentCaptor.forClass(Player::class.java)
-        verify(originalGame).addPlayer(argument.capture())
-        assertThat(argument.value.getName(), `is`("Player 2"))
+        argumentCaptor<Player>().apply {
+            verify(originalGame).addPlayer(capture())
+
+            assertThat(firstValue.getName(), `is`("Player 2"))
+        }
     }
 
     @Test

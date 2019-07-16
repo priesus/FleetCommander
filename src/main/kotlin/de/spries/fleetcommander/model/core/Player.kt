@@ -13,7 +13,9 @@ open class Player(private val name: String, private var id: Int = -1, private va
     fun getId() = id
     fun getCredits() = credits
     fun getStatus() = status
-    fun setCredits(credits:Int) {this.credits=credits}
+    fun setCredits(credits: Int) {
+        this.credits = credits
+    }
 
     fun assignId(id: Int) {
         this.id = id

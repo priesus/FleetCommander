@@ -50,4 +50,24 @@ open class PlayerSpecificPlanet(private val originalPlanet: Planet, private val 
     fun changeProductionFocus(focus: Int) {
         originalPlanet.setProductionFocus(focus, viewingPlayer)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PlayerSpecificPlanet
+
+        if (originalPlanet != other.originalPlanet) return false
+        if (viewingPlayer != other.viewingPlayer) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = originalPlanet.hashCode()
+        result = 31 * result + viewingPlayer.hashCode()
+        return result
+    }
+
+
 }

@@ -9,7 +9,6 @@ import de.spries.fleetcommander.model.ai.behavior.ProductionStrategy
 import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player.Status
 import de.spries.fleetcommander.model.core.universe.Universe
-import de.spries.fleetcommander.model.facade.PlayerSpecificUniverse
 import org.hamcrest.Matchers.`is`
 import org.junit.Assert.assertThat
 import org.junit.Before
