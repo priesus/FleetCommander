@@ -9,50 +9,51 @@ import org.junit.Test
 class GameAuthenticatorTest {
 
     private lateinit var firstGamePlayerToken: String
+    private val gameAuth = GameAuthenticator()
 
     @Before
     fun setUp() {
-        GameAuthenticator.INSTANCE.reset()
-        firstGamePlayerToken = GameAuthenticator.INSTANCE.createAuthToken(FIRST_GAME_FIRST_PLAYER)
+        gameAuth.reset()
+        firstGamePlayerToken = gameAuth.createAuthToken(FIRST_GAME_FIRST_PLAYER)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun cannotCreateTokenForGameAgain() {
-        GameAuthenticator.INSTANCE.createAuthToken(FIRST_GAME_FIRST_PLAYER)
+        gameAuth.createAuthToken(FIRST_GAME_FIRST_PLAYER)
     }
 
     @Test
     fun generatedTokenIsValid() {
-        assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken), `is`(true))
+        assertThat(gameAuth.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken), `is`(true))
     }
 
     @Test
     fun invalidTokenIsNotValidForGame() {
-        assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, INVALID_TOKEN), `is`(false))
+        assertThat(gameAuth.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, INVALID_TOKEN), `is`(false))
     }
 
     @Test
     fun generatedTokenIsNotValidForOtherGame() {
-        val secondGameToken = GameAuthenticator.INSTANCE.createAuthToken(SECOND_GAME_FIRST_PLAYER)
-        assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
+        val secondGameToken = gameAuth.createAuthToken(SECOND_GAME_FIRST_PLAYER)
+        assertThat(gameAuth.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
     }
 
     @Test
     fun generatedTokenIsNotValidForOtherPlayer() {
-        val secondGameToken = GameAuthenticator.INSTANCE.createAuthToken(FIRST_GAME_SECOND_PLAYER)
-        assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
+        val secondGameToken = gameAuth.createAuthToken(FIRST_GAME_SECOND_PLAYER)
+        assertThat(gameAuth.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, secondGameToken), `is`(false))
     }
 
     @Test
     fun deletingTokenInvalidatesToken() {
-        GameAuthenticator.INSTANCE.deleteAuthToken(FIRST_GAME_FIRST_PLAYER)
-        assertThat(GameAuthenticator.INSTANCE.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken),
+        gameAuth.deleteAuthToken(FIRST_GAME_FIRST_PLAYER)
+        assertThat(gameAuth.isAuthTokenValid(FIRST_GAME_FIRST_PLAYER, firstGamePlayerToken),
                 `is`(false))
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun cannotDeleteTokenForInexistentGameId() {
-        GameAuthenticator.INSTANCE.deleteAuthToken(INEXISTENT_GAME_PLAYER)
+        gameAuth.deleteAuthToken(INEXISTENT_GAME_PLAYER)
     }
 
     companion object {

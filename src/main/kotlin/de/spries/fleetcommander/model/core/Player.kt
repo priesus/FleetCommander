@@ -3,7 +3,9 @@ package de.spries.fleetcommander.model.core
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.core.universe.FactorySite
 
-open class Player(private val name: String, private var id: Int = -1, private var credits: Int = STARTING_CREDITS) {
+open class Player(private val name: String,
+                  private var id: Int = -1,
+                  private var credits: Int = STARTING_CREDITS) {
 
     class InsufficientCreditsException(msg: String) : IllegalActionException(msg)
 

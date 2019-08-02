@@ -13,7 +13,7 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
 @Component
-class GameAccessTokenFilter : Filter {
+class GameAccessTokenFilter(private val gamesAuthenticator: GameAuthenticator) : Filter {
 
     private val log = KotlinLogging.logger {}
 
@@ -40,7 +40,7 @@ class GameAccessTokenFilter : Filter {
             }
 
             val gamePlayer = GamePlayer(gameId, playerId)
-            if (!GameAuthenticator.INSTANCE.isAuthTokenValid(gamePlayer, token)) {
+            if (!gamesAuthenticator.isAuthTokenValid(gamePlayer, token)) {
                 log.warn("{}: Unauthorized access with token {}", gamePlayer, token)
                 throw IllegalActionException("'Authorization' header was invalid for game $gameId")
             }

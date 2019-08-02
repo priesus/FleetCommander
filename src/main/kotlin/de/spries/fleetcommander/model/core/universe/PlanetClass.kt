@@ -1,6 +1,6 @@
 package de.spries.fleetcommander.model.core.universe
 
-enum class PlanetClass private constructor(private val productivityFactor: Float) {
+enum class PlanetClass constructor(private val productivityFactor: Float) {
     A(1.2f),
     B(1f),
     C(0.9f),

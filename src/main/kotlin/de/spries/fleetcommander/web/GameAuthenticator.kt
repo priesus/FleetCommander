@@ -1,11 +1,12 @@
 package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.web.dto.GamePlayer
+import org.springframework.stereotype.Component
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
-enum class GameAuthenticator {
-    INSTANCE;
+@Component
+class GameAuthenticator {
 
     private val gamePlayerTokens: MutableMap<GamePlayer, String> = ConcurrentHashMap()
 

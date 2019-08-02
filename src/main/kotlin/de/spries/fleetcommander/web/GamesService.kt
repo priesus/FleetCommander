@@ -13,8 +13,10 @@ import de.spries.fleetcommander.web.dto.GameParams
 import de.spries.fleetcommander.web.dto.GamePlayer
 import de.spries.fleetcommander.web.dto.ShipFormationParams
 import mu.KotlinLogging
+import org.springframework.stereotype.Service
 
-class GamesService {
+@Service
+class GamesService(private val gamesAuthenticator: GameAuthenticator) {
 
     private val log = KotlinLogging.logger {}
 
@@ -26,7 +28,7 @@ class GamesService {
         val gameId = GameStore.INSTANCE.create(game)
         game.assignId(gameId)
         val gamePlayer = GamePlayer(gameId, p.getId())
-        val authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer)
+        val authToken = gamesAuthenticator.createAuthToken(gamePlayer)
 
         log.debug("{}: Created for {}", gamePlayer, playerName)
 
@@ -49,7 +51,7 @@ class GamesService {
         val player = Player(playerName)
         game.addPlayer(player)
         val gamePlayer = GamePlayer(gameId, player.getId())
-        val authToken = GameAuthenticator.INSTANCE.createAuthToken(gamePlayer)
+        val authToken = gamesAuthenticator.createAuthToken(gamePlayer)
 
         log.debug("{}: Joined by {}", gamePlayer, playerName)
 
@@ -73,7 +75,7 @@ class GamesService {
 
     fun quitGame(gamePlayer: GamePlayer) {
         log.debug("{}: Delete", gamePlayer)
-        GameAuthenticator.INSTANCE.deleteAuthToken(gamePlayer)
+        gamesAuthenticator.deleteAuthToken(gamePlayer)
         val game = getGame(gamePlayer)
         game.quit()
     }

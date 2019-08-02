@@ -20,7 +20,7 @@ class GamesServiceIT {
 
     @Before
     fun setUp() {
-        service = GamesService()
+        service = GamesService(GameAuthenticator())
         val accessParams = service.createNewGame("Player 1")
         gamePlayer = GamePlayer(accessParams.getGameId(), accessParams.getPlayerId())
     }

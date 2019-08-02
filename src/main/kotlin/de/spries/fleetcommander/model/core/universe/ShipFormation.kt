@@ -3,7 +3,10 @@ package de.spries.fleetcommander.model.core.universe
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 
-data class ShipFormation(private var shipCount: Int = 1, private val origin: Planet, private val destination: Planet, private val commander: Player)
+data class ShipFormation(private var shipCount: Int = 1,
+                         private val origin: Planet,
+                         private val destination: Planet,
+                         private val commander: Player)
     : HasCoordinates(origin.x, origin.y) {
 
     private val distanceOverall: Double = origin.distanceTo(destination)
