@@ -15,16 +15,18 @@ import java.util.stream.Collectors
 
 class GameStoreTest {
 
+    private val gameRepo = GameRepository()
+
     @Before
     fun setUp() {
-        GameStore.INSTANCE.reset()
+        gameRepo.reset()
     }
 
     @Test
     fun creatingGameReturnsNewGameId() {
-        val gameId1 = GameStore.INSTANCE.create(mock())
+        val gameId1 = gameRepo.create(mock())
         assertThat(gameId1, `is`(1))
-        val gameId2 = GameStore.INSTANCE.create(mock())
+        val gameId2 = gameRepo.create(mock())
         assertThat(gameId2, `is`(2))
     }
 
@@ -32,27 +34,27 @@ class GameStoreTest {
     fun creatingGameAddsGameToList() {
         val game = mock<Game>()
 
-        assertThat(GameStore.INSTANCE.getGames(), not(hasItem(game)))
-        GameStore.INSTANCE.create(game)
-        assertThat(GameStore.INSTANCE.getGames(), hasItem(game))
+        assertThat(gameRepo.getGames(), not(hasItem(game)))
+        gameRepo.create(game)
+        assertThat(gameRepo.getGames(), hasItem(game))
     }
 
     @Test
     fun gameReturnedByGetEqualsCreatedGame() {
         val game = mock<Game>()
-        val gameId = GameStore.INSTANCE.create(game)
+        val gameId = gameRepo.create(game)
 
-        val storedGame = GameStore.INSTANCE[gameId]
+        val storedGame = gameRepo[gameId]
         assertThat(storedGame, `is`(game))
     }
 
     @Test
     fun deletingGameRemovesGameFromList() {
         val game = mock<Game>()
-        val gameId = GameStore.INSTANCE.create(game)
+        val gameId = gameRepo.create(game)
 
-        GameStore.INSTANCE.delete(gameId)
-        assertThat(GameStore.INSTANCE.getGames(), not(hasItem(game)))
+        gameRepo.delete(gameId)
+        assertThat(gameRepo.getGames(), not(hasItem(game)))
     }
 
     @Test
@@ -63,7 +65,7 @@ class GameStoreTest {
         }
 
         val forkJoinPool = ForkJoinPool(100)
-        val ids = forkJoinPool.submit<Set<Int>> { games.parallelStream().map { g -> GameStore.INSTANCE.create(g) }.collect(Collectors.toSet()) }
+        val ids = forkJoinPool.submit<Set<Int>> { games.parallelStream().map { g -> gameRepo.create(g) }.collect(Collectors.toSet()) }
                 .get()
 
         assertThat(ids, hasSize(100))

@@ -2,6 +2,8 @@ package de.spries.fleetcommander.web
 
 import de.spries.fleetcommander.model.core.Game.Status
 import de.spries.fleetcommander.model.core.common.IllegalActionException
+import de.spries.fleetcommander.persistence.GameRepository
+import de.spries.fleetcommander.persistence.JoinCodeRepository
 import de.spries.fleetcommander.web.dto.GameParams
 import de.spries.fleetcommander.web.dto.GamePlayer
 import org.hamcrest.Matchers.`is`
@@ -20,7 +22,7 @@ class GamesServiceIT {
 
     @Before
     fun setUp() {
-        service = GamesService(GameAuthenticator())
+        service = GamesService(GameAuthenticator(), GameRepository(), JoinCodeRepository())
         val accessParams = service.createNewGame("Player 1")
         gamePlayer = GamePlayer(accessParams.getGameId(), accessParams.getPlayerId())
     }

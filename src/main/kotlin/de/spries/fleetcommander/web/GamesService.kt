@@ -4,10 +4,8 @@ import de.spries.fleetcommander.model.core.Game
 import de.spries.fleetcommander.model.core.Player
 import de.spries.fleetcommander.model.core.common.IllegalActionException
 import de.spries.fleetcommander.model.facade.PlayerSpecificGame
-import de.spries.fleetcommander.persistence.GameStore
-import de.spries.fleetcommander.persistence.InvalidCodeException
-import de.spries.fleetcommander.persistence.JoinCodeLimitReachedException
-import de.spries.fleetcommander.persistence.JoinCodes
+import de.spries.fleetcommander.persistence.GameRepository
+import de.spries.fleetcommander.persistence.JoinCodeRepository
 import de.spries.fleetcommander.web.dto.GameAccessParams
 import de.spries.fleetcommander.web.dto.GameParams
 import de.spries.fleetcommander.web.dto.GamePlayer
@@ -16,7 +14,9 @@ import mu.KotlinLogging
 import org.springframework.stereotype.Service
 
 @Service
-class GamesService(private val gamesAuthenticator: GameAuthenticator) {
+class GamesService(private val gamesAuthenticator: GameAuthenticator,
+                   private val gameRepo: GameRepository,
+                   private val joinCodeRepo: JoinCodeRepository) {
 
     private val log = KotlinLogging.logger {}
 
@@ -25,7 +25,7 @@ class GamesService(private val gamesAuthenticator: GameAuthenticator) {
         val p = Player(playerName)
         game.addPlayer(p)
 
-        val gameId = GameStore.INSTANCE.create(game)
+        val gameId = gameRepo.create(game)
         game.assignId(gameId)
         val gamePlayer = GamePlayer(gameId, p.getId())
         val authToken = gamesAuthenticator.createAuthToken(gamePlayer)
@@ -35,19 +35,18 @@ class GamesService(private val gamesAuthenticator: GameAuthenticator) {
         return GameAccessParams(gamePlayer, authToken)
     }
 
-    @Throws(JoinCodeLimitReachedException::class)
     fun createJoinCode(gameId: Int): String {
-        return JoinCodes.INSTANCE.create(gameId)
+        return joinCodeRepo.create(gameId)
     }
 
     fun getActiveJoinCodes(gameId: Int): Collection<String> {
-        return JoinCodes.INSTANCE[gameId]
+        return joinCodeRepo[gameId]
     }
 
-    @Throws(InvalidCodeException::class)
     fun joinGame(playerName: String, joinCode: String): GameAccessParams {
-        val gameId = JoinCodes.INSTANCE.invalidate(joinCode)
-        val game = GameStore.INSTANCE[gameId] ?: throw IllegalActionException("The game doesn't exist on the server")
+        val gameId = joinCodeRepo.invalidate(joinCode)
+        val game = gameRepo[gameId]
+                ?: throw IllegalActionException("The game doesn't exist on the server")
         val player = Player(playerName)
         game.addPlayer(player)
         val gamePlayer = GamePlayer(gameId, player.getId())
@@ -59,7 +58,7 @@ class GamesService(private val gamesAuthenticator: GameAuthenticator) {
     }
 
     fun getGame(gamePlayer: GamePlayer): PlayerSpecificGame {
-        val game = GameStore.INSTANCE[gamePlayer.gameId]
+        val game = gameRepo[gamePlayer.gameId]
         log.debug("{}: Get", gamePlayer)
         if (game != null) {
             val player = game.getPlayerWithId(gamePlayer.playerId)
@@ -91,7 +90,7 @@ class GamesService(private val gamesAuthenticator: GameAuthenticator) {
         if (java.lang.Boolean.TRUE == params.started) {
             val game = getGame(gamePlayer)
             game.start()
-            JoinCodes.INSTANCE.invalidateAll(gamePlayer.gameId)
+            joinCodeRepo.invalidateAll(gamePlayer.gameId)
         }
     }
 

@@ -1,10 +1,11 @@
 package de.spries.fleetcommander.persistence
 
 import de.spries.fleetcommander.model.core.Game
+import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
-enum class GameStore {
-    INSTANCE;
+@Component
+class GameRepository {
 
     private val gameStore: MutableMap<Int, Game> = ConcurrentHashMap()
     private var nextGameId: Int = 1

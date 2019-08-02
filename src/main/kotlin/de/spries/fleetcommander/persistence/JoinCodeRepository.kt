@@ -1,22 +1,14 @@
 package de.spries.fleetcommander.persistence
 
+import org.springframework.stereotype.Component
 import java.util.HashSet
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.streams.asSequence
 
-enum class JoinCodes {
-    INSTANCE;
-
-    var randomGenerator: (() -> (String)) = ({
-        val charPool: List<Char> = (('a'..'z') + ('0'..'9')).filterNot { it == '0' || it == 'o' }
-        ThreadLocalRandom.current()
-                .ints(6, 0, charPool.size)
-                .asSequence()
-                .map(charPool::get)
-                .joinToString("")
-    })
+@Component
+class JoinCodeRepository(private val randomGenerator: () -> String = randomAlphaNumGenerator) {
 
     private val gameIdPerCode: MutableMap<String, Int> = ConcurrentHashMap()
     private val codesPerGameId: MutableMap<Int, MutableCollection<String>> = ConcurrentHashMap()
@@ -70,7 +62,18 @@ enum class JoinCodes {
         codesPerGameId.clear()
     }
 
+    class InvalidCodeException(msg: String) : Exception(msg)
+    class JoinCodeLimitReachedException(msg: String) : Exception(msg)
+
     companion object {
         private const val MAX_ACTIVE_CODES = 5
+        private val randomAlphaNumGenerator = {
+            val charPool: List<Char> = (('a'..'z') + ('0'..'9')).filterNot { it == '0' || it == 'o' }
+            ThreadLocalRandom.current()
+                    .ints(6, 0, charPool.size)
+                    .asSequence()
+                    .map(charPool::get)
+                    .joinToString("")
+        }
     }
 }
