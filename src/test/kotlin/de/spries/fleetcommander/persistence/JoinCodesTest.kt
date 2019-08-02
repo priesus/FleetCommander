@@ -59,7 +59,7 @@ class JoinCodesTest {
         val jcr = JoinCodeRepository(randomGenerator)
         whenever(randomGenerator.invoke()).thenReturn("abcde6")
 
-        val code = jcr.create(1)
+        jcr.create(1)
 
         assertThat(jcr.invalidate("abcDE6"), `is`(1))
     }

@@ -30,6 +30,5 @@ Fleet Commander is a turn-based strategy game inspired by "Strategic Commander" 
 * Allow building research facilities instead of factories, that
     * advance the power of your ships in combat, and
     * increase ship travelling speed
-* Add planet classes, that determine how effective local factories are on that planet
 * Let planets have different amounts of facilities
-* Offer different levels of AI enemies
+* Let players choose between AI difficulty levels

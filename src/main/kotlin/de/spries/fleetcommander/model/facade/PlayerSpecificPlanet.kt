@@ -17,7 +17,7 @@ class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewi
 
     fun isInhabitedByMe() = originalPlanet.isInhabitedBy(viewingPlayer)
 
-    fun isKnownAsEnemyPlanet() = if (TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
+    fun isKnownAsEnemyPlanet() = if (ManualTestingParameters.ENEMY_LOCATIONS_VISIBLE && viewingPlayer.isHumanPlayer()) {
         originalPlanet.isInhabited() && !originalPlanet.isInhabitedBy(viewingPlayer)
     } else originalPlanet.isKnownAsEnemyPlanet(viewingPlayer)
 
@@ -29,13 +29,13 @@ class PlayerSpecificPlanet(private val originalPlanet: Planet, private val viewi
         originalPlanet.isJustInhabited()
     } else false
 
-    fun getShipCount() = if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
+    fun getShipCount() = if (isInhabitedByMe() || ManualTestingParameters.ENEMY_LOCATIONS_VISIBLE && viewingPlayer.isHumanPlayer()) {
         originalPlanet.getShipCount()
     } else 0
 
     fun getIncomingShipCount() = originalPlanet.getIncomingShipCount(viewingPlayer)
 
-    fun getFactorySite() = if (isInhabitedByMe() || TestMode.TEST_MODE && viewingPlayer.isHumanPlayer()) {
+    fun getFactorySite() = if (isInhabitedByMe() || ManualTestingParameters.ENEMY_LOCATIONS_VISIBLE && viewingPlayer.isHumanPlayer()) {
         originalPlanet.getFactorySite()
     } else null
 

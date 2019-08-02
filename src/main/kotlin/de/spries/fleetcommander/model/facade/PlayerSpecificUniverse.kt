@@ -17,7 +17,7 @@ class PlayerSpecificUniverse(private val originalUniverse: Universe, private val
     }
 
     fun getTravellingShipFormations(): Collection<ShipFormation> {
-        return if (TestMode.TEST_MODE) originalUniverse.getTravellingShipFormations()
+        return if (ManualTestingParameters.ENEMY_LOCATIONS_VISIBLE) originalUniverse.getTravellingShipFormations()
         else originalUniverse.getTravellingShipFormations()
                 .filter { s -> s.getCommander() === viewingPlayer }
     }
